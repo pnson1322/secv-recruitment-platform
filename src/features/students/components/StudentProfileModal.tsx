@@ -50,7 +50,6 @@ export default function StudentProfileModal({
 
   return (
     <ClientPortal>
-      {/* Backdrop */}
       <div 
         className="fixed inset-0 z-[400] flex items-center justify-center bg-black/60 px-4 py-6 backdrop-blur-sm"
         onClick={onClose}
@@ -59,7 +58,6 @@ export default function StudentProfileModal({
           className="flex h-[92vh] w-full max-w-[1050px] flex-col overflow-hidden rounded-[32px] border border-slate-200 bg-white shadow-2xl"
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Header Section */}
           <div className="bg-white px-10 pt-8 pb-5">
             <div className="flex items-start justify-between mb-6">
               <div>
@@ -135,7 +133,6 @@ export default function StudentProfileModal({
             )}
           </div>
 
-          {/* Main Content Body */}
           <div className="flex flex-1 overflow-hidden bg-white">
             {isError ? (
               <div className="flex flex-1 flex-col items-center justify-center">
@@ -148,7 +145,6 @@ export default function StudentProfileModal({
               <div className="flex flex-1 items-center justify-center text-slate-400 font-medium">Không tìm thấy hồ sơ</div>
             ) : (
               <>
-                {/* CV Section */}
                 <div className="flex-1 p-8 bg-slate-50/30 overflow-hidden flex flex-col">
                   {defaultCv ? (
                     <div 
@@ -186,7 +182,6 @@ export default function StudentProfileModal({
                   )}
                 </div>
 
-                {/* Info Sidebar */}
                 <div className="w-[360px] overflow-y-auto p-8 border-l border-slate-100 bg-white [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                   <section className="mb-10">
                     <h3 className="mb-5 text-[17px] font-bold text-slate-900">Thông tin cơ bản</h3>
@@ -252,7 +247,6 @@ export default function StudentProfileModal({
             )}
           </div>
 
-          {/* Footer CTA */}
           {!isLoading && !isError && profile && (
             <div className="flex items-center justify-end gap-4 border-t border-slate-100 bg-white px-10 py-6">
               <button onClick={onClose} className="h-12 min-w-[120px] rounded-2xl border border-slate-200 bg-white text-[15px] font-semibold text-slate-600 transition hover:bg-slate-50">

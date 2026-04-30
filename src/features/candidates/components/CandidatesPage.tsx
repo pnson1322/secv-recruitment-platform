@@ -1,18 +1,22 @@
 "use client";
 
 import { X } from "lucide-react";
-import { useCandidatesPage } from "../hooks/useCandidatesPage";
-import { useCandidatesActions } from "../hooks/useCandidatesActions";
-import CandidateToolbar from "./CandidateToolbar";
-import CandidateTabBar from "./CandidateTabBar";
+
 import Pagination from "@/components/Pagination";
-import CandidateTableAll from "./tables/CandidateTableAll";
-import CandidateTablePending from "./tables/CandidateTablePending";
-import CandidateTableApproved from "./tables/CandidateTableApproved";
-import CandidateTableResult from "./tables/CandidateTableResult";
-import CandidateTableInvited from "./tables/CandidateTableInvited";
-import CandidateTableSkeleton from "./tables/CandidateTableSkeleton";
 import StudentProfileModal from "@/features/students/components/StudentProfileModal";
+
+import { useCandidatesActions } from "../hooks/useCandidatesActions";
+import { useCandidatesPage } from "../hooks/useCandidatesPage";
+
+import CandidateTabBar from "./CandidateTabBar";
+import CandidateToolbar from "./CandidateToolbar";
+import ResendInvitationModal from "./ResendInvitationModal";
+import CandidateTableAll from "./tables/CandidateTableAll";
+import CandidateTableApproved from "./tables/CandidateTableApproved";
+import CandidateTableInvited from "./tables/CandidateTableInvited";
+import CandidateTablePending from "./tables/CandidateTablePending";
+import CandidateTableResult from "./tables/CandidateTableResult";
+import CandidateTableSkeleton from "./tables/CandidateTableSkeleton";
 
 export default function CandidatesPage() {
   const {
@@ -44,7 +48,13 @@ export default function CandidatesPage() {
     selectedProfile,
     setSelectedProfile,
     handleUpdateStatus,
-    onResendInvitation,
+    invitationToResend,
+    resendMessage,
+    setResendMessage,
+    isResendingInvitation,
+    openResendInvitationModal,
+    closeResendInvitationModal,
+    submitResendInvitation,
   } = useCandidatesActions(refetch);
 
   return (
@@ -63,11 +73,15 @@ export default function CandidatesPage() {
 
       {isError ? (
         <div className="flex flex-col items-center justify-center rounded-2xl border border-red-100 bg-red-50/30 px-6 py-16 shadow-sm">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-500 mb-4">
+          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-500">
             <X size={24} />
           </div>
+
           <h3 className="text-[16px] font-bold text-slate-800">Không thể tải dữ liệu</h3>
-          <p className="mt-1 text-[14px] text-slate-500">Vui lòng kiểm tra kết nối mạng và thử lại.</p>
+          <p className="mt-1 text-[14px] text-slate-500">
+            Vui lòng kiểm tra kết nối mạng và thử lại.
+          </p>
+
           <button
             onClick={() => refetch()}
             className="mt-6 rounded-xl bg-slate-900 px-6 py-2.5 text-[14px] font-semibold text-white transition hover:bg-slate-800"
@@ -90,33 +104,45 @@ export default function CandidatesPage() {
           ) : tab === "pending" ? (
             <CandidateTablePending
               applications={applications}
-              onApprove={(app) => handleUpdateStatus(app.applicationId, "interviewing", "Đã duyệt ứng viên thành công")}
-              onReject={(app) => handleUpdateStatus(app.applicationId, "rejected", "Đã loại ứng viên")}
+              onApprove={(app) =>
+                handleUpdateStatus(
+                  app.applicationId,
+                  "interviewing",
+                  "Đã duyệt ứng viên thành công"
+                )
+              }
+              onReject={(app) =>
+                handleUpdateStatus(app.applicationId, "rejected", "Đã loại ứng viên")
+              }
               onViewCV={setSelectedProfile}
             />
           ) : tab === "approved" ? (
             <CandidateTableApproved
               applications={applications}
               onViewCV={setSelectedProfile}
-              onPass={(app) => handleUpdateStatus(app.applicationId, "passed", "Đã chuyển ứng viên sang trạng thái Đậu")}
-              onReject={(app) => handleUpdateStatus(app.applicationId, "rejected", "Đã loại ứng viên")}
+              onPass={(app) =>
+                handleUpdateStatus(
+                  app.applicationId,
+                  "passed",
+                  "Đã chuyển ứng viên sang trạng thái Đậu"
+                )
+              }
+              onReject={(app) =>
+                handleUpdateStatus(app.applicationId, "rejected", "Đã loại ứng viên")
+              }
             />
           ) : tab === "invited" ? (
-            <CandidateTableInvited 
-              invitations={invitations} 
-              invStats={invStats} 
-              onResend={onResendInvitation}
+            <CandidateTableInvited
+              invitations={invitations}
+              invStats={invStats}
+              onResend={openResendInvitationModal}
               onViewProfile={setSelectedProfile}
             />
           ) : (
             <CandidateTableAll applications={applications} onViewCV={setSelectedProfile} />
           )}
 
-          <Pagination
-            currentPage={page}
-            totalPages={totalPages}
-            onPageChange={setPage}
-          />
+          <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />
         </>
       )}
 
@@ -130,14 +156,29 @@ export default function CandidatesPage() {
           applicationStatus={selectedProfile.status}
           onUpdateStatus={(newStatus) => {
             if ("applicationId" in selectedProfile) {
-              const message = newStatus === "rejected" ? "Đã loại ứng viên" : 
-                             newStatus === "interviewing" ? "Đã duyệt ứng viên" : "Đã chuyển sang trạng thái Đậu";
+              const message =
+                newStatus === "rejected"
+                  ? "Đã loại ứng viên"
+                  : newStatus === "interviewing"
+                    ? "Đã duyệt ứng viên"
+                    : "Đã chuyển sang trạng thái Đậu";
+
               handleUpdateStatus(selectedProfile.applicationId, newStatus as any, message);
               setSelectedProfile(null);
             }
           }}
         />
       )}
+
+      <ResendInvitationModal
+        open={!!invitationToResend}
+        invitation={invitationToResend}
+        message={resendMessage}
+        isSubmitting={isResendingInvitation}
+        onMessageChange={setResendMessage}
+        onClose={closeResendInvitationModal}
+        onSubmit={submitResendInvitation}
+      />
     </div>
   );
 }

@@ -13,7 +13,6 @@ export const handleDownloadCV = async (url: string, defaultFilename: string) => 
     document.body.removeChild(link);
     URL.revokeObjectURL(blobUrl);
   } catch (error) {
-    // Fallback if CORS prevents blob download
     window.open(url, "_blank");
   }
 };

@@ -31,10 +31,8 @@ export default function Pagination({
 
   return (
     <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 px-2">
-      {/* Empty space for left alignment balance on desktop */}
       <div className="hidden sm:block w-32" />
 
-      {/* Center: Pagination Buttons */}
       <div className="flex items-center gap-1.5">
         <button
           type="button"
@@ -85,7 +83,6 @@ export default function Pagination({
         </button>
       </div>
 
-      {/* Right: Page info */}
       <div className="text-[14px] text-slate-500 font-medium sm:w-32 sm:text-right">
         Trang <span className="text-slate-900 font-bold">{currentPage}</span> trên{" "}
         <span className="text-slate-900 font-bold">{totalPages}</span>

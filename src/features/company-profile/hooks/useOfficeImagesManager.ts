@@ -64,7 +64,6 @@ export function useOfficeImagesManager({ open, company }: Params) {
       return;
     }
 
-    // Validate all files first
     for (const file of newFiles) {
       const error = validateFile(file);
       if (error) {
@@ -75,7 +74,6 @@ export function useOfficeImagesManager({ open, company }: Params) {
 
     try {
       setIsAdding(true);
-      // Upload files sequentially to avoid overwhelming the server or causing issues with state
       for (const file of newFiles) {
         await addMutation.mutateAsync(file);
       }
