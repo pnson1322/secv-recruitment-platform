@@ -57,7 +57,7 @@ export default function CompanyJobCard({
 
             <span className="inline-flex items-center gap-1.5">
               <Clock3 size={14} className="text-slate-400" />
-              {formatDate(job.approveAt)}
+              {formatDate(job.applicationDeadline)}
             </span>
           </div>
         </div>

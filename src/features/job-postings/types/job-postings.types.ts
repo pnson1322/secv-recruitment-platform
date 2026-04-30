@@ -128,7 +128,7 @@ export type JobPostingDataItem = {
   salaryMax: number | null;
   salaryType: SalaryType;
   isSalaryNegotiable: boolean;
-  approveAt: string;
+  applicationDeadline: string;
   categoryId: number;
   status: JobPostingStatus;
 };

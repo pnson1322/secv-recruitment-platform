@@ -28,6 +28,7 @@ type CompanyProfilePageProps = {
   onEditContact?: () => void;
   onManageOfficeImages?: () => void;
   onChangeCoverImage?: () => void;
+  onChangeLogo?: () => void;
   onFollow?: () => void;
   onRestrict?: () => void;
 };
@@ -85,6 +86,7 @@ export default function CompanyProfilePage({
   onEditContact,
   onManageOfficeImages,
   onChangeCoverImage,
+  onChangeLogo,
   onFollow,
   onRestrict,
 }: CompanyProfilePageProps) {
@@ -105,6 +107,7 @@ export default function CompanyProfilePage({
         isOwner={isOwner}
         onEditBasicInfo={onEditBasicInfo}
         onChangeCoverImage={onChangeCoverImage}
+        onChangeLogo={onChangeLogo}
         onFollow={onFollow}
         onRestrict={onRestrict}
       />

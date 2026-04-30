@@ -39,41 +39,48 @@ export function useOfficeImagesManager({ open, company }: Params) {
     setIsAdding(false);
   }, [open, company.officeImages]);
 
-  const validateFile = (file: File | null) => {
-    if (!file) return "Vui lòng chọn ảnh.";
-
+  const validateFile = (file: File) => {
     if (!ACCEPTED_TYPES.includes(file.type)) {
-      return "Chỉ hỗ trợ JPG hoặc PNG.";
+      return `Tệp "${file.name}" không đúng định dạng (chỉ hỗ trợ JPG/PNG).`;
     }
 
     if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
-      return `Ảnh phải nhỏ hơn ${MAX_FILE_SIZE_MB}MB.`;
+      return `Tệp "${file.name}" quá lớn (tối đa ${MAX_FILE_SIZE_MB}MB).`;
     }
 
     return "";
   };
 
-  const handleAddImage = async (file: File | null) => {
+  const handleAddImages = async (files: FileList | null) => {
+    if (!files || files.length === 0) return;
     setErrorMessage("");
 
-    const validationError = validateFile(file);
-    if (validationError) {
-      setErrorMessage(validationError);
+    const newFiles = Array.from(files);
+    const currentCount = images.length;
+    const remainingSlots = MAX_IMAGES - currentCount;
+
+    if (newFiles.length > remainingSlots) {
+      setErrorMessage(`Bạn chỉ có thể thêm tối đa ${remainingSlots} ảnh nữa.`);
       return;
     }
 
-    if (!file) return;
-
-    if (images.length >= MAX_IMAGES) {
-      setErrorMessage(`Chỉ được tối đa ${MAX_IMAGES} ảnh văn phòng.`);
-      return;
+    // Validate all files first
+    for (const file of newFiles) {
+      const error = validateFile(file);
+      if (error) {
+        setErrorMessage(error);
+        return;
+      }
     }
 
     try {
       setIsAdding(true);
-      await addMutation.mutateAsync(file);
+      // Upload files sequentially to avoid overwhelming the server or causing issues with state
+      for (const file of newFiles) {
+        await addMutation.mutateAsync(file);
+      }
     } catch {
-      setErrorMessage("Không thể thêm ảnh. Vui lòng thử lại.");
+      setErrorMessage("Một số ảnh không thể tải lên. Vui lòng thử lại.");
     } finally {
       setIsAdding(false);
       if (addInputRef.current) {
@@ -102,13 +109,13 @@ export function useOfficeImagesManager({ open, company }: Params) {
   const handleReplaceImage = async (imageId: number, file: File | null) => {
     setErrorMessage("");
 
-    const validationError = validateFile(file);
-    if (validationError) {
-      setErrorMessage(validationError);
+    if (!file) return;
+
+    const error = validateFile(file);
+    if (error) {
+      setErrorMessage(error);
       return;
     }
-
-    if (!file) return;
 
     const previousImages = images;
 
@@ -135,7 +142,7 @@ export function useOfficeImagesManager({ open, company }: Params) {
     isAdding,
     addInputRef,
     maxImages: MAX_IMAGES,
-    handleAddImage,
+    handleAddImages,
     handleDeleteImage,
     handleReplaceImage,
   };

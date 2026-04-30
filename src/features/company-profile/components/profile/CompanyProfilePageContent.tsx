@@ -12,6 +12,7 @@ import EditDescriptionModal from "../edit-profile/EditDescriptionModal";
 import EditDetailModal from "../edit-profile/EditDetailModal";
 import EditContactModal from "../edit-profile/EditContactModal";
 import EditCoverImageModal from "../edit-profile/EditCoverImageModal";
+import EditLogoModal from "../edit-profile/EditLogoModal";
 import ManageOfficeImagesModal from "../edit-profile/ManageOfficeImagesModal";
 import CompanyProfileLoading from "./CompanyProfileLoading";
 import CompanyProfileError from "./CompanyProfileError";
@@ -28,6 +29,7 @@ type ModalKey =
   | "detail"
   | "contact"
   | "cover"
+  | "logo"
   | "office-images";
 
 export default function CompanyProfilePageContent({
@@ -89,6 +91,7 @@ export default function CompanyProfilePageContent({
         onEditContact={() => setActiveModal("contact")}
         onManageOfficeImages={() => setActiveModal("office-images")}
         onChangeCoverImage={() => setActiveModal("cover")}
+        onChangeLogo={() => setActiveModal("logo")}
         onFollow={() => undefined}
         onRestrict={() => undefined}
       />
@@ -111,6 +114,10 @@ export default function CompanyProfilePageContent({
 
       {activeModal === "cover" && (
         <EditCoverImageModal open onClose={closeModal} />
+      )}
+
+      {activeModal === "logo" && (
+        <EditLogoModal open company={company} onClose={closeModal} />
       )}
 
       {activeModal === "office-images" && (

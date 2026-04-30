@@ -24,7 +24,7 @@ export default function ManageOfficeImagesModal({
     isAdding,
     addInputRef,
     maxImages,
-    handleAddImage,
+    handleAddImages,
     handleDeleteImage,
     handleReplaceImage,
   } = useOfficeImagesManager({
@@ -64,7 +64,7 @@ export default function ManageOfficeImagesModal({
             <OfficeImageAddTile
               disabled={isAdding}
               inputRef={addInputRef}
-              onAdd={handleAddImage}
+              onAdd={handleAddImages}
             />
           )}
         </div>
@@ -72,7 +72,7 @@ export default function ManageOfficeImagesModal({
         <div className="space-y-2 pt-1">
           <p className="text-[14px] text-slate-500">
             Tối đa {maxImages} ảnh. Khuyến nghị: 1200x800px, định dạng JPG/PNG,
-            dưới 5MB mỗi ảnh
+            dưới 5MB mỗi ảnh. Bạn có thể chọn nhiều ảnh cùng lúc.
           </p>
 
           {errorMessage && (

@@ -5,7 +5,7 @@ import { ImageUp, Loader2 } from "lucide-react";
 type Props = {
   disabled?: boolean;
   inputRef: React.RefObject<HTMLInputElement | null>;
-  onAdd: (file: File | null) => void;
+  onAdd: (files: FileList | null) => void;
 };
 
 export default function OfficeImageAddTile({
@@ -18,10 +18,11 @@ export default function OfficeImageAddTile({
       <input
         ref={inputRef}
         type="file"
+        multiple
         accept="image/png,image/jpeg,image/jpg"
         className="hidden"
         disabled={disabled}
-        onChange={(e) => onAdd(e.target.files?.[0] || null)}
+        onChange={(e) => onAdd(e.target.files)}
       />
 
       {disabled ? (
@@ -31,7 +32,10 @@ export default function OfficeImageAddTile({
           <div className="flex h-14 w-14 items-center justify-center rounded-full bg-slate-100 transition duration-200 group-hover:bg-cyan-100">
             <ImageUp size={28} />
           </div>
-          <span className="mt-3 text-[16px] font-semibold">Thêm ảnh</span>
+          <div className="mt-3 flex flex-col items-center">
+            <span className="text-[16px] font-semibold">Thêm ảnh</span>
+            <span className="text-[12px] text-slate-400">Chọn tối đa 6 ảnh</span>
+          </div>
         </>
       )}
     </label>
