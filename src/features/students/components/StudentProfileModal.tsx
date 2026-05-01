@@ -15,6 +15,9 @@ type Props = {
   applicationStatus?: string;
   adminNote?: string | null;
   onUpdateStatus?: (status: string) => void;
+  onInvite?: () => void;
+  inviteLabel?: string;
+  showInviteCTA?: boolean;
 };
 
 const ACADEMIC_STATUS = {
@@ -31,6 +34,9 @@ export default function StudentProfileModal({
   applicationStatus,
   adminNote,
   onUpdateStatus,
+  onInvite,
+  inviteLabel = "Gửi lời mời",
+  showInviteCTA = false,
 }: Props) {
   const { profile, isLoading, isError, retry } = useStudentProfileModal(open, studentId, onClose);
 
@@ -192,7 +198,11 @@ export default function StudentProfileModal({
                       </div>
                       <div className="flex justify-between items-center text-[14px]">
                         <span className="text-slate-500 font-medium">Năm học</span>
-                        <span className="font-semibold text-slate-800">Năm {profile.currentYear}</span>
+                        <span className="font-semibold text-slate-800">
+                          {profile.studentStatus === "GRADUATED" 
+                            ? "Đã tốt nghiệp" 
+                            : `Năm ${profile.currentYear}`}
+                        </span>
                       </div>
                       <div className="flex justify-between items-center text-[14px]">
                         <span className="text-slate-500 font-medium text-left">Chuyên ngành</span>
@@ -266,6 +276,15 @@ export default function StudentProfileModal({
                       <button onClick={() => onUpdateStatus?.("rejected")} className="h-12 min-w-[120px] rounded-2xl border-2 border-red-500 text-[15px] font-semibold text-red-500 hover:bg-red-50">Loại</button>
                       <button onClick={() => onUpdateStatus?.("passed")} className="h-12 min-w-[120px] rounded-2xl bg-emerald-600 text-[15px] font-semibold text-white shadow-lg shadow-emerald-100 hover:bg-emerald-700">Đậu</button>
                     </>
+                  )}
+                  {showInviteCTA && onInvite && (
+                    <button
+                      onClick={onInvite}
+                      className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-cyan-500 px-8 text-[15px] font-semibold text-white shadow-lg shadow-cyan-100 transition hover:bg-cyan-600 active:scale-95"
+                    >
+                      <Mail size={18} />
+                      {inviteLabel}
+                    </button>
                   )}
                 </>
               )}

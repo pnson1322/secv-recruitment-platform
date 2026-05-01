@@ -10,7 +10,7 @@ import { useCandidatesPage } from "../hooks/useCandidatesPage";
 
 import CandidateTabBar from "./CandidateTabBar";
 import CandidateToolbar from "./CandidateToolbar";
-import ResendInvitationModal from "./ResendInvitationModal";
+import SearchCandidateInviteModal from "./search/SearchCandidateInviteModal";
 import CandidateTableAll from "./tables/CandidateTableAll";
 import CandidateTableApproved from "./tables/CandidateTableApproved";
 import CandidateTableInvited from "./tables/CandidateTableInvited";
@@ -48,13 +48,18 @@ export default function CandidatesPage() {
     selectedProfile,
     setSelectedProfile,
     handleUpdateStatus,
-    invitationToResend,
-    resendMessage,
-    setResendMessage,
-    isResendingInvitation,
     openResendInvitationModal,
-    closeResendInvitationModal,
-    submitResendInvitation,
+    candidateToInvite,
+    selectedJobId,
+    setSelectedJobId,
+    inviteMessage,
+    setInviteMessage,
+    inviteError,
+    isSubmittingInvite,
+    approvedJobs,
+    openInviteModalFromProfile,
+    closeInviteModal,
+    submitInvite,
   } = useCandidatesActions(refetch);
 
   return (
@@ -154,6 +159,7 @@ export default function CandidatesPage() {
           role="company"
           adminNote={(selectedProfile as any).adminNote}
           applicationStatus={selectedProfile.status}
+          showInviteCTA={tab === "invited"}
           onUpdateStatus={(newStatus) => {
             if ("applicationId" in selectedProfile) {
               const message =
@@ -167,17 +173,25 @@ export default function CandidatesPage() {
               setSelectedProfile(null);
             }
           }}
+          onInvite={() => {
+            openInviteModalFromProfile(selectedProfile);
+            setSelectedProfile(null);
+          }}
         />
       )}
 
-      <ResendInvitationModal
-        open={!!invitationToResend}
-        invitation={invitationToResend}
-        message={resendMessage}
-        isSubmitting={isResendingInvitation}
-        onMessageChange={setResendMessage}
-        onClose={closeResendInvitationModal}
-        onSubmit={submitResendInvitation}
+      <SearchCandidateInviteModal
+        open={!!candidateToInvite}
+        candidate={candidateToInvite}
+        jobs={approvedJobs}
+        selectedJobId={selectedJobId}
+        message={inviteMessage}
+        error={inviteError}
+        isSubmitting={isSubmittingInvite}
+        onJobChange={setSelectedJobId}
+        onMessageChange={setInviteMessage}
+        onClose={closeInviteModal}
+        onSubmit={submitInvite}
       />
     </div>
   );

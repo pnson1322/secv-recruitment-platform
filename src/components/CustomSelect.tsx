@@ -9,7 +9,7 @@ type Option = {
 };
 
 type CustomSelectProps = {
-  label: string;
+  label?: string;
   placeholder?: string;
   value: string;
   options: Option[];
@@ -18,7 +18,7 @@ type CustomSelectProps = {
 };
 
 export default function CustomSelect({
-  label,
+  label = "",
   placeholder = "Chọn một tùy chọn",
   value,
   options,

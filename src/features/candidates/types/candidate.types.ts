@@ -36,6 +36,7 @@ export type CandidateStudent = {
   gpa?: string;
   phone?: string;
   skills?: CandidateSkill[];
+  isOpenToWork?: boolean;
 };
 
 export type CandidateJob = {
