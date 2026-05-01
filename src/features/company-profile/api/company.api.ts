@@ -150,20 +150,23 @@ export async function changeStatusCompany(
 }
 
 // for Student:
-type StudentGetCompanyParams = {
+export type StudentGetCompanyParams = {
   page?: number;
   limit?: number;
+  search?: string;
+  location?: string;
+  scale?: string;
 };
 
 export async function getCompaniesForStudent(
   params: StudentGetCompanyParams = {},
 ) {
-  const { page = 1, limit = 10 } = params;
+  const { page = 1, limit = 10, search, location, scale } = params;
 
   const res = await api.get<ApiResponse<StudentCompanyListData>>(
     "/company/all/user",
     {
-      params: { page, limit },
+      params: { page, limit, search, location, scale },
     },
   );
 
