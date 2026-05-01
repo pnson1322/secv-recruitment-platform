@@ -1,3 +1,5 @@
+import type { StudentStatus } from "./student-card.types";
+
 export type ApiResponse<T> = {
   success: boolean;
   message: string;
@@ -37,6 +39,7 @@ export type CandidateStudent = {
   phone?: string;
   skills?: CandidateSkill[];
   isOpenToWork?: boolean;
+  studentStatus?: StudentStatus;
 };
 
 export type CandidateJob = {

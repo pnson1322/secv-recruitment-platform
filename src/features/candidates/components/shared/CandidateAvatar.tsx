@@ -4,6 +4,7 @@ type Props = {
   name: string;
   avatarUrl?: string | null;
   size?: number;
+  className?: string;
 };
 
 const COLORS = [
@@ -37,11 +38,12 @@ export default function CandidateAvatar({
   name,
   avatarUrl,
   size = 40,
+  className = "",
 }: Props) {
   if (avatarUrl) {
     return (
       <div
-        className="shrink-0 overflow-hidden rounded-full"
+        className={`shrink-0 overflow-hidden rounded-full ${className}`}
         style={{ width: size, height: size }}
       >
         <Image
@@ -57,7 +59,7 @@ export default function CandidateAvatar({
 
   return (
     <div
-      className={`flex shrink-0 items-center justify-center rounded-full text-white font-bold ${getColorFromName(name)}`}
+      className={`flex shrink-0 items-center justify-center rounded-full text-white font-bold ${getColorFromName(name)} ${className}`}
       style={{ width: size, height: size, fontSize: size * 0.35 }}
     >
       {getInitials(name)}

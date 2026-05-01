@@ -10,6 +10,7 @@ type Props = {
     invited: number;
   };
   onTabChange: (tab: CandidateTab) => void;
+  hiddenTabs?: CandidateTab[];
 };
 
 const TABS: {
@@ -56,11 +57,18 @@ const TABS: {
   },
 ];
 
-export default function CandidateTabBar({ activeTab, tabCounts, onTabChange }: Props) {
+export default function CandidateTabBar({ 
+  activeTab, 
+  tabCounts, 
+  onTabChange,
+  hiddenTabs = [] 
+}: Props) {
+  const visibleTabs = TABS.filter(tab => !hiddenTabs.includes(tab.key));
+
   return (
     <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
       <div className="flex flex-wrap items-center">
-        {TABS.map((tab) => {
+        {visibleTabs.map((tab) => {
           const isActive = activeTab === tab.key;
           const count = tabCounts[tab.countKey] ?? 0;
 

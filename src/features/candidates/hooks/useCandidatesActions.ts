@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 import { toast } from "sonner";
 
@@ -14,7 +14,6 @@ import { ROLES } from "@/features/auth/constants/roles";
 import { useQuery } from "@tanstack/react-query";
 import { getJobPostingsListByCompanyId } from "@/features/job-postings/api/job-postings.api";
 import { JobPostingDataItem } from "@/features/job-postings/types/job-postings.types";
-import { useMemo } from "react";
 import { StudentCardItem } from "../types/student-card.types";
 
 const DEFAULT_INVITATION_MESSAGE =
@@ -28,6 +27,7 @@ export function useCandidatesActions(refetch: () => void) {
   const [inviteMessage, setInviteMessage] = useState("");
   const [inviteError, setInviteError] = useState<string | null>(null);
   const [isSubmittingInvite, setIsSubmittingInvite] = useState(false);
+  const [isMessageManuallyEdited, setIsMessageManuallyEdited] = useState(false);
 
   const companyQuery = useCompanyProfile({ viewerRole: ROLES.RECRUITER });
   const companyId = companyQuery.data?.data?.companyId;
@@ -109,6 +109,7 @@ export function useCandidatesActions(refetch: () => void) {
       gpa: student.gpa ?? null,
       isOpenToWork: !!student.isOpenToWork,
       skills: student.skills?.map((s) => s.skillName) || [],
+      studentStatus: student.studentStatus,
     };
   };
 
@@ -121,6 +122,7 @@ export function useCandidatesActions(refetch: () => void) {
         `Chào ${student.fullName}, công ty bên mình thấy hồ sơ của bạn phù hợp với vị trí ${defaultJob.jobTitle}. Nếu bạn quan tâm, bên mình rất mong có cơ hội trao đổi thêm với bạn.`,
       );
     }
+    setIsMessageManuallyEdited(false);
     setInviteError(null);
   };
 
@@ -134,9 +136,16 @@ export function useCandidatesActions(refetch: () => void) {
         `Chào ${student.fullName}, công ty bên mình thấy hồ sơ của bạn phù hợp với vị trí ${data.job.jobTitle}. Nếu bạn quan tâm, bên mình rất mong có cơ hội trao đổi thêm với bạn.`,
       );
     } else {
-      openInviteModal(student);
+      const defaultJob = approvedJobs[0];
+      if (defaultJob) {
+        setSelectedJobId(String(defaultJob.jobId));
+        setInviteMessage(
+          `Chào ${student.fullName}, công ty bên mình thấy hồ sơ của bạn phù hợp với vị trí ${defaultJob.jobTitle}. Nếu bạn quan tâm, bên mình rất mong có cơ hội trao đổi thêm với bạn.`,
+        );
+      }
     }
 
+    setIsMessageManuallyEdited(false);
     setInviteError(null);
   };
 
@@ -145,6 +154,7 @@ export function useCandidatesActions(refetch: () => void) {
     setCandidateToInvite(student);
     setSelectedJobId(String(invitation.job.jobId));
     setInviteMessage(invitation.message?.trim() || "");
+    setIsMessageManuallyEdited(true); // Resend is usually custom already
     setInviteError(null);
   };
 
@@ -153,7 +163,24 @@ export function useCandidatesActions(refetch: () => void) {
     setCandidateToInvite(null);
     setSelectedJobId("");
     setInviteMessage("");
+    setIsMessageManuallyEdited(false);
     setInviteError(null);
+  };
+
+  useEffect(() => {
+    if (candidateToInvite && selectedJobId && !isMessageManuallyEdited) {
+      const selectedJob = approvedJobs.find(j => String(j.jobId) === selectedJobId);
+      if (selectedJob) {
+        setInviteMessage(
+          `Chào ${candidateToInvite.fullName}, công ty bên mình thấy hồ sơ của bạn phù hợp với vị trí ${selectedJob.jobTitle}. Nếu bạn quan tâm, bên mình rất mong có cơ hội trao đổi thêm với bạn.`,
+        );
+      }
+    }
+  }, [selectedJobId, candidateToInvite, isMessageManuallyEdited, approvedJobs]);
+
+  const handleMessageChange = (msg: string) => {
+    setInviteMessage(msg);
+    setIsMessageManuallyEdited(true);
   };
 
   const submitInvite = async () => {
@@ -200,7 +227,7 @@ export function useCandidatesActions(refetch: () => void) {
     selectedJobId,
     setSelectedJobId,
     inviteMessage,
-    setInviteMessage,
+    setInviteMessage: handleMessageChange,
     inviteError,
     isSubmittingInvite,
     approvedJobs,

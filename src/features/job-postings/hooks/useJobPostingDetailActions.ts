@@ -21,6 +21,7 @@ type Params = {
   patchMutation: PatchMutationLike;
   setModerationMode: (value: ModerationMode) => void;
   setOpenEdit: (value: boolean) => void;
+  setOpenApplicants: (value: boolean) => void;
 };
 
 export function useJobPostingDetailActions({
@@ -30,6 +31,7 @@ export function useJobPostingDetailActions({
   patchMutation,
   setModerationMode,
   setOpenEdit,
+  setOpenApplicants,
 }: Params) {
   const handleEdit = () => {
     setOpenEdit(true);
@@ -40,7 +42,7 @@ export function useJobPostingDetailActions({
   };
 
   const handleViewApplicants = () => {
-    toast.info("Chưa có API xem ứng viên");
+    setOpenApplicants(true);
   };
 
   const handleApply = () => {

@@ -15,6 +15,7 @@ import JobPostingDetailSection from "./detail/JobPostingDetailSection";
 import JobPostingSidebar from "./detail/JobPostingSideBar";
 import SimilarJobsSection from "./detail/SimilarJobsSection";
 import JobPostingModerationModal from "./detail/JobPostingModerationModal";
+import JobApplicantsModal from "./detail/JobApplicantsModal";
 import JobPostingDetailLoading from "./detail/JobPostingDetailLoading";
 import JobPostingDetailError from "./detail/JobPostingDetailError";
 import {
@@ -57,6 +58,7 @@ export default function JobPostingDetailPageContent({ jobId }: Props) {
   const viewerRole = user?.role;
 
   const [openEdit, setOpenEdit] = useState(false);
+  const [openApplicants, setOpenApplicants] = useState(false);
   const [moderationMode, setModerationMode] = useState<ModerationMode>(null);
 
   const jobDetailQuery = useJobPostingDetail(jobId);
@@ -82,6 +84,7 @@ export default function JobPostingDetailPageContent({ jobId }: Props) {
     patchMutation,
     setModerationMode,
     setOpenEdit,
+    setOpenApplicants,
   });
 
   if (!viewerRole) return null;
@@ -233,6 +236,13 @@ export default function JobPostingDetailPageContent({ jobId }: Props) {
           isLoading={patchMutation.isPending}
         />
       ) : null}
+
+      <JobApplicantsModal
+        open={openApplicants}
+        onClose={() => setOpenApplicants(false)}
+        jobId={jobId}
+        jobTitle={job.jobTitle}
+      />
     </>
   );
 }
