@@ -97,17 +97,18 @@ export default function JobPostingDetailPageContent({ jobId }: Props) {
     return <JobPostingDetailError isStudent={viewerRole === "STUDENT"} />;
   }
 
+  const company = companyProfileQuery.data?.data;
+  const deadlineState = getDeadlineState(job.applicationDeadline);
+
   if (
     viewerRole === "STUDENT" &&
-    (job.status !== "approved" || !["Active", "Closed"].includes(job.tag))
+    (job.status !== "approved" || !["Active", "Closed"].includes(job.tag) || deadlineState.isExpired)
   ) {
     return <JobPostingDetailError isStudent />;
   }
 
-  const company = companyProfileQuery.data?.data;
   const statusMeta = getJobPostingStatusMeta(job.status);
   const tagMeta = getJobPostingTagMeta(job.tag);
-  const deadlineState = getDeadlineState(job.applicationDeadline);
   const isBusy = patchMutation.isPending || toggleActiveMutation.isPending;
 
   return (
