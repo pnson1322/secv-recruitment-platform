@@ -210,3 +210,33 @@ export type AdminJobPostingsStats = {
   rejected: number;
   total: number;
 };
+
+export type MatchReason =
+  | { type: "skillMatch"; matched: SkillItem[] }
+  | { type: "salaryMatch"; overlapPct: number }
+  | { type: "locationMatch" }
+  | { type: "semanticMatch"; similarity: number; label: string };
+
+export type JobRecommendation = {
+  jobId: number;
+  companyId: number;
+  companyName: string;
+  logoUrl: string | null;
+  jobTitle: string;
+  city: string;
+  salaryMin: number | null;
+  salaryMax: number | null;
+  salaryType: string;
+  isSalaryNegotiable: boolean;
+  postedAt: string;
+  skills: SkillItem[];
+  ruleScore: number;
+  vectorScore: number;
+  finalScore: number;
+  matchReasons: MatchReason[];
+};
+
+export type JobRecommendationsParams = {
+  limit?: number;
+  alpha?: number;
+};

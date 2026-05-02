@@ -99,7 +99,7 @@ export default function JobPostingDetailPageContent({ jobId }: Props) {
 
   if (
     viewerRole === "STUDENT" &&
-    (job.status !== "approved" || job.tag !== "Active")
+    (job.status !== "approved" || !["Active", "Closed"].includes(job.tag))
   ) {
     return <JobPostingDetailError isStudent />;
   }
@@ -143,6 +143,7 @@ export default function JobPostingDetailPageContent({ jobId }: Props) {
               tagLabel={tagMeta.label}
               tagClassName={tagMeta.className}
               isLoading={isBusy}
+              isClosed={job.tag === "Closed"}
               onEdit={actions.handleEdit}
               onHide={() => toggleActiveMutation.mutate()}
               onViewApplicants={actions.handleViewApplicants}
@@ -237,12 +238,14 @@ export default function JobPostingDetailPageContent({ jobId }: Props) {
         />
       ) : null}
 
-      <JobApplicantsModal
-        open={openApplicants}
-        onClose={() => setOpenApplicants(false)}
-        jobId={jobId}
-        jobTitle={job.jobTitle}
-      />
+      {viewerRole !== "STUDENT" && (
+        <JobApplicantsModal
+          open={openApplicants}
+          onClose={() => setOpenApplicants(false)}
+          jobId={jobId}
+          jobTitle={job.jobTitle}
+        />
+      )}
     </>
   );
 }

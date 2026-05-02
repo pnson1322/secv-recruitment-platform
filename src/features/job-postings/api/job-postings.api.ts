@@ -13,6 +13,8 @@ import type {
   JobPostingsListParam,
   JobPostingsStats,
   JobPostingTag,
+  JobRecommendation,
+  JobRecommendationsParams,
   PatchBody,
   PostBody,
   PostResponse,
@@ -181,5 +183,15 @@ export async function getJobPostingCardsForStudent(
     },
   });
 
+  return res.data;
+}
+
+export async function getJobRecommendations(params: JobRecommendationsParams) {
+  const res = await api.get<ApiResponse<JobRecommendation[]>>(
+    "/recommendations/jobs",
+    {
+      params,
+    },
+  );
   return res.data;
 }

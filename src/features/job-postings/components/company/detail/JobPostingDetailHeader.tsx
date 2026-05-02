@@ -40,6 +40,7 @@ type Props = {
   tagLabel: string;
   tagClassName: string;
   isLoading?: boolean;
+  isClosed?: boolean;
   onEdit: () => void;
   onHide: () => void;
   onViewApplicants: () => void;
@@ -70,6 +71,7 @@ export default function JobPostingDetailHeader({
   tagLabel,
   tagClassName,
   isLoading = false,
+  isClosed = false,
   onEdit,
   onHide,
   onViewApplicants,
@@ -281,10 +283,11 @@ export default function JobPostingDetailHeader({
             <button
               type="button"
               onClick={onApply}
-              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-(--color-accent) px-5 py-3 text-[15px] font-semibold text-white transition hover:brightness-95"
+              disabled={isExpired || isClosed}
+              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-(--color-accent) px-5 py-3 text-[15px] font-semibold text-white transition hover:brightness-95 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-500"
             >
               <Check size={18} />
-              Ứng tuyển ngay
+              {isExpired || isClosed ? "Đã hết hạn ứng tuyển" : "Ứng tuyển ngay"}
             </button>
 
             <button
