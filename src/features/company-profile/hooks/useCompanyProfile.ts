@@ -26,7 +26,7 @@ export function useCompanyProfile({
         throw new Error("viewerRole is required");
       }
 
-      if (isOwnerView) {
+      if (isOwnerView && viewerRole === "COMPANY") {
         return getMyCompany();
       }
 

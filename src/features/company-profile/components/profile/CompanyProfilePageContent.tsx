@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import CompanyProfilePage from "./CompanyProfilePage";
+import { type ProfileTab } from "./CompanyProfileTabs";
 import { useCompanyProfile } from "../../hooks/useCompanyProfile";
 import { useCompanyProfileJobs } from "../../hooks/useCompanyProfileJobs";
 import EditBasicInfoModal from "../edit-profile/EditBasicInfoModal";
@@ -17,6 +18,7 @@ import ManageOfficeImagesModal from "../edit-profile/ManageOfficeImagesModal";
 import CompanyProfileLoading from "./CompanyProfileLoading";
 import CompanyProfileError from "./CompanyProfileError";
 import { getCategoriesList } from "@/features/job-postings/api/job-postings.api";
+import { useCompanyComments, useCompanyStats } from "../../hooks/useCompanyComments";
 
 type CompanyProfilePageContentProps = {
   companyId?: string;
@@ -59,6 +61,30 @@ export default function CompanyProfilePageContent({
   const jobs = jobsQuery.data?.data?.data ?? [];
   const categories = categoriesQuery.data?.data ?? [];
 
+  const [reviewsPage, setReviewsPage] = useState(1);
+  const [activeTab, setActiveTab] = useState<ProfileTab>("about");
+  const isOwner = viewerRole === "COMPANY" && !companyId;
+
+  const isCompanyViewingOwn = isOwner && viewerRole === "COMPANY";
+  const isAdminViewing = viewerRole === "ADMIN" && !!companyId;
+  const canSeeReviews = isCompanyViewingOwn || isAdminViewing;
+
+  const statsQuery = useCompanyStats(company?.companyId, canSeeReviews);
+
+  const shouldFetchComments = canSeeReviews && activeTab === "reviews";
+
+  const reviewsQuery = useCompanyComments({
+    page: reviewsPage,
+    limit: 10,
+    companyId: company?.companyId,
+    role: viewerRole,
+  }, shouldFetchComments);
+
+  const reviewsData = shouldFetchComments ? reviewsQuery.data?.data : null;
+  const reviews = reviewsData?.data ?? [];
+  const reviewsPagination = reviewsData?.meta;
+  const reviewsStats = statsQuery.data?.data;
+
   const [activeModal, setActiveModal] = useState<ModalKey>(null);
 
   if (isAuthLoading || !viewerRole) {
@@ -94,6 +120,13 @@ export default function CompanyProfilePageContent({
         onChangeLogo={() => setActiveModal("logo")}
         onFollow={() => undefined}
         onRestrict={() => undefined}
+        reviews={reviews}
+        reviewsPagination={reviewsPagination}
+        reviewsStats={reviewsStats}
+        isReviewsLoading={reviewsQuery.isLoading || statsQuery.isLoading}
+        onPageChange={setReviewsPage}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
       />
 
       {activeModal === "basic-info" && (

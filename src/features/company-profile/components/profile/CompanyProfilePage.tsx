@@ -13,6 +13,11 @@ import type {
   CategoryItem,
   JobPostingDataItem,
 } from "@/features/job-postings/types/job-postings.types";
+import type {
+  CompanyComment,
+  PaginationMeta,
+  CompanyStatsData,
+} from "../../types/comment.types";
 
 type CompanyProfilePageProps = {
   company: CompanyProfile;
@@ -31,46 +36,14 @@ type CompanyProfilePageProps = {
   onChangeLogo?: () => void;
   onFollow?: () => void;
   onRestrict?: () => void;
+  reviews?: CompanyComment[];
+  reviewsPagination?: PaginationMeta;
+  reviewsStats?: CompanyStatsData | null;
+  isReviewsLoading?: boolean;
+  onPageChange?: (page: number) => void;
+  activeTab: ProfileTab;
+  onTabChange: (tab: ProfileTab) => void;
 };
-
-export type MockReview = {
-  id: number;
-  authorName: string;
-  authorRole: string;
-  rating: number;
-  content: string;
-  createdAt: string;
-};
-
-const mockReviews: MockReview[] = [
-  {
-    id: 1,
-    authorName: "Nguyễn Văn A",
-    authorRole: "Software Engineer",
-    rating: 5,
-    content:
-      "Môi trường làm việc chuyên nghiệp, đồng nghiệp thân thiện. Cơ hội học hỏi và phát triển rất tốt. Rất phù hợp cho sinh viên mới ra trường.",
-    createdAt: "2 tuần trước",
-  },
-  {
-    id: 2,
-    authorName: "Trần Thị B",
-    authorRole: "Business Analyst",
-    rating: 4,
-    content:
-      "Công ty tốt, dự án đa dạng. Lương thưởng hợp lý, có nhiều benefit cho nhân viên. Văn hóa công ty cởi mở và năng động.",
-    createdAt: "1 tháng trước",
-  },
-  {
-    id: 3,
-    authorName: "Lê Minh C",
-    authorRole: "Intern",
-    rating: 5,
-    content:
-      "Được đào tạo bài bản từ đầu, mentor nhiệt tình. Công việc thử thách nhưng rất bổ ích. Recommend cho các bạn sinh viên!",
-    createdAt: "2 tháng trước",
-  },
-];
 
 export default function CompanyProfilePage({
   company,
@@ -89,6 +62,13 @@ export default function CompanyProfilePage({
   onChangeLogo,
   onFollow,
   onRestrict,
+  reviews = [],
+  reviewsPagination,
+  reviewsStats,
+  isReviewsLoading = false,
+  onPageChange,
+  activeTab,
+  onTabChange,
 }: CompanyProfilePageProps) {
   const isStudent = viewerRole === "STUDENT";
 
@@ -96,8 +76,6 @@ export default function CompanyProfilePage({
     if (isStudent) return ["about", "jobs"];
     return ["about", "jobs", "reviews"];
   }, [isStudent]);
-
-  const [activeTab, setActiveTab] = useState<ProfileTab>("about");
 
   return (
     <div className="space-y-6 px-6 md:px-10 lg:px-24">
@@ -117,8 +95,8 @@ export default function CompanyProfilePage({
       <CompanyProfileTabs
         tabs={tabs}
         activeTab={activeTab}
-        onChange={setActiveTab}
-        reviewCount={mockReviews.length}
+        onChange={onTabChange}
+        reviewCount={reviewsStats?.totalComments ?? reviewsPagination?.totalItems ?? reviews.length}
       />
 
       {activeTab === "about" && (
@@ -144,9 +122,13 @@ export default function CompanyProfilePage({
 
       {activeTab === "reviews" && !isStudent && (
         <CompanyReviewsSection
-          reviews={mockReviews}
+          reviews={reviews}
           viewerRole={viewerRole}
           averageRating={company.rating ?? 4.5}
+          pagination={reviewsPagination}
+          stats={reviewsStats}
+          isLoading={isReviewsLoading}
+          onPageChange={onPageChange}
         />
       )}
     </div>

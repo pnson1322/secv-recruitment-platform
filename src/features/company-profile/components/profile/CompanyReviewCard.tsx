@@ -1,31 +1,36 @@
 "use client";
 
 import { Star } from "lucide-react";
-import type { Role } from "@/features/auth/constants/roles";
-import type { MockReview } from "./CompanyProfilePage";
+import type { CompanyComment } from "../../types/comment.types";
 
 export default function CompanyReviewCard({
   review,
-  viewerRole,
 }: {
-  review: MockReview;
-  viewerRole: Role;
+  review: CompanyComment;
 }) {
-  const showRealName = viewerRole === "ADMIN";
-
   return (
     <div className="rounded-xl border border-slate-200 bg-white px-5 py-5 shadow-sm">
       <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
         <div className="flex items-start gap-3.5">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-linear-to-br from-[#1E3A8A] to-[#06B6D4] text-[12px] font-semibold text-white">
-            {showRealName ? initials(review.authorName) : "SV"}
-          </div>
+          {review.studentAvatar ? (
+            <img
+              src={review.studentAvatar}
+              alt={review.studentName}
+              className="h-10 w-10 rounded-full object-cover"
+            />
+          ) : (
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-linear-to-br from-[#1E3A8A] to-[#06B6D4] text-[12px] font-semibold text-white">
+              {review.studentName ? initials(review.studentName) : "SV"}
+            </div>
+          )}
 
           <div>
             <p className="text-[15px] font-bold text-slate-900">
-              {showRealName ? review.authorName : "Sinh viên ẩn danh"}
+              {review.studentName || "Sinh viên ẩn danh"}
             </p>
-            <p className="text-[13px] text-slate-500">{review.authorRole}</p>
+            <p className="text-[13px] text-slate-500">
+              {review.studentName ? "Sinh viên" : "Người đánh giá"}
+            </p>
           </div>
         </div>
 
@@ -45,7 +50,11 @@ export default function CompanyReviewCard({
           </div>
 
           <p className="mt-1.5 text-[13px] text-slate-500">
-            {review.createdAt}
+            {new Intl.DateTimeFormat("vi-VN", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+            }).format(new Date(review.createdAt))}
           </p>
         </div>
       </div>
@@ -65,3 +74,4 @@ function initials(name: string) {
     .slice(0, 2)
     .toUpperCase();
 }
+

@@ -2,6 +2,7 @@
 
 import { X, Search, LayoutGrid, FileWarning } from "lucide-react";
 import ClientPortal from "@/components/ClientPortal";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 import Pagination from "@/components/Pagination";
 import StudentProfileModal from "@/features/students/components/StudentProfileModal";
 import { useJobApplicants, type JobApplicantTab } from "../../../hooks/useJobApplicants";
@@ -49,6 +50,9 @@ const TABS: { key: JobApplicantTab; label: string; activeClass: string; badgeCla
 ];
 
 export default function JobApplicantsModal({ open, onClose, jobId, jobTitle }: Props) {
+  const { user } = useAuth();
+  const viewerRole = user?.role;
+
   const {
     tab,
     setTab,
@@ -63,7 +67,7 @@ export default function JobApplicantsModal({ open, onClose, jobId, jobTitle }: P
     totalPages,
     totalItems,
     refetch,
-  } = useJobApplicants(jobId);
+  } = useJobApplicants(jobId, open && viewerRole === "COMPANY");
 
   const {
     selectedProfile,

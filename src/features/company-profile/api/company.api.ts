@@ -11,6 +11,7 @@ import type {
   EmptyBody,
   StudentCompanyListData,
 } from "../types/company.types";
+import { CompanyCommentsResponse, CompanyStatsResponse } from "../types/comment.types";
 
 // for Company:
 export async function getMyCompany() {
@@ -170,5 +171,27 @@ export async function getCompaniesForStudent(
     },
   );
 
+  return res.data;
+}
+
+// Comments:
+export async function getCompanyComments(params: { page?: number; limit?: number } = {}) {
+  const { page = 1, limit = 10 } = params;
+  const res = await api.get<CompanyCommentsResponse>("/comments/company", {
+    params: { page, limit },
+  });
+  return res.data;
+}
+
+export async function getCompanyCommentsAdmin(companyId: number, params: { page?: number; limit?: number } = {}) {
+  const { page = 1, limit = 10 } = params;
+  const res = await api.get<CompanyCommentsResponse>(`/comments/admin/${companyId}`, {
+    params: { page, limit },
+  });
+  return res.data;
+}
+
+export async function getCompanyStats(companyId: number) {
+  const res = await api.get<CompanyStatsResponse>(`/comments/stat/${companyId}`);
   return res.data;
 }

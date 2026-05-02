@@ -2,34 +2,51 @@
 
 import { Star } from "lucide-react";
 import type { Role } from "@/features/auth/constants/roles";
-import type { MockReview } from "./CompanyProfilePage";
 import CompanySectionCard from "./CompanySectionCard";
 import CompanyReviewCard from "./CompanyReviewCard";
+import type { CompanyComment, PaginationMeta, CompanyStatsData } from "../../types/comment.types";
+import Pagination from "@/components/Pagination";
+import { Loader2 } from "lucide-react";
+import CompanyReviewsSkeleton from "./CompanyReviewsSkeleton";
 
 type Props = {
-  reviews: MockReview[];
+  reviews: CompanyComment[];
   viewerRole: Role;
   averageRating: number;
+  pagination?: PaginationMeta;
+  stats?: CompanyStatsData | null;
+  isLoading?: boolean;
+  onPageChange?: (page: number) => void;
 };
 
 export default function CompanyReviewsSection({
   reviews,
   viewerRole,
   averageRating,
+  pagination,
+  stats,
+  isLoading = false,
+  onPageChange,
 }: Props) {
   const isCompany = viewerRole === "COMPANY";
 
-  const reviewSummary = {
-    average: averageRating,
-    total: 89,
-    breakdown: [
-      { label: "5 sao", percent: 60 },
-      { label: "4 sao", percent: 30 },
-      { label: "3 sao", percent: 10 },
-      { label: "2 sao", percent: 10 },
-      { label: "1 sao", percent: 10 },
+  const reviewSummary = stats || {
+    averageRating: averageRating,
+    totalComments: 0,
+    distribution: [
+      { rating: 5, percentage: 0 },
+      { rating: 4, percentage: 0 },
+      { rating: 3, percentage: 0 },
+      { rating: 2, percentage: 0 },
+      { rating: 1, percentage: 0 },
     ],
   };
+
+  const sortedDistribution = [...(reviewSummary.distribution || [])].sort((a, b) => b.rating - a.rating);
+
+  if (isLoading) {
+    return <CompanyReviewsSkeleton />;
+  }
 
   return (
     <div className="space-y-5">
@@ -37,7 +54,7 @@ export default function CompanyReviewsSection({
         <div className="grid gap-6 lg:grid-cols-[220px_1fr] lg:items-center">
           <div className="text-center lg:text-left">
             <p className="text-[2.35rem] font-bold text-slate-900">
-              {reviewSummary.average}
+              {reviewSummary.averageRating}
             </p>
 
             <div className="mt-2 flex justify-center gap-1 lg:justify-start">
@@ -45,33 +62,39 @@ export default function CompanyReviewsSection({
                 <Star
                   key={index}
                   size={19}
-                  className="fill-amber-400 text-amber-400"
+                  className={
+                    index < Math.round(reviewSummary.averageRating)
+                      ? "fill-amber-400 text-amber-400"
+                      : "text-slate-300"
+                  }
                 />
               ))}
             </div>
 
             <p className="mt-2 text-[14px] font-medium text-slate-500">
-              {reviewSummary.total} đánh giá
+              {reviewSummary.totalComments} đánh giá
             </p>
           </div>
 
           <div className="space-y-3">
-            {reviewSummary.breakdown.map((item) => (
+            {sortedDistribution.map((item) => (
               <div
-                key={item.label}
+                key={item.rating}
                 className="grid grid-cols-[48px_1fr_52px] items-center gap-4"
               >
-                <span className="text-[14px] text-slate-500">{item.label}</span>
+                <span className="text-[14px] text-slate-500">
+                  {item.rating} sao
+                </span>
 
                 <div className="h-2.5 rounded-full bg-slate-200">
                   <div
                     className="h-2.5 rounded-full bg-amber-400"
-                    style={{ width: `${item.percent}%` }}
+                    style={{ width: `${item.percentage * 100}%` }}
                   />
                 </div>
 
                 <span className="text-right text-[14px] text-slate-500">
-                  {item.percent}%
+                  {Math.round(item.percentage * 100)}%
                 </span>
               </div>
             ))}
@@ -85,7 +108,7 @@ export default function CompanyReviewsSection({
         </h3>
 
         <p className="mt-2 text-[14px] text-slate-500">
-          Tổng cộng {reviewSummary.total} đánh giá
+          Tổng cộng {reviewSummary.totalComments} đánh giá
         </p>
 
         {isCompany && (
@@ -96,13 +119,30 @@ export default function CompanyReviewsSection({
         )}
 
         <div className="mt-5 space-y-4">
-          {reviews.map((review) => (
-            <CompanyReviewCard
-              key={review.id}
-              review={review}
-              viewerRole={viewerRole}
-            />
-          ))}
+          {reviews.length > 0 ? (
+            <>
+              {reviews.map((review) => (
+                <CompanyReviewCard
+                  key={review.id}
+                  review={review}
+                />
+              ))}
+
+              {pagination && pagination.totalPages > 1 && (
+                <div className="mt-8 flex justify-center">
+                  <Pagination
+                    currentPage={pagination.currentPage}
+                    totalPages={pagination.totalPages}
+                    onPageChange={onPageChange || (() => {})}
+                  />
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="py-10 text-center">
+              <p className="text-slate-500">Chưa có đánh giá nào.</p>
+            </div>
+          )}
         </div>
       </CompanySectionCard>
     </div>

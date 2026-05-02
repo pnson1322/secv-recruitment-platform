@@ -16,7 +16,7 @@ import { useDebounce } from "@/hooks/useDebounce";
 
 export type JobApplicantTab = "all" | "submitted" | "interviewing" | "passed" | "rejected";
 
-export function useJobApplicants(jobId: number) {
+export function useJobApplicants(jobId: number, enabled = true) {
   const [tab, setTab] = useState<JobApplicantTab>("all");
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 500);
@@ -31,7 +31,7 @@ export function useJobApplicants(jobId: number) {
   const [isError, setIsError] = useState(false);
 
   const fetchData = useCallback(async () => {
-    if (!jobId) return;
+    if (!jobId || !enabled) return;
     
     setIsLoading(true);
     setIsError(false);
@@ -77,15 +77,17 @@ export function useJobApplicants(jobId: number) {
     } finally {
       setIsLoading(false);
     }
-  }, [jobId, tab, page, debouncedSearch]);
+  }, [jobId, tab, page, debouncedSearch, enabled]);
 
   useEffect(() => {
     setPage(1);
   }, [tab, debouncedSearch]);
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    if (enabled) {
+      fetchData();
+    }
+  }, [fetchData, enabled]);
 
   const tabCounts = useMemo(() => {
     return {
