@@ -16,6 +16,7 @@ type Props = {
   viewerRole: Role;
   isLoading?: boolean;
   onViewJobDetail: (jobId: number) => void;
+  onApplyJob?: (job: JobPostingDataItem) => void;
 };
 
 type SalaryFilterValue =
@@ -45,6 +46,7 @@ export default function CompanyJobsSection({
   viewerRole,
   isLoading = false,
   onViewJobDetail,
+  onApplyJob,
 }: Props) {
   const [categoryFilter, setCategoryFilter] = useState<string>(
     DEFAULT_CATEGORY_FILTER,
@@ -175,6 +177,7 @@ export default function CompanyJobsSection({
               job={job}
               viewerRole={viewerRole}
               onViewDetail={onViewJobDetail}
+              onApply={onApplyJob}
             />
           ))}
         </div>

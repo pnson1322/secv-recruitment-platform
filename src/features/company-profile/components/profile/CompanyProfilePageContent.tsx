@@ -19,6 +19,9 @@ import CompanyProfileLoading from "./CompanyProfileLoading";
 import CompanyProfileError from "./CompanyProfileError";
 import { getCategoriesList } from "@/features/job-postings/api/job-postings.api";
 import { useCompanyComments, useCompanyStats } from "../../hooks/useCompanyComments";
+import ApplyJobModal from "@/features/applications/components/modals/ApplyJobModal";
+import type { JobPostingDataItem } from "@/features/job-postings/types/job-postings.types";
+import { useApplyJob } from "@/features/applications/hooks/useApplyJob";
 
 type CompanyProfilePageContentProps = {
   companyId?: string;
@@ -63,13 +66,17 @@ export default function CompanyProfilePageContent({
 
   const [reviewsPage, setReviewsPage] = useState(1);
   const [activeTab, setActiveTab] = useState<ProfileTab>("about");
+  const { applyJobData, handleOpenApplyModal, handleCloseApplyModal } = useApplyJob();
   const isOwner = viewerRole === "COMPANY" && !companyId;
 
   const isCompanyViewingOwn = isOwner && viewerRole === "COMPANY";
   const isAdminViewing = viewerRole === "ADMIN" && !!companyId;
   const canSeeReviews = isCompanyViewingOwn || isAdminViewing;
 
-  const statsQuery = useCompanyStats(company?.companyId, canSeeReviews);
+  const statsQuery = useCompanyStats({ 
+    companyId: company?.companyId, 
+    role: viewerRole 
+  }, canSeeReviews);
 
   const shouldFetchComments = canSeeReviews && activeTab === "reviews";
 
@@ -120,6 +127,7 @@ export default function CompanyProfilePageContent({
         onChangeLogo={() => setActiveModal("logo")}
         onFollow={() => undefined}
         onRestrict={() => undefined}
+        onApplyJob={(job: JobPostingDataItem) => handleOpenApplyModal(job.jobId, job.jobTitle)}
         reviews={reviews}
         reviewsPagination={reviewsPagination}
         reviewsStats={reviewsStats}
@@ -155,6 +163,15 @@ export default function CompanyProfilePageContent({
 
       {activeModal === "office-images" && (
         <ManageOfficeImagesModal open company={company} onClose={closeModal} />
+      )}
+
+      {applyJobData && (
+        <ApplyJobModal
+          open
+          onClose={handleCloseApplyModal}
+          jobId={applyJobData.jobId}
+          jobTitle={applyJobData.jobTitle}
+        />
       )}
     </>
   );

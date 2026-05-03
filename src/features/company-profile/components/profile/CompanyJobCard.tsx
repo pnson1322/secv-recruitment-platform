@@ -10,12 +10,14 @@ type Props = {
   job: JobPostingDataItem;
   viewerRole: Role;
   onViewDetail: (jobId: number) => void;
+  onApply?: (job: JobPostingDataItem) => void;
 };
 
 export default function CompanyJobCard({
   job,
   viewerRole,
   onViewDetail,
+  onApply,
 }: Props) {
   const isStudent = viewerRole === "STUDENT";
   const hasStatus = typeof job.status === "string" && job.status.length > 0;
@@ -63,15 +65,18 @@ export default function CompanyJobCard({
         </div>
 
         <div className="flex shrink-0 items-center gap-2.5">
-          {isStudent ? (
+          {isStudent && onApply && (
             <button
               type="button"
-              onClick={() => toast.info("Chưa có API ứng tuyển")}
+              onClick={(e) => {
+                e.stopPropagation();
+                onApply(job);
+              }}
               className="rounded-lg border border-(--color-accent) bg-cyan-50 px-4 py-2 text-[14px] font-semibold text-(--color-accent) shadow-sm transition hover:bg-(--color-accent) hover:text-white hover:shadow-md"
             >
               Ứng tuyển
             </button>
-          ) : null}
+          )}
 
           <button
             type="button"

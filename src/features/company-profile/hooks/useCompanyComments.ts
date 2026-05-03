@@ -23,13 +23,20 @@ export function useCompanyComments(params: CommentParams = {}, enabled = true) {
   });
 }
 
-export function useCompanyStats(companyId?: number, enabled = true) {
+export function useCompanyStats(params: { companyId?: number; role?: string }, enabled = true) {
+  const { companyId, role } = params;
+
   return useQuery({
-    queryKey: ["company-stats", companyId],
+    queryKey: ["company-stats", companyId, role],
     queryFn: () => {
-      if (!companyId) throw new Error("Company ID is required");
-      return getCompanyStats(companyId);
+      const idToUse = role === "COMPANY" ? (companyId ?? 0) : companyId;
+      
+      if (idToUse === undefined) {
+        throw new Error("Company ID is required for non-company roles");
+      }
+      
+      return getCompanyStats(idToUse);
     },
-    enabled: enabled && !!companyId,
+    enabled: enabled && (role === "COMPANY" || !!companyId),
   });
 }

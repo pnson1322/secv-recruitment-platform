@@ -22,6 +22,7 @@ type Params = {
   setModerationMode: (value: ModerationMode) => void;
   setOpenEdit: (value: boolean) => void;
   setOpenApplicants: (value: boolean) => void;
+  onApply?: (job: JobPosting) => void;
 };
 
 export function useJobPostingDetailActions({
@@ -32,6 +33,7 @@ export function useJobPostingDetailActions({
   setModerationMode,
   setOpenEdit,
   setOpenApplicants,
+  onApply,
 }: Params) {
   const handleEdit = () => {
     setOpenEdit(true);
@@ -46,7 +48,9 @@ export function useJobPostingDetailActions({
   };
 
   const handleApply = () => {
-    toast.info("Chưa có API ứng tuyển");
+    if (job) {
+      onApply?.(job);
+    }
   };
 
   const handleSave = () => {

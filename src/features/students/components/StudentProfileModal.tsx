@@ -18,6 +18,7 @@ type Props = {
   onInvite?: () => void;
   inviteLabel?: string;
   showInviteCTA?: boolean;
+  cvUrl?: string;
 };
 
 const ACADEMIC_STATUS = {
@@ -37,17 +38,30 @@ export default function StudentProfileModal({
   onInvite,
   inviteLabel = "Gửi lời mời",
   showInviteCTA = false,
+  cvUrl,
 }: Props) {
   const { profile, isLoading, isError, retry } = useStudentProfileModal(open, studentId, onClose);
 
+  const getFormattedUrl = (url?: string) => {
+    if (!url) return "";
+    if (url.startsWith("http")) return url;
+    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "";
+    const cleanBaseUrl = baseUrl.replace(/\/$/, "");
+    const cleanUrl = url.replace(/^\//, "");
+    return `${cleanBaseUrl}/${cleanUrl}`;
+  };
+
   if (!open) return null;
 
-  const defaultCv = profile?.resumes.find((r) => r.isDefault) || profile?.resumes[0];
   const academicStatus = ACADEMIC_STATUS[profile?.studentStatus as keyof typeof ACADEMIC_STATUS] || ACADEMIC_STATUS.STUDYING;
 
+  const rawCvUrl = cvUrl || profile?.resumes.find((r) => r.isDefault)?.cvUrl || profile?.resumes[0]?.cvUrl;
+  const displayCvUrl = getFormattedUrl(rawCvUrl);
+  const hasCv = !!rawCvUrl;
+
   const onDownload = () => {
-    if (!defaultCv) return;
-    toast.promise(handleDownloadCV(defaultCv.cvUrl, `CV_${profile?.fullName.replace(/\s+/g, "_")}.pdf`), {
+    if (!displayCvUrl) return;
+    toast.promise(handleDownloadCV(displayCvUrl, `CV_${profile?.fullName.replace(/\s+/g, "_")}.pdf`), {
       loading: "Đang chuẩn bị tệp tin...",
       success: "Tải xuống thành công!",
       error: "Không thể tải tệp tin",
@@ -75,7 +89,7 @@ export default function StudentProfileModal({
                 )}
               </div>
               <div className="flex items-center gap-3">
-                {defaultCv && (
+                {hasCv && (
                   <button
                     type="button"
                     onClick={onDownload}
@@ -152,25 +166,23 @@ export default function StudentProfileModal({
             ) : (
               <>
                 <div className="flex-1 p-8 bg-slate-50/30 overflow-hidden flex flex-col">
-                  {defaultCv ? (
-                    <div 
-                      className="flex-1 rounded-[32px] border border-slate-200 bg-white shadow-sm overflow-hidden relative group cursor-pointer"
-                      onClick={onDownload}
-                    >
+                  {hasCv ? (
+                    <div className="flex-1 rounded-[32px] border border-slate-200 bg-white shadow-sm overflow-hidden relative group">
                       <iframe
-                        src={`${defaultCv.cvUrl}#toolbar=0&navpanes=0&scrollbar=0`}
-                        className="w-full h-full border-none pointer-events-none"
+                        src={`${displayCvUrl}#toolbar=0&navpanes=0&scrollbar=1`}
+                        className="w-full h-full border-none"
                         title="CV Preview"
                       />
-                      <div className="absolute inset-0 bg-white/0 transition-all duration-300 group-hover:bg-slate-900/10 group-hover:backdrop-blur-[2px] flex items-center justify-center">
-                        <div className="flex flex-col items-center gap-3 translate-y-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-                          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-slate-900 text-white shadow-2xl">
-                            <Download size={28} />
-                          </div>
-                          <p className="text-[16px] font-semibold text-slate-900 bg-white/90 px-6 py-2 rounded-full shadow-lg">
-                            Nhấn để tải CV ngay
-                          </p>
-                        </div>
+                      
+                      {/* Nút tải xuống nhỏ gọn ở góc, không chặn vùng cuộn chính của PDF */}
+                      <div className="absolute bottom-6 right-6 opacity-0 transition-all duration-300 group-hover:opacity-100">
+                        <button 
+                          onClick={onDownload}
+                          className="flex items-center gap-2 rounded-full bg-slate-900 px-5 py-2.5 text-white shadow-2xl transition hover:scale-105 active:scale-95"
+                        >
+                          <Download size={18} />
+                          <span className="text-[13px] font-bold">Tải CV về máy</span>
+                        </button>
                       </div>
                     </div>
                   ) : (

@@ -1,12 +1,104 @@
 import { api } from "@/lib/axios";
-import { StudentProfile, ApiResponse, EvaluationBody, EvaluationResponse } from "../types/student.types";
+import {
+  StudentProfile,
+  ApiResponse,
+  EvaluationBody,
+  EvaluationResponse,
+  UploadResumeResponse,
+  MyProfile,
+  UpdateStudentInfoBody,
+} from "../types/student.types";
 
 export async function getStudentProfile(studentId: number) {
-  const res = await api.get<ApiResponse<StudentProfile>>(`/student/${studentId}`);
+  const res = await api.get<ApiResponse<StudentProfile>>(
+    `/student/${studentId}`,
+  );
+  return res.data.data;
+}
+
+export async function getMyProfile() {
+  const res = await api.get<ApiResponse<MyProfile>>("/student/me");
   return res.data.data;
 }
 
 export async function createEvaluation(body: EvaluationBody) {
-  const res = await api.post<ApiResponse<EvaluationResponse>>("/comments", body);
+  const res = await api.post<ApiResponse<EvaluationResponse>>(
+    "/comments",
+    body,
+  );
+  return res.data;
+}
+
+export async function patchJobStatus(body: { isOpenToWork: boolean }) {
+  const res = await api.patch<ApiResponse<Record<string, never>>>(
+    "/student/me/job-status",
+    body,
+  );
+  return res.data;
+}
+
+export async function putSkills(body: { skillIds: number[] }) {
+  //Gửi lên mảng ID các kỹ năng. Dữ liệu cũ sẽ bị ghi đè hoàn toàn bởi danh sách mới này.
+  const res = await api.put<ApiResponse<Record<string, never>>>(
+    "/student/me/skills",
+    body,
+  );
+  return res.data;
+}
+
+export async function uploadResume(cvFile: File, resumeName?: string) {
+  const formData = new FormData();
+  formData.append("cvFile", cvFile);
+  if (resumeName) {
+    formData.append("resumeName", resumeName);
+  }
+
+  const res = await api.post<ApiResponse<UploadResumeResponse>>(
+    "/student/me/resumes",
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    },
+  );
+  return res.data;
+}
+
+export async function setDefaultResume(resumeId: number) {
+  const res = await api.patch<ApiResponse<UploadResumeResponse>>(
+    `/student/me/resumes/${resumeId}/default`,
+  );
+  return res.data;
+}
+
+export async function updateAvatar(avatarFile: File) {
+  const formData = new FormData();
+  formData.append("avatar", avatarFile);
+
+  const res = await api.patch<ApiResponse<{ avatarUrl: string }>>(
+    "/student/me/avatar",
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    },
+  );
+  return res.data;
+}
+
+export async function updateStudentInfo(body: UpdateStudentInfoBody) {
+  const res = await api.patch<ApiResponse<Record<string, never>>>(
+    "/student/me/info",
+    body,
+  );
+  return res.data;
+}
+
+export async function deleteResume(resumeId: number) {
+  const res = await api.delete<ApiResponse<Record<string, never>>>(
+    `/student/me/resumes/${resumeId}`,
+  );
   return res.data;
 }

@@ -204,6 +204,7 @@ export default function JobApplicantsModal({ open, onClose, jobId, jobTitle }: P
           studentId={selectedProfile.student.studentId}
           role="company"
           applicationStatus={selectedProfile.status}
+          cvUrl={"cvUrl" in selectedProfile ? (selectedProfile as any).cvUrl : undefined}
           onUpdateStatus={(newStatus) => {
             if (selectedProfile && "applicationId" in selectedProfile) {
               handleUpdateStatus(

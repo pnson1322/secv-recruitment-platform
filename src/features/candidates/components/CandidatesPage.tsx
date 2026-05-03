@@ -160,6 +160,7 @@ export default function CandidatesPage() {
           adminNote={(selectedProfile as any).adminNote}
           applicationStatus={selectedProfile.status}
           showInviteCTA={tab === "invited"}
+          cvUrl={"cvUrl" in selectedProfile ? (selectedProfile as any).cvUrl : undefined}
           onUpdateStatus={(newStatus) => {
             if ("applicationId" in selectedProfile) {
               const message =

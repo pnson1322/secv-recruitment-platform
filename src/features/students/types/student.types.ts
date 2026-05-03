@@ -45,3 +45,34 @@ export type StudentProfile = {
   resumes: StudentResume[];
   totalApplications?: number;
 };
+
+export type UploadResumeResponse = {
+  message: string;
+  data: {
+    resume_id: number;
+    student_id: number;
+    resume_name: string;
+    cv_url: string;
+    is_default: boolean;
+    created_at: string;
+  };
+};
+
+export type MyProfile = {
+  studentId: number;
+  fullName: string;
+  avatarUrl: string | null;
+  currentYear: number;
+  gpa: string;
+  isOpenToWork: boolean;
+  skills: {
+    skillId: number;
+    skillName: string;
+  }[];
+  resumes: StudentResume[];
+};
+
+export type UpdateStudentInfoBody = {
+  fullName: string;
+  email: string;
+};

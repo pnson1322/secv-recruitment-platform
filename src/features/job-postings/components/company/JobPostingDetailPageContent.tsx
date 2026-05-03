@@ -18,6 +18,9 @@ import JobPostingModerationModal from "./detail/JobPostingModerationModal";
 import JobApplicantsModal from "./detail/JobApplicantsModal";
 import JobPostingDetailLoading from "./detail/JobPostingDetailLoading";
 import JobPostingDetailError from "./detail/JobPostingDetailError";
+import ApplyJobModal from "@/features/applications/components/modals/ApplyJobModal";
+import { useApplyJob } from "@/features/applications/hooks/useApplyJob";
+import type { JobPosting } from "../../types/job-postings.types";
 import {
   formatRelativeDate,
   formatSalary,
@@ -59,6 +62,7 @@ export default function JobPostingDetailPageContent({ jobId }: Props) {
 
   const [openEdit, setOpenEdit] = useState(false);
   const [openApplicants, setOpenApplicants] = useState(false);
+  const { applyJobData, handleOpenApplyModal, handleCloseApplyModal } = useApplyJob();
   const [moderationMode, setModerationMode] = useState<ModerationMode>(null);
 
   const jobDetailQuery = useJobPostingDetail(jobId);
@@ -85,6 +89,7 @@ export default function JobPostingDetailPageContent({ jobId }: Props) {
     setModerationMode,
     setOpenEdit,
     setOpenApplicants,
+    onApply: (job: JobPosting) => handleOpenApplyModal(job.jobId, job.jobTitle),
   });
 
   if (!viewerRole) return null;
@@ -245,6 +250,15 @@ export default function JobPostingDetailPageContent({ jobId }: Props) {
           onClose={() => setOpenApplicants(false)}
           jobId={jobId}
           jobTitle={job.jobTitle}
+        />
+      )}
+
+      {viewerRole === "STUDENT" && applyJobData && (
+        <ApplyJobModal 
+          open
+          onClose={handleCloseApplyModal}
+          jobId={applyJobData.jobId}
+          jobTitle={applyJobData.jobTitle}
         />
       )}
     </>

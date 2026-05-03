@@ -27,6 +27,7 @@ type CompanyProfilePageProps = {
   isJobsLoading?: boolean;
   isOwner?: boolean;
   onViewJobDetail: (jobId: number) => void;
+  onApplyJob?: (job: JobPostingDataItem) => void;
   onEditBasicInfo?: () => void;
   onEditDescription?: () => void;
   onEditDetail?: () => void;
@@ -53,6 +54,7 @@ export default function CompanyProfilePage({
   isJobsLoading = false,
   isOwner = false,
   onViewJobDetail,
+  onApplyJob, 
   onEditBasicInfo,
   onEditDescription,
   onEditDetail,
@@ -117,6 +119,7 @@ export default function CompanyProfilePage({
           viewerRole={viewerRole}
           isLoading={isJobsLoading}
           onViewJobDetail={onViewJobDetail}
+          onApplyJob={onApplyJob}
         />
       )}
 
