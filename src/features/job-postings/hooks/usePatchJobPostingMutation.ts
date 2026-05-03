@@ -40,6 +40,9 @@ export function usePatchJobPostingMutation(jobId: number) {
         queryClient.invalidateQueries({
           queryKey: ["job-postings", "admin", "stats"],
         }),
+        queryClient.invalidateQueries({
+          queryKey: ["job-postings", "admin", "list"],
+        }),
       ]);
     },
     onError: (error) => {

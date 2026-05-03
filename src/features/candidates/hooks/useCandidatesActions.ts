@@ -15,6 +15,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getJobPostingsListByCompanyId } from "@/features/job-postings/api/job-postings.api";
 import { JobPostingDataItem } from "@/features/job-postings/types/job-postings.types";
 import { StudentCardItem } from "../types/student-card.types";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 
 const DEFAULT_INVITATION_MESSAGE =
   "Chúng tôi đã xem xét lại hồ sơ của bạn và rất mong muốn được trao đổi thêm về cơ hội nghề nghiệp.";
@@ -29,7 +30,11 @@ export function useCandidatesActions(refetch: () => void) {
   const [isSubmittingInvite, setIsSubmittingInvite] = useState(false);
   const [isMessageManuallyEdited, setIsMessageManuallyEdited] = useState(false);
 
-  const companyQuery = useCompanyProfile({ viewerRole: ROLES.RECRUITER });
+  const { user } = useAuth();
+  const companyQuery = useCompanyProfile({ 
+    viewerRole: user?.role === ROLES.RECRUITER ? ROLES.RECRUITER : undefined,
+    companyId: undefined 
+  });
   const companyId = companyQuery.data?.data?.companyId;
 
   const jobsQuery = useQuery({
@@ -154,7 +159,7 @@ export function useCandidatesActions(refetch: () => void) {
     setCandidateToInvite(student);
     setSelectedJobId(String(invitation.job.jobId));
     setInviteMessage(invitation.message?.trim() || "");
-    setIsMessageManuallyEdited(true); // Resend is usually custom already
+    setIsMessageManuallyEdited(true); 
     setInviteError(null);
   };
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ClientPortal from "@/components/ClientPortal";
 
 type Props = {
@@ -20,14 +20,24 @@ export default function JobPostingModerationModal({
 }: Props) {
   const [reason, setReason] = useState("");
 
+  useEffect(() => {
+    if (open) setReason("");
+  }, [open]);
+
   if (!open) return null;
 
   const isReject = mode === "reject";
 
   return (
     <ClientPortal>
-      <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/45 px-4">
-        <div className="w-full max-w-115 overflow-hidden rounded-3xl bg-white shadow-2xl">
+      <div 
+        className="fixed inset-0 z-100 flex items-center justify-center bg-black/45 px-4"
+        onClick={onClose}
+      >
+        <div 
+          className="w-full max-w-115 overflow-hidden rounded-3xl bg-white shadow-2xl"
+          onClick={(e) => e.stopPropagation()}
+        >
           <div className="px-6 pb-4 pt-6">
             <h3 className="text-[18px] font-bold text-(--color-text)">
               {isReject ? "Từ chối tin tuyển dụng" : "Hạn chế tin tuyển dụng"}

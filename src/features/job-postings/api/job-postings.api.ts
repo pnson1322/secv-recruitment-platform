@@ -144,16 +144,20 @@ export async function getJobPostingCardsForAdmin(
 ) {
   const { page = 1, limit = 10, search, status, city } = params;
 
+  const filteredParams: any = {};
+
+  if (search || status || city || page > 1 || limit !== 10) {
+    filteredParams.page = page;
+    filteredParams.limit = limit;
+    if (search) filteredParams.search = search;
+    if (status) filteredParams.status = status;
+    if (city) filteredParams.city = city;
+  }
+
   const res = await api.get<
     ApiResponse<JobPostingData<JobPostingCardAdminCompanyItem>>
   >("/job-postings/card", {
-    params: {
-      page,
-      limit,
-      search,
-      status,
-      city,
-    },
+    params: filteredParams,
   });
 
   return res.data;

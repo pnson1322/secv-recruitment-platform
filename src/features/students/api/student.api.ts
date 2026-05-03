@@ -53,7 +53,6 @@ export async function patchJobStatus(body: { isOpenToWork: boolean }) {
 }
 
 export async function putSkills(body: { skillIds: number[] }) {
-  //Gửi lên mảng ID các kỹ năng. Dữ liệu cũ sẽ bị ghi đè hoàn toàn bởi danh sách mới này.
   const res = await api.put<ApiResponse<Record<string, never>>>(
     "/student/me/skills",
     body,

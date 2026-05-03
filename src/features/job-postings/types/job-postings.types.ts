@@ -159,7 +159,7 @@ export type JobPostingCardsParams = {
   page?: number;
   limit?: number;
   search?: string;
-  status?: JobPostingStatus;
+  status?: JobPostingStatus | "";
   city?: string;
 };
 

@@ -172,7 +172,6 @@ export default function StudentProfileModal({
                         title="CV Preview"
                       />
                       
-                      {/* Nút tải xuống nhỏ gọn ở góc, không chặn vùng cuộn chính của PDF */}
                       <div className="absolute bottom-6 right-6 opacity-0 transition-all duration-300 group-hover:opacity-100">
                         <button 
                           onClick={onDownload}

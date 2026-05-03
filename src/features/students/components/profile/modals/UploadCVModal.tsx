@@ -30,7 +30,6 @@ export default function UploadCVModal({ open, onClose, onSuccess }: Props) {
       return;
     }
     setFile(selectedFile);
-    // Luôn cập nhật tên hiển thị nếu chưa nhập hoặc đang để tên mặc định của file cũ
     setResumeName(selectedFile.name.replace(/\.[^/.]+$/, ""));
   };
 
@@ -41,7 +40,7 @@ export default function UploadCVModal({ open, onClose, onSuccess }: Props) {
 
   const onDrop = (e: React.DragEvent) => {
     e.preventDefault();
-    e.stopPropagation(); // Ngăn chặn sự kiện click của parent bị kích hoạt
+    e.stopPropagation();
     const droppedFile = e.dataTransfer.files?.[0];
     if (droppedFile) handleFile(droppedFile);
   };

@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { ROLES } from "@/features/auth/constants/roles";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 import { useCompanyProfile } from "@/features/company-profile/hooks/useCompanyProfile";
 import {
   getJobPostingsListByCompanyId,
@@ -40,6 +41,7 @@ function buildDefaultInviteMessage(studentName: string, jobTitle: string) {
 }
 
 export function useSearchCandidatesPage() {
+  const { user } = useAuth();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(6);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
@@ -74,7 +76,10 @@ export function useSearchCandidatesPage() {
     setPage(1);
   }, [pageSize]);
 
-  const companyQuery = useCompanyProfile({ viewerRole: ROLES.RECRUITER });
+  const companyQuery = useCompanyProfile({ 
+    viewerRole: user?.role === ROLES.RECRUITER ? ROLES.RECRUITER : undefined,
+    companyId: undefined 
+  });
   const companyId = companyQuery.data?.data?.companyId;
 
   const skillsQuery = useQuery({
