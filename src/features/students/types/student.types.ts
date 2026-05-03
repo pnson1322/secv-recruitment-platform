@@ -75,4 +75,29 @@ export type MyProfile = {
 export type UpdateStudentInfoBody = {
   fullName: string;
   email: string;
+  phoneNumber: string;
+};
+
+export type StudentGeneralStats = {
+  totalStudents: number;
+  studying: number;
+  graduated: number;
+};
+
+export type StudentAdminListItem = {
+  studentId: number;
+  fullName: string;
+  studentCode: string;
+  email: string;
+  currentYear: number;
+  enrollmentYear: number;
+  studentStatus: "STUDYING" | "GRADUATED" | "DROPPED_OUT";
+  totalApplications: number;
+};
+
+export type StudentListParams = {
+  page?: number;
+  limit?: number;
+  status?: string;
+  keyword?: string;
 };

@@ -13,7 +13,6 @@ type Props = {
   studentId: number | null;
   role: "admin" | "company";
   applicationStatus?: string;
-  adminNote?: string | null;
   onUpdateStatus?: (status: string) => void;
   onInvite?: () => void;
   inviteLabel?: string;
@@ -33,7 +32,6 @@ export default function StudentProfileModal({
   studentId,
   role,
   applicationStatus,
-  adminNote,
   onUpdateStatus,
   onInvite,
   inviteLabel = "Gửi lời mời",
@@ -254,12 +252,6 @@ export default function StudentProfileModal({
                             <span className="text-slate-500 font-medium">Trạng thái</span>
                             <span className="font-semibold text-slate-800">{profile.isOpenToWork ? "Đang tìm việc" : "Bận"}</span>
                           </div>
-                        </div>
-                      </section>
-                      <section>
-                        <h3 className="mb-5 text-[17px] font-bold text-slate-900">Ghi chú</h3>
-                        <div className="rounded-[24px] bg-slate-50/60 p-6 text-[14px] leading-relaxed text-slate-500 italic font-medium">
-                          {adminNote || "Không có ghi chú."}
                         </div>
                       </section>
                     </div>

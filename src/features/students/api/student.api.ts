@@ -7,7 +7,22 @@ import {
   UploadResumeResponse,
   MyProfile,
   UpdateStudentInfoBody,
+  StudentGeneralStats,
+  StudentAdminListItem,
+  StudentListParams,
 } from "../types/student.types";
+
+export async function getStudentGeneralStats() {
+  const res = await api.get<ApiResponse<StudentGeneralStats>>("/student/general");
+  return res.data;
+}
+
+export async function getStudentListForAdmin(params: StudentListParams) {
+  const res = await api.get<ApiResponse<{ data: StudentAdminListItem[]; meta: any }>>("/student", {
+    params,
+  });
+  return res.data;
+}
 
 export async function getStudentProfile(studentId: number) {
   const res = await api.get<ApiResponse<StudentProfile>>(
