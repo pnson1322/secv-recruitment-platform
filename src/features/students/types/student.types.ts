@@ -73,9 +73,9 @@ export type MyProfile = {
 };
 
 export type UpdateStudentInfoBody = {
-  fullName: string;
-  email: string;
-  phoneNumber: string;
+  fullName?: string;
+  email?: string;
+  phoneNumber?: string;
 };
 
 export type StudentGeneralStats = {

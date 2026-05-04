@@ -124,15 +124,16 @@ type AdminGetCompanyParams = {
   page?: number;
   limit?: number;
   status?: CompanyStatus;
+  search?: string;
 };
 
 export async function getCompaniesForAdmin(params: AdminGetCompanyParams = {}) {
-  const { page = 1, limit = 10, status } = params;
+  const { page = 1, limit = 10, status, search } = params;
 
   const res = await api.get<ApiResponse<AdminCompanyListData>>(
     "/company/all/admin",
     {
-      params: { page, limit, status },
+      params: { page, limit, status, search },
     },
   );
 

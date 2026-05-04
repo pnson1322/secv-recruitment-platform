@@ -28,6 +28,8 @@ export default function StudentProfilePage() {
     isSkillsModalOpen,
     setIsSkillsModalOpen,
     handleRemoveSkill,
+    handleUpdateJobStatus,
+    isUpdatingStatus,
   } = useStudentProfilePage();
 
   if (isLoading) {
@@ -71,7 +73,11 @@ export default function StudentProfilePage() {
           isDeleting={isDeleting}
         />
 
-        <JobStatusSection />
+        <JobStatusSection 
+          isOpenToWork={profile.isOpenToWork}
+          onUpdate={handleUpdateJobStatus}
+          isLoading={isUpdatingStatus}
+        />
 
         <SkillsInterestsSection 
           skills={profile.skills} 

@@ -44,7 +44,7 @@ export default function CompanyProfilePageContent({
   const { user, isLoading: isAuthLoading } = useAuth();
   const viewerRole = user?.role;
 
-  const { data, isLoading, error } = useCompanyProfile({
+  const { data, isLoading, error, refetch: refetchProfile } = useCompanyProfile({
     viewerRole,
     companyId,
   });
@@ -126,7 +126,7 @@ export default function CompanyProfilePageContent({
         onChangeCoverImage={() => setActiveModal("cover")}
         onChangeLogo={() => setActiveModal("logo")}
         onFollow={() => undefined}
-        onRestrict={() => undefined}
+        onStatusChanged={() => refetchProfile()}
         onApplyJob={(job: JobPostingDataItem) => handleOpenApplyModal(job.jobId, job.jobTitle)}
         reviews={reviews}
         reviewsPagination={reviewsPagination}

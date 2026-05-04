@@ -1,16 +1,30 @@
 "use client";
 
-import { Briefcase, Info, Check } from "lucide-react";
-import { useState } from "react";
+import { Briefcase, Info, Check, Loader2 } from "lucide-react";
+import { useState, useEffect } from "react";
+
+type Props = {
+  isOpenToWork: boolean;
+  onUpdate: (isOpenToWork: boolean) => Promise<void>;
+  isLoading?: boolean;
+};
 
 const STATUS_OPTIONS = [
-  { id: "active", label: "Đang tìm việc", color: "text-cyan-600", bg: "bg-cyan-50/50", border: "border-cyan-200" },
-  { id: "employed", label: "Đã có việc làm", color: "text-slate-600", bg: "bg-white", border: "border-slate-200" },
-  { id: "not-searching", label: "Không tìm việc", color: "text-slate-600", bg: "bg-white", border: "border-slate-200" },
+  { id: "active", label: "Đang tìm việc", value: true, color: "text-cyan-600", bg: "bg-cyan-50/50", border: "border-cyan-200" },
+  { id: "not-searching", label: "Không tìm việc", value: false, color: "text-slate-600", bg: "bg-white", border: "border-slate-200" },
 ];
 
-export default function JobStatusSection() {
-  const [status, setStatus] = useState("active");
+export default function JobStatusSection({ isOpenToWork, onUpdate, isLoading = false }: Props) {
+  const [selectedStatus, setSelectedStatus] = useState(isOpenToWork ? "active" : "not-searching");
+
+  useEffect(() => {
+    setSelectedStatus(isOpenToWork ? "active" : "not-searching");
+  }, [isOpenToWork]);
+
+  const handleSave = async () => {
+    const newValue = selectedStatus === "active";
+    await onUpdate(newValue);
+  };
 
   return (
     <section className="rounded-[32px] border border-slate-200 bg-white p-8 shadow-sm">
@@ -20,7 +34,7 @@ export default function JobStatusSection() {
         </div>
         <div>
           <h2 className="text-[20px] font-bold text-slate-900 uppercase">Trạng thái tìm việc</h2>
-          <p className="text-[14px] text-slate-500">Trạng thái hiện tại:</p>
+          <p className="text-[14px] text-slate-500">Cập nhật để nhà tuyển dụng tìm thấy bạn:</p>
         </div>
       </div>
 
@@ -28,22 +42,22 @@ export default function JobStatusSection() {
         {STATUS_OPTIONS.map((opt) => (
           <div 
             key={opt.id}
-            onClick={() => setStatus(opt.id)}
+            onClick={() => setSelectedStatus(opt.id)}
             className={`flex cursor-pointer items-center justify-between rounded-[20px] border p-4 transition-all duration-300 ${
-              status === opt.id ? `${opt.bg} ${opt.border} shadow-sm` : "border-slate-100 bg-white hover:bg-slate-50"
+              selectedStatus === opt.id ? `${opt.bg} ${opt.border} shadow-sm` : "border-slate-100 bg-white hover:bg-slate-50"
             }`}
           >
             <div className="flex items-center gap-3">
               <div className={`flex h-5 w-5 items-center justify-center rounded-full border-2 transition-all ${
-                status === opt.id ? "border-cyan-500 bg-cyan-500" : "border-slate-300"
+                selectedStatus === opt.id ? "border-cyan-500 bg-cyan-500" : "border-slate-300"
               }`}>
-                {status === opt.id && <div className="h-1.5 w-1.5 rounded-full bg-white" />}
+                {selectedStatus === opt.id && <div className="h-1.5 w-1.5 rounded-full bg-white" />}
               </div>
-              <span className={`text-[15px] font-bold ${status === opt.id ? "text-slate-900" : "text-slate-500"}`}>
+              <span className={`text-[15px] font-bold ${selectedStatus === opt.id ? "text-slate-900" : "text-slate-500"}`}>
                 {opt.label}
               </span>
             </div>
-            {status === opt.id && <Check size={18} className="text-cyan-500" />}
+            {selectedStatus === opt.id && <Check size={18} className="text-cyan-500" />}
           </div>
         ))}
       </div>
@@ -60,12 +74,17 @@ export default function JobStatusSection() {
           </li>
           <li className="flex items-center gap-2">
             <span className="h-1 w-1 rounded-full bg-slate-400"></span>
-            Nhận gợi ý việc làm phù hợp
+            Nhận gợi ý việc làm phù hợp từ hệ thống
           </li>
         </ul>
       </div>
 
-      <button className="w-full rounded-[20px] bg-cyan-500 py-4 text-[16px] font-bold text-white shadow-lg shadow-cyan-500/20 transition hover:bg-cyan-600 hover:shadow-cyan-500/30 active:scale-[0.98]">
+      <button 
+        onClick={handleSave}
+        disabled={isLoading || (selectedStatus === (isOpenToWork ? "active" : "not-searching"))}
+        className="flex w-full items-center justify-center gap-2 rounded-[20px] bg-cyan-500 py-4 text-[16px] font-bold text-white shadow-lg shadow-cyan-500/20 transition hover:bg-cyan-600 hover:shadow-cyan-500/30 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none"
+      >
+        {isLoading && <Loader2 size={18} className="animate-spin" />}
         Lưu thay đổi
       </button>
     </section>

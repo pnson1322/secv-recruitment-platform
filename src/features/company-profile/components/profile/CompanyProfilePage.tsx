@@ -9,6 +9,8 @@ import CompanyProfileTabs, { type ProfileTab } from "./CompanyProfileTabs";
 import CompanyAboutSection from "./CompanyAboutSection";
 import CompanyJobsSection from "./CompanyJobsSection";
 import CompanyReviewsSection from "./CompanyReviewsSection";
+import CompanyStatusModal from "./CompanyStatusModal";
+import { useCompanyStatus } from "../../hooks/useCompanyStatus";
 import type {
   CategoryItem,
   JobPostingDataItem,
@@ -18,6 +20,7 @@ import type {
   PaginationMeta,
   CompanyStatsData,
 } from "../../types/comment.types";
+import { CompanyStatus } from "../../types/company.types";
 
 type CompanyProfilePageProps = {
   company: CompanyProfile;
@@ -36,7 +39,7 @@ type CompanyProfilePageProps = {
   onChangeCoverImage?: () => void;
   onChangeLogo?: () => void;
   onFollow?: () => void;
-  onRestrict?: () => void;
+  onStatusChanged?: () => void;
   reviews?: CompanyComment[];
   reviewsPagination?: PaginationMeta;
   reviewsStats?: CompanyStatsData | null;
@@ -63,7 +66,7 @@ export default function CompanyProfilePage({
   onChangeCoverImage,
   onChangeLogo,
   onFollow,
-  onRestrict,
+  onStatusChanged,
   reviews = [],
   reviewsPagination,
   reviewsStats,
@@ -73,6 +76,13 @@ export default function CompanyProfilePage({
   onTabChange,
 }: CompanyProfilePageProps) {
   const isStudent = viewerRole === "STUDENT";
+
+  const {
+    isStatusLoading,
+    statusModal,
+    handleChangeStatus,
+    closeStatusModal,
+  } = useCompanyStatus(company.companyId as number, onStatusChanged);
 
   const tabs = useMemo<ProfileTab[]>(() => {
     if (isStudent) return ["about", "jobs"];
@@ -89,7 +99,7 @@ export default function CompanyProfilePage({
         onChangeCoverImage={onChangeCoverImage}
         onChangeLogo={onChangeLogo}
         onFollow={onFollow}
-        onRestrict={onRestrict}
+        onChangeStatus={handleChangeStatus}
       />
 
       <CompanyProfileStats company={company} totalJobs={jobs.length} />
@@ -134,6 +144,14 @@ export default function CompanyProfilePage({
           onPageChange={onPageChange}
         />
       )}
+
+      <CompanyStatusModal
+        open={statusModal.open}
+        mode={statusModal.mode}
+        isLoading={isStatusLoading}
+        onClose={closeStatusModal}
+        onConfirm={(reason) => handleChangeStatus(statusModal.mode, reason)}
+      />
     </div>
   );
 }

@@ -1,9 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { Pencil, ShieldAlert, Camera } from "lucide-react";
+import { Pencil, ShieldAlert, Camera, CheckCircle, XCircle, RefreshCcw, Unlock } from "lucide-react";
 import type { Role } from "@/features/auth/constants/roles";
-import type { CompanyProfile } from "../../types/company.types";
+import type { CompanyProfile, CompanyStatus } from "../../types/company.types";
 
 type Props = {
   company: CompanyProfile;
@@ -13,7 +13,7 @@ type Props = {
   onChangeLogo?: () => void;
   onChangeCoverImage?: () => void;
   onFollow?: () => void;
-  onRestrict?: () => void;
+  onChangeStatus?: (status: CompanyStatus, reason?: string) => void;
 };
 
 export default function CompanyProfileHeader({
@@ -24,16 +24,46 @@ export default function CompanyProfileHeader({
   onChangeLogo,
   onChangeCoverImage,
   onFollow,
-  onRestrict,
+  onChangeStatus,
 }: Props) {
   const isStudent = viewerRole === "STUDENT";
   const isAdmin = viewerRole === "ADMIN";
+  const isCompany = viewerRole === "COMPANY";
 
   const companyName = company.companyName || "Tên công ty";
   const slogan = company.slogan || "Chưa cập nhật slogan";
   const coverImage =
     company.coverImageUrl || "/images/company-cover-placeholder.jpg";
   const logoImage = company.logoUrl || "/images/company-logo-placeholder.png";
+
+  const getStatusBadge = (status: CompanyStatus) => {
+    switch (status) {
+      case "PENDING":
+        return {
+          label: "Chờ duyệt",
+          className: "bg-amber-50 text-amber-600 border-amber-100",
+        };
+      case "APPROVED":
+        return {
+          label: "Hoạt động",
+          className: "bg-emerald-50 text-emerald-600 border-emerald-100",
+        };
+      case "REJECTED":
+        return {
+          label: "Từ chối",
+          className: "bg-red-50 text-red-600 border-red-100",
+        };
+      case "RESTRICTED":
+        return {
+          label: "Hạn chế",
+          className: "bg-slate-100 text-slate-600 border-slate-200",
+        };
+      default:
+        return null;
+    }
+  };
+
+  const statusBadge = company.status ? getStatusBadge(company.status) : null;
 
   return (
     <div className="space-y-4">
@@ -94,36 +124,90 @@ export default function CompanyProfileHeader({
 
             <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between pb-2">
               <div className="w-full">
-                <div className="flex w-full items-start justify-between gap-4">
+                <div className="flex w-full flex-col md:flex-row md:items-start md:justify-between gap-4">
                   <div className="min-w-0">
-                    <h1 className="wrap-break-word text-[28px] font-bold text-slate-900 md:text-[32px]">
-                      {companyName}
-                    </h1>
+                    <div className="flex flex-wrap items-center gap-3">
+                      <h1 className="wrap-break-word text-[28px] font-bold text-slate-900 md:text-[32px]">
+                        {companyName}
+                      </h1>
+                      {(isAdmin || isCompany) && statusBadge && (
+                        <span className={`rounded-full border px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider ${statusBadge.className}`}>
+                          {statusBadge.label}
+                        </span>
+                      )}
+                    </div>
 
                     <p className="mt-2 text-[15px] text-slate-500">{slogan}</p>
                   </div>
 
                   {(isStudent || isAdmin) && (
-                    <div className="shrink-0">
+                    <div className="shrink-0 flex items-center gap-3">
                       {isStudent && (
                         <button
                           type="button"
                           onClick={onFollow}
-                          className="inline-flex h-11 items-center justify-center rounded-xl bg-cyan-500 px-5 text-[14px] font-semibold text-white transition hover:bg-cyan-600"
+                          className="inline-flex h-11 items-center justify-center rounded-xl bg-cyan-500 px-5 text-[14px] font-semibold text-white transition hover:bg-cyan-600 shadow-lg shadow-cyan-100"
                         >
                           Theo dõi
                         </button>
                       )}
 
                       {isAdmin && (
-                        <button
-                          type="button"
-                          onClick={onRestrict}
-                          className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-red-500 px-5 text-[14px] font-semibold text-white transition hover:bg-red-600"
-                        >
-                          <ShieldAlert size={16} />
-                          Hạn chế
-                        </button>
+                        <div className="flex items-center gap-3">
+                          {company.status === "PENDING" && (
+                            <>
+                              <button
+                                type="button"
+                                onClick={() => onChangeStatus?.("APPROVED")}
+                                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-emerald-500 px-5 text-[14px] font-semibold text-white transition hover:bg-emerald-600 shadow-lg shadow-emerald-100"
+                              >
+                                <CheckCircle size={16} />
+                                Phê duyệt
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => onChangeStatus?.("REJECTED")}
+                                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-red-500 px-5 text-[14px] font-semibold text-white transition hover:bg-red-600 shadow-lg shadow-red-100"
+                              >
+                                <XCircle size={16} />
+                                Từ chối
+                              </button>
+                            </>
+                          )}
+
+                          {company.status === "APPROVED" && (
+                            <button
+                              type="button"
+                              onClick={() => onChangeStatus?.("RESTRICTED")}
+                              className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-orange-500 px-5 text-[14px] font-semibold text-white transition hover:bg-orange-600 shadow-lg shadow-orange-100"
+                            >
+                              <ShieldAlert size={16} />
+                              Hạn chế
+                            </button>
+                          )}
+
+                          {company.status === "REJECTED" && (
+                            <button
+                              type="button"
+                              onClick={() => onChangeStatus?.("APPROVED")}
+                              className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-emerald-600 px-5 text-[14px] font-semibold text-white transition hover:bg-emerald-700 shadow-lg shadow-emerald-100"
+                            >
+                              <RefreshCcw size={16} />
+                              Duyệt lại đơn
+                            </button>
+                          )}
+
+                          {company.status === "RESTRICTED" && (
+                            <button
+                              type="button"
+                              onClick={() => onChangeStatus?.("APPROVED")}
+                              className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-emerald-500 px-5 text-[14px] font-semibold text-white transition hover:bg-emerald-600 shadow-lg shadow-emerald-100"
+                            >
+                              <Unlock size={16} />
+                              Mở lại hoạt động
+                            </button>
+                          )}
+                        </div>
                       )}
                     </div>
                   )}
