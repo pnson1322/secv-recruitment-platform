@@ -1,5 +1,11 @@
 import Link from "next/link";
 import { ShieldAlert } from "lucide-react";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Không có quyền truy cập",
+  description: "Bạn không có quyền truy cập trang này",
+};
 
 export default function UnauthorizedPage() {
   return (

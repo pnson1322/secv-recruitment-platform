@@ -2,6 +2,12 @@ import CompanyProfilePageContent from "@/features/company-profile/components/pro
 import ProtectedRoute from "@/features/auth/components/ProtectedRoute";
 import AppHeader from "@/features/navigation/components/AppHeader";
 import AppFooter from "@/components/layout/AppFooter";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Chi tiết Doanh nghiệp",
+  description: "Xem thông tin chi tiết và các tin tuyển dụng của doanh nghiệp",
+};
 
 type Props = {
   params: Promise<{

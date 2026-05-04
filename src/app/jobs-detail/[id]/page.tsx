@@ -2,6 +2,12 @@ import JobPostingDetailPageContent from "@/features/job-postings/components/comp
 import ProtectedRoute from "@/features/auth/components/ProtectedRoute";
 import AppHeader from "@/features/navigation/components/AppHeader";
 import AppFooter from "@/components/layout/AppFooter";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Chi tiết Công việc",
+  description: "Xem thông tin chi tiết và ứng tuyển vào công việc",
+};
 
 type Props = {
   params: Promise<{

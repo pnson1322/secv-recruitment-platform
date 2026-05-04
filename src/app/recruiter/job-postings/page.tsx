@@ -1,24 +1,11 @@
-"use client";
+import { Metadata } from "next";
+import RecruiterJobPostingsClient from "./RecruiterJobPostingsClient";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import CompanyJobPostingsPage from "@/features/job-postings/components/company/CompanyJobPostingsPage";
-import CreateJobPostingModal from "@/features/job-postings/components/company/create-job/CreateJobPostingModal";
+export const metadata: Metadata = {
+  title: "Quản lý Tin tuyển dụng",
+  description: "Quản lý và đăng tải các tin tuyển dụng của công ty",
+};
 
 export default function RecruiterJobPostingsPage() {
-  const router = useRouter();
-  const [openCreateModal, setOpenCreateModal] = useState(false);
-
-  return (
-    <>
-      <CompanyJobPostingsPage
-        onCreateJob={() => setOpenCreateModal(true)}
-        onViewJobDetail={(jobId) => router.push(`/jobs-detail/${jobId}`)}
-      />
-
-      {openCreateModal ? (
-        <CreateJobPostingModal open onClose={() => setOpenCreateModal(false)} />
-      ) : null}
-    </>
-  );
+  return <RecruiterJobPostingsClient />;
 }

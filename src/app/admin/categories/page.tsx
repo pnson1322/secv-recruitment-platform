@@ -3,7 +3,7 @@ import JobCategoriesPage from "@/features/job-categories/components/JobCategorie
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Quản lý Thể loại | Admin Dashboard",
+  title: "Quản lý Thể loại",
   description: "Quản lý các thể loại công việc trong hệ thống",
 };
 
