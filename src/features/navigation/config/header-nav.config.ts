@@ -56,6 +56,5 @@ export const adminNav: NavItem[] = [
   { label: "Kiểm duyệt", href: "/admin/moderation", icon: ShieldCheck },
   { label: "Thể loại", href: "/admin/categories", icon: Layers3 },
   { label: "Giám sát", href: "/admin/monitoring", icon: BarChart3 },
-  { label: "Thông báo", href: "/admin/notifications", icon: MessageSquare },
   { label: "Cài đặt", href: "/admin/settings", icon: Settings },
 ];

@@ -41,6 +41,7 @@ type Props = {
   tagClassName: string;
   isLoading?: boolean;
   isClosed?: boolean;
+  isSaved?: boolean;
   onEdit: () => void;
   onHide: () => void;
   onViewApplicants: () => void;
@@ -72,6 +73,7 @@ export default function JobPostingDetailHeader({
   tagClassName,
   isLoading = false,
   isClosed = false,
+  isSaved = false,
   onEdit,
   onHide,
   onViewApplicants,
@@ -293,10 +295,14 @@ export default function JobPostingDetailHeader({
             <button
               type="button"
               onClick={onSave}
-              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-(--color-accent) bg-white px-5 py-3 text-[15px] font-semibold text-(--color-accent) transition hover:bg-cyan-50"
+              className={`inline-flex items-center justify-center gap-2 rounded-2xl border px-5 py-3 text-[15px] font-semibold transition ${
+                isSaved
+                  ? "border-amber-100 bg-amber-50 text-amber-600 hover:bg-amber-100"
+                  : "border-(--color-accent) bg-white text-(--color-accent) hover:bg-cyan-50"
+              }`}
             >
-              <Bookmark size={18} />
-              Lưu tin
+              <Bookmark size={18} className={isSaved ? "fill-amber-600" : ""} />
+              {isSaved ? "Đã lưu" : "Lưu tin"}
             </button>
           </div>
         ) : null}

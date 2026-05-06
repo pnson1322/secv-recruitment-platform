@@ -112,6 +112,7 @@ export type JobPosting = {
   createdAt: string;
   updatedAt: string;
   requiredSkills: SkillItem[];
+  saved?: boolean;
 };
 
 export type JobPostingsListParam = {
@@ -195,6 +196,7 @@ export type JobPostingCardStudentItem = {
   postedAt: string;
   applicantCount: number;
   skills: SkillItem[];
+  saved?: boolean;
 };
 
 export type JobPostingsStats = {

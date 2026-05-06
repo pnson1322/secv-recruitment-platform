@@ -10,6 +10,7 @@ import type {
   DetailBody,
   EmptyBody,
   StudentCompanyListData,
+  MonitorStats,
 } from "../types/company.types";
 import { CompanyCommentsResponse, CompanyStatsResponse } from "../types/comment.types";
 
@@ -133,7 +134,12 @@ export async function getCompaniesForAdmin(params: AdminGetCompanyParams = {}) {
   const res = await api.get<ApiResponse<AdminCompanyListData>>(
     "/company/all/admin",
     {
-      params: { page, limit, status, search },
+      params: { 
+        page, 
+        limit, 
+        status, 
+        search: search || undefined 
+      },
     },
   );
 
@@ -148,6 +154,11 @@ export async function changeStatusCompany(
     `/company/${id}/status/admin`,
     payload,
   );
+  return res.data;
+}
+
+export async function getMonitorStats() {
+  const res = await api.get<ApiResponse<MonitorStats>>("/statistics/monitor");
   return res.data;
 }
 
@@ -168,10 +179,51 @@ export async function getCompaniesForStudent(
   const res = await api.get<ApiResponse<StudentCompanyListData>>(
     "/company/all/user",
     {
-      params: { page, limit, search, location, scale },
+      params: { 
+        page, 
+        limit, 
+        search: search || undefined, 
+        location: location || undefined, 
+        scale: scale || undefined 
+      },
     },
   );
 
+  return res.data;
+}
+
+export async function getFollowedCompanies(
+  params: StudentGetCompanyParams = {},
+) {
+  const { page = 1, limit = 10, search, location, scale } = params;
+
+  const res = await api.get<ApiResponse<StudentCompanyListData>>(
+    "/company/followed",
+    {
+      params: { 
+        page, 
+        limit, 
+        search: search || undefined, 
+        location: location || undefined, 
+        scale: scale || undefined 
+      },
+    },
+  );
+
+  return res.data;
+}
+
+export async function followCompany(companyId: number) {
+  const res = await api.post<ApiResponse<EmptyBody>>(
+    `/followed/${companyId}`
+  );
+  return res.data;
+}
+
+export async function unfollowCompany(companyId: number) {
+  const res = await api.delete<ApiResponse<EmptyBody>>(
+    `/followed/${companyId}`
+  );
   return res.data;
 }
 

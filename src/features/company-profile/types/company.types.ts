@@ -34,6 +34,7 @@ export type CompanyProfile = {
   updatedAt?: string;
   officeImages?: OfficeImage[];
   adminNote: string;
+  followed?: boolean;
 };
 
 export type ApiResponse<T> = {
@@ -104,6 +105,7 @@ export type StudentCompanyDataPart = {
   logoUrl: string;
   industry: string;
   activeJobs: number;
+  followed?: boolean;
 };
 
 export type StudentPaginationMeta = {
@@ -117,3 +119,11 @@ export type StudentCompanyListData = {
   data: StudentCompanyDataPart[];
   meta: StudentPaginationMeta;
 };
+
+export type MonitorStats = {
+  totalCompanies: number;
+  avgRating: number;
+  totalApplications: number;
+  totalPassed: number;
+};
+

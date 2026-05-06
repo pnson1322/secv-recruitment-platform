@@ -18,8 +18,9 @@ export async function getStudentGeneralStats() {
 }
 
 export async function getStudentListForAdmin(params: StudentListParams) {
+  const {page = 1, limit = 10, status, keyword } = params
   const res = await api.get<ApiResponse<{ data: StudentAdminListItem[]; meta: any }>>("/student", {
-    params,
+    params: {page, limit, status: status || undefined, keyword: keyword || undefined}
   });
   return res.data;
 }
@@ -113,6 +114,14 @@ export async function updateStudentInfo(body: UpdateStudentInfoBody) {
 export async function deleteResume(resumeId: number) {
   const res = await api.delete<ApiResponse<Record<string, never>>>(
     `/student/me/resumes/${resumeId}`,
+  );
+  return res.data;
+}
+
+export async function updateStudentActiveStatus(studentId: number, isActive: boolean) {
+  const res = await api.patch<ApiResponse<Record<string, never>>>(
+    `/student/${studentId}/active`,
+    { isActive }
   );
   return res.data;
 }

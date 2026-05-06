@@ -44,6 +44,7 @@ export type StudentProfile = {
   skills: string[];
   resumes: StudentResume[];
   totalApplications?: number;
+  isActive: boolean;
 };
 
 export type UploadResumeResponse = {
@@ -93,6 +94,7 @@ export type StudentAdminListItem = {
   enrollmentYear: number;
   studentStatus: "STUDYING" | "GRADUATED" | "DROPPED_OUT";
   totalApplications: number;
+  isActive: boolean;
 };
 
 export type StudentListParams = {

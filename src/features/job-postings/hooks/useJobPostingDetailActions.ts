@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import type { Role } from "@/features/auth/constants/roles";
 import type { JobPosting, PatchBody } from "../types/job-postings.types";
+import { useSaveJobPosting } from "./useSaveJobPosting";
 
 type ModerationMode = "reject" | "restrict" | null;
 
@@ -35,6 +36,8 @@ export function useJobPostingDetailActions({
   setOpenApplicants,
   onApply,
 }: Params) {
+  const saveMutation = useSaveJobPosting(job?.jobId ?? 0);
+
   const handleEdit = () => {
     setOpenEdit(true);
   };
@@ -54,7 +57,8 @@ export function useJobPostingDetailActions({
   };
 
   const handleSave = () => {
-    toast.info("Chưa có API lưu tin");
+    if (!job) return;
+    saveMutation.mutate(job.saved ?? false);
   };
 
   const handleApprove = () => {

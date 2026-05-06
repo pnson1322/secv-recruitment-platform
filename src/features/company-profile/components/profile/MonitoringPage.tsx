@@ -14,6 +14,7 @@ import {
   Filter,
   AlertCircle
 } from "lucide-react";
+import CompanyMonitorStats from "./CompanyMonitorStats";
 
 const STATUS_OPTIONS = [
   { label: "Tất cả trạng thái", value: "" },
@@ -70,6 +71,8 @@ export default function MonitoringPage() {
     setStatus,
     search,
     setSearch,
+    stats,
+    isLoadingStats,
     changeStatusMutation,
   } = useCompanyMonitoring();
 
@@ -92,6 +95,8 @@ export default function MonitoringPage() {
 
   return (
     <div className="mx-auto max-w-[1400px] space-y-8 px-4 pb-12 pt-6">
+      <CompanyMonitorStats stats={stats} isLoading={isLoadingStats} />
+      
       <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end">
           <div className="relative flex-[2]">

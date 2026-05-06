@@ -190,6 +190,40 @@ export async function getJobPostingCardsForStudent(
   return res.data;
 }
 
+export async function getSavedJobPostings(
+  params: JobPostingCardsParams,
+) {
+  const { page = 1, limit = 10, search, city, status } = params;
+
+  const res = await api.get<
+    ApiResponse<JobPostingData<JobPostingCardStudentItem>>
+  >("/job-postings/saved", {
+    params: {
+      page,
+      limit,
+      search: search || undefined,
+      city: city || undefined,
+      status: status || undefined,
+    },
+  });
+
+  return res.data;
+}
+
+export async function saveJobPosting(jobId: number) {
+  const res = await api.post<ApiResponse<{ jobId: number; isSaved: boolean }>>(
+    `/saved-jobs/${jobId}`
+  );
+  return res.data;
+}
+
+export async function unsaveJobPosting(jobId: number) {
+  const res = await api.delete<ApiResponse<{ jobId: number; isSaved: boolean }>>(
+    `/saved-jobs/${jobId}`
+  );
+  return res.data;
+}
+
 export async function getJobRecommendations(params: JobRecommendationsParams) {
   const res = await api.get<ApiResponse<JobRecommendation[]>>(
     "/recommendations/jobs",

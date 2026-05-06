@@ -1,48 +1,27 @@
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { getCompaniesForStudent, StudentGetCompanyParams } from "@/features/company-profile/api/company.api";
-import { StudentCompanyDataPart, StudentPaginationMeta } from "@/features/company-profile/types/company.types";
 
 export function useStudentCompaniesPage() {
-  const [companies, setCompanies] = useState<StudentCompanyDataPart[]>([]);
-  const [meta, setMeta] = useState<StudentPaginationMeta | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isError, setIsError] = useState(false);
-
   const [search, setSearch] = useState("");
   const [location, setLocation] = useState("");
   const [scale, setScale] = useState("");
   const [page, setPage] = useState(1);
   const limit = 9;
 
-  const fetchCompanies = useCallback(async () => {
-    setIsLoading(true);
-    setIsError(false);
-    try {
-      const params: StudentGetCompanyParams = {
-        page,
-        limit,
-        search: search || undefined,
-        location: location || undefined,
-        scale: scale || undefined,
-      };
-      const res = await getCompaniesForStudent(params);
-      if (res.success && res.data) {
-        setCompanies(res.data.data);
-        setMeta(res.data.meta);
-      } else {
-        setIsError(true);
-      }
-    } catch (error) {
-      console.error("Error fetching companies:", error);
-      setIsError(true);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [page, search, location, scale]);
+  const params: StudentGetCompanyParams = {
+    page,
+    limit,
+    search: search || undefined,
+    location: location || undefined,
+    scale: scale || undefined,
+  };
 
-  useEffect(() => {
-    fetchCompanies();
-  }, [fetchCompanies]);
+  const { data, isLoading, isError, refetch } = useQuery({
+    queryKey: ["student-companies", params],
+    queryFn: () => getCompaniesForStudent(params),
+    placeholderData: (previousData) => previousData,
+  });
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
@@ -50,8 +29,8 @@ export function useStudentCompaniesPage() {
   };
 
   return {
-    companies,
-    meta,
+    companies: data?.data?.data ?? [],
+    meta: data?.data?.meta ?? null,
     isLoading,
     isError,
     search,
@@ -62,6 +41,6 @@ export function useStudentCompaniesPage() {
     setScale,
     page,
     setPage: handlePageChange,
-    refetch: fetchCompanies,
+    refetch,
   };
 }

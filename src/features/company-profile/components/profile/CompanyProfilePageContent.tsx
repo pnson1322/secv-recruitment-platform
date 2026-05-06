@@ -22,6 +22,7 @@ import { useCompanyComments, useCompanyStats } from "../../hooks/useCompanyComme
 import ApplyJobModal from "@/features/applications/components/modals/ApplyJobModal";
 import type { JobPostingDataItem } from "@/features/job-postings/types/job-postings.types";
 import { useApplyJob } from "@/features/applications/hooks/useApplyJob";
+import { useFollowCompany } from "@/features/companies/hooks/useFollowCompany";
 
 type CompanyProfilePageContentProps = {
   companyId?: string;
@@ -67,6 +68,7 @@ export default function CompanyProfilePageContent({
   const [reviewsPage, setReviewsPage] = useState(1);
   const [activeTab, setActiveTab] = useState<ProfileTab>("about");
   const { applyJobData, handleOpenApplyModal, handleCloseApplyModal } = useApplyJob();
+  const toggleFollowMutation = useFollowCompany(company?.companyId ?? 0);
   const isOwner = viewerRole === "COMPANY" && !companyId;
 
   const isCompanyViewingOwn = isOwner && viewerRole === "COMPANY";
@@ -125,7 +127,7 @@ export default function CompanyProfilePageContent({
         onManageOfficeImages={() => setActiveModal("office-images")}
         onChangeCoverImage={() => setActiveModal("cover")}
         onChangeLogo={() => setActiveModal("logo")}
-        onFollow={() => undefined}
+        onFollow={() => toggleFollowMutation.mutate(company?.followed ?? false, { onSuccess: () => refetchProfile() })}
         onStatusChanged={() => refetchProfile()}
         onApplyJob={(job: JobPostingDataItem) => handleOpenApplyModal(job.jobId, job.jobTitle)}
         reviews={reviews}

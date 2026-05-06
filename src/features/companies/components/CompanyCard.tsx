@@ -3,14 +3,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { Briefcase, ChevronRight } from "lucide-react";
 import { StudentCompanyDataPart } from "@/features/company-profile/types/company.types";
+import { useFollowCompany } from "../hooks/useFollowCompany";
 
 interface CompanyCardProps {
   company: StudentCompanyDataPart;
 }
 
 export default function CompanyCard({ company }: CompanyCardProps) {
+  const toggleFollowMutation = useFollowCompany(company.companyId);
+
   return (
-    <div className="flex flex-col rounded-2xl border border-slate-100 bg-white p-5 shadow-sm transition-all hover:shadow-md">
+    <div className="group flex flex-col rounded-2xl border border-slate-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-cyan-200 hover:shadow-xl hover:shadow-cyan-500/10">
       <div className="flex gap-4">
         <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl border border-slate-50 bg-slate-50">
           {company.logoUrl ? (
@@ -44,8 +47,19 @@ export default function CompanyCard({ company }: CompanyCardProps) {
       </div>
 
       <div className="mt-5 flex gap-2.5">
-        <button className="flex-1 rounded-xl border border-slate-200 py-2.5 text-[14px] font-bold text-slate-700 transition hover:bg-slate-50">
-          Theo dõi
+        <button 
+          onClick={(e) => {
+            e.preventDefault();
+            toggleFollowMutation.mutate(company.followed ?? false);
+          }}
+          disabled={toggleFollowMutation.isPending}
+          className={`flex-1 rounded-xl border py-2.5 text-[14px] font-bold transition disabled:opacity-50 ${
+            company.followed 
+              ? "border-red-100 bg-red-50 text-red-600 hover:bg-red-100" 
+              : "border-slate-200 text-slate-700 hover:bg-slate-50"
+          }`}
+        >
+          {company.followed ? "Bỏ theo dõi" : "Theo dõi"}
         </button>
         <Link
           href={`/company/${company.companyId}`}

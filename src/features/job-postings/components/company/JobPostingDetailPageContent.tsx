@@ -150,6 +150,7 @@ export default function JobPostingDetailPageContent({ jobId }: Props) {
               tagClassName={tagMeta.className}
               isLoading={isBusy}
               isClosed={job.tag === "Closed"}
+              isSaved={job.saved}
               onEdit={actions.handleEdit}
               onHide={() => toggleActiveMutation.mutate()}
               onViewApplicants={actions.handleViewApplicants}

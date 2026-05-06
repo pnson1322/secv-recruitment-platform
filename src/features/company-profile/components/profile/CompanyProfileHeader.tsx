@@ -146,9 +146,13 @@ export default function CompanyProfileHeader({
                         <button
                           type="button"
                           onClick={onFollow}
-                          className="inline-flex h-11 items-center justify-center rounded-xl bg-cyan-500 px-5 text-[14px] font-semibold text-white transition hover:bg-cyan-600 shadow-lg shadow-cyan-100"
+                          className={`inline-flex h-11 items-center justify-center rounded-xl px-5 text-[14px] font-semibold transition ${
+                            company.followed 
+                              ? "bg-red-50 text-red-600 border border-red-100 hover:bg-red-100" 
+                              : "bg-cyan-500 text-white hover:bg-cyan-600 shadow-lg shadow-cyan-100"
+                          }`}
                         >
-                          Theo dõi
+                          {company.followed ? "Bỏ theo dõi" : "Theo dõi"}
                         </button>
                       )}
 

@@ -1,7 +1,7 @@
 "use client";
 
-import { Eye, Ban, User } from "lucide-react";
-import { useState } from "react";
+import { Eye, Ban, User, CheckCircle2 } from "lucide-react";
+import { useStudentTable } from "../../hooks/useStudentTable";
 import type { StudentAdminListItem } from "../../types/student.types";
 import StudentProfileModal from "../StudentProfileModal";
 
@@ -17,17 +17,14 @@ const STATUS_META = {
 };
 
 export default function StudentTable({ students, isLoading }: Props) {
-  const [selectedStudentId, setSelectedStudentId] = useState<number | null>(null);
-  const [openDetail, setOpenDetail] = useState(false);
-
-  const handleViewDetail = (id: number) => {
-    setSelectedStudentId(id);
-    setOpenDetail(true);
-  };
-
-  const handleBlock = (id: number) => {
-    console.log("Block student", id);
-  };
+  const {
+    selectedStudentId,
+    openDetail,
+    setOpenDetail,
+    toggleActiveMutation,
+    handleViewDetail,
+    handleToggleActive,
+  } = useStudentTable();
 
   if (isLoading) {
     return (
@@ -67,6 +64,7 @@ export default function StudentTable({ students, isLoading }: Props) {
                 <th className="whitespace-nowrap px-6 py-5 text-[14px] font-bold uppercase tracking-wider text-slate-500 text-center">Email</th>
                 <th className="whitespace-nowrap px-6 py-5 text-[14px] font-bold uppercase tracking-wider text-slate-500 text-center">Năm học</th>
                 <th className="whitespace-nowrap px-6 py-5 text-[14px] font-bold uppercase tracking-wider text-slate-500 text-center">Trạng thái học</th>
+                <th className="whitespace-nowrap px-6 py-5 text-[14px] font-bold uppercase tracking-wider text-slate-500 text-center">Tài khoản</th>
                 <th className="whitespace-nowrap px-6 py-5 text-[14px] font-bold uppercase tracking-wider text-slate-500 text-center">Đơn đã nộp</th>
                 <th className="whitespace-nowrap px-6 py-5 text-[14px] font-bold uppercase tracking-wider text-slate-500 text-center">Hành động</th>
               </tr>
@@ -101,6 +99,11 @@ export default function StudentTable({ students, isLoading }: Props) {
                       </div>
                     </td>
                     <td className="px-6 py-5 text-center">
+                      <div className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[12px] font-bold uppercase tracking-tight ${(student.isActive ?? (student as any).is_active) ? "bg-emerald-50 text-emerald-600" : "bg-red-50 text-red-600"}`}>
+                        {(student.isActive ?? (student as any).is_active) ? "Hoạt động" : "Bị khóa"}
+                      </div>
+                    </td>
+                    <td className="px-6 py-5 text-center">
                       <span className="text-[15px] font-bold text-slate-700">{student.totalApplications}</span>
                     </td>
                     <td className="px-6 py-5 text-center">
@@ -113,11 +116,19 @@ export default function StudentTable({ students, isLoading }: Props) {
                           <Eye size={20} strokeWidth={2.5} />
                         </button>
                         <button 
-                          onClick={() => handleBlock(student.studentId)}
-                          className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-500 transition-all hover:bg-red-500 hover:text-white hover:shadow-lg hover:shadow-red-200 active:scale-90"
-                          title="Khóa sinh viên"
+                          onClick={() => {
+                            const currentActive = student.isActive ?? (student as any).is_active;
+                            handleToggleActive(student.studentId, currentActive);
+                          }}
+                          disabled={toggleActiveMutation.isPending}
+                          className={`flex h-10 w-10 items-center justify-center rounded-xl transition-all active:scale-90 disabled:opacity-50 ${
+                            (student.isActive ?? (student as any).is_active) 
+                              ? "bg-slate-100 text-slate-500 hover:bg-red-500 hover:text-white hover:shadow-lg hover:shadow-red-200" 
+                              : "bg-emerald-50 text-emerald-500 hover:bg-emerald-500 hover:text-white hover:shadow-lg hover:shadow-emerald-200"
+                          }`}
+                          title={(student.isActive ?? (student as any).is_active) ? "Khóa sinh viên" : "Mở khóa sinh viên"}
                         >
-                          <Ban size={20} strokeWidth={2.5} />
+                          {(student.isActive ?? (student as any).is_active) ? <Ban size={20} strokeWidth={2.5} /> : <CheckCircle2 size={20} strokeWidth={2.5} />}
                         </button>
                       </div>
                     </td>

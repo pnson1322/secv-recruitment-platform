@@ -241,7 +241,7 @@ export default function StudentProfileModal({
                   {role === "admin" && (
                     <div className="space-y-10">
                       <section>
-                        <h3 className="mb-5 text-[17px] font-bold text-slate-900">Thống kê ứng tuyển</h3>
+                        <h3 className="mb-5 text-[17px] font-bold text-slate-900">Trạng thái hệ thống</h3>
                         <div className="rounded-[24px] bg-slate-50/60 p-6 space-y-4">
                           <div className="flex justify-between text-[14px]">
                             <span className="text-slate-500 font-medium">Đơn đã nộp</span>
@@ -250,6 +250,12 @@ export default function StudentProfileModal({
                           <div className="flex justify-between text-[14px]">
                             <span className="text-slate-500 font-medium">Trạng thái</span>
                             <span className="font-semibold text-slate-800">{profile.isOpenToWork ? "Đang tìm việc" : "Bận"}</span>
+                          </div>
+                          <div className="flex justify-between items-center text-[14px]">
+                            <span className="text-slate-500 font-medium">Tài khoản</span>
+                            <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[12px] font-bold uppercase tracking-tight ${profile.isActive ? "bg-emerald-50 text-emerald-600" : "bg-red-50 text-red-600"}`}>
+                              {profile.isActive ? "Hoạt động" : "Bị khóa"}
+                            </span>
                           </div>
                         </div>
                       </section>
