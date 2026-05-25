@@ -107,7 +107,25 @@ export default function SavedJobsTab() {
         {isLoading ? (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {[...Array(6)].map((_, i) => (
-              <div key={i} className="h-64 animate-pulse rounded-2xl bg-slate-100" />
+              <div key={i} className="flex flex-col rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
+                <div className="flex gap-4">
+                  <div className="h-16 w-16 shrink-0 animate-pulse rounded-xl bg-slate-100" />
+                  <div className="flex flex-1 flex-col justify-center gap-2.5">
+                    <div className="h-5 w-3/4 animate-pulse rounded-lg bg-slate-100" />
+                    <div className="h-3.5 w-1/2 animate-pulse rounded-lg bg-slate-100" />
+                  </div>
+                </div>
+                <div className="mt-4 grid grid-cols-2 gap-3">
+                  <div className="h-4 w-full animate-pulse rounded bg-slate-50" />
+                  <div className="h-4 w-full animate-pulse rounded bg-slate-50" />
+                  <div className="h-4 w-full animate-pulse rounded bg-slate-50" />
+                  <div className="h-4 w-full animate-pulse rounded bg-slate-50" />
+                </div>
+                <div className="mt-5 flex gap-2.5">
+                  <div className="h-10 w-10 animate-pulse rounded-xl bg-slate-50" />
+                  <div className="h-10 flex-1 animate-pulse rounded-xl bg-slate-50" />
+                </div>
+              </div>
             ))}
           </div>
         ) : data?.data.length === 0 ? (

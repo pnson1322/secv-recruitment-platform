@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Pencil, ShieldAlert, Camera, CheckCircle, XCircle, RefreshCcw, Unlock } from "lucide-react";
+import { Pencil, ShieldAlert, Camera, CheckCircle, XCircle, RefreshCcw, Unlock, MessageSquare } from "lucide-react";
 import type { Role } from "@/features/auth/constants/roles";
 import type { CompanyProfile, CompanyStatus } from "../../types/company.types";
 
@@ -14,6 +14,7 @@ type Props = {
   onChangeCoverImage?: () => void;
   onFollow?: () => void;
   onChangeStatus?: (status: CompanyStatus, reason?: string) => void;
+  onChat?: () => void;
 };
 
 export default function CompanyProfileHeader({
@@ -25,6 +26,7 @@ export default function CompanyProfileHeader({
   onChangeCoverImage,
   onFollow,
   onChangeStatus,
+  onChat,
 }: Props) {
   const isStudent = viewerRole === "STUDENT";
   const isAdmin = viewerRole === "ADMIN";
@@ -143,17 +145,27 @@ export default function CompanyProfileHeader({
                   {(isStudent || isAdmin) && (
                     <div className="shrink-0 flex items-center gap-3">
                       {isStudent && (
-                        <button
-                          type="button"
-                          onClick={onFollow}
-                          className={`inline-flex h-11 items-center justify-center rounded-xl px-5 text-[14px] font-semibold transition ${
-                            company.followed 
-                              ? "bg-red-50 text-red-600 border border-red-100 hover:bg-red-100" 
-                              : "bg-cyan-500 text-white hover:bg-cyan-600 shadow-lg shadow-cyan-100"
-                          }`}
-                        >
-                          {company.followed ? "Bỏ theo dõi" : "Theo dõi"}
-                        </button>
+                        <div className="flex gap-2">
+                          <button
+                            type="button"
+                            onClick={onFollow}
+                            className={`inline-flex h-11 items-center justify-center rounded-xl px-5 text-[14px] font-semibold transition ${
+                              company.followed 
+                                ? "bg-red-50 text-red-600 border border-red-100 hover:bg-red-100" 
+                                : "bg-cyan-500 text-white hover:bg-cyan-600 shadow-lg shadow-cyan-100"
+                            }`}
+                          >
+                            {company.followed ? "Bỏ theo dõi" : "Theo dõi"}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={onChat}
+                            className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-cyan-500 bg-cyan-50 text-cyan-600 px-5 text-[14px] font-semibold transition hover:bg-cyan-100"
+                          >
+                            <MessageSquare size={16} />
+                            Nhắn tin
+                          </button>
+                        </div>
                       )}
 
                       {isAdmin && (

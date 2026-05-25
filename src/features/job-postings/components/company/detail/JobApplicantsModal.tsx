@@ -7,6 +7,7 @@ import Pagination from "@/components/Pagination";
 import StudentProfileModal from "@/features/students/components/StudentProfileModal";
 import { useJobApplicants, type JobApplicantTab } from "../../../hooks/useJobApplicants";
 import { useCandidatesActions } from "@/features/candidates/hooks/useCandidatesActions";
+import { useStartChat } from "@/features/chat/hooks/useStartChat";
 import JobApplicantCard from "./JobApplicantCard";
 
 type Props = {
@@ -69,6 +70,7 @@ export default function JobApplicantsModal({ open, onClose, jobId, jobTitle }: P
     refetch,
   } = useJobApplicants(jobId, open && viewerRole === "COMPANY");
 
+  const { startChatWithStudent } = useStartChat();
   const {
     selectedProfile,
     setSelectedProfile,
@@ -205,6 +207,13 @@ export default function JobApplicantsModal({ open, onClose, jobId, jobTitle }: P
           role="company"
           applicationStatus={selectedProfile.status}
           cvUrl={"cvUrl" in selectedProfile ? (selectedProfile as any).cvUrl : undefined}
+          onChat={() =>
+            startChatWithStudent(
+              selectedProfile.student.studentId,
+              selectedProfile.student.fullName,
+              selectedProfile.student.avatarUrl
+            )
+          }
           onUpdateStatus={(newStatus) => {
             if (selectedProfile && "applicationId" in selectedProfile) {
               handleUpdateStatus(

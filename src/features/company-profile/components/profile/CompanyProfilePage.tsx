@@ -40,6 +40,7 @@ type CompanyProfilePageProps = {
   onChangeLogo?: () => void;
   onFollow?: () => void;
   onStatusChanged?: () => void;
+  onChat?: () => void;
   reviews?: CompanyComment[];
   reviewsPagination?: PaginationMeta;
   reviewsStats?: CompanyStatsData | null;
@@ -67,6 +68,7 @@ export default function CompanyProfilePage({
   onChangeLogo,
   onFollow,
   onStatusChanged,
+  onChat,
   reviews = [],
   reviewsPagination,
   reviewsStats,
@@ -100,6 +102,7 @@ export default function CompanyProfilePage({
         onChangeLogo={onChangeLogo}
         onFollow={onFollow}
         onChangeStatus={handleChangeStatus}
+        onChat={onChat}
       />
 
       <CompanyProfileStats company={company} totalJobs={jobs.length} />

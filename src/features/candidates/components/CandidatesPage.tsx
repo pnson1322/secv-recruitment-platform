@@ -7,6 +7,7 @@ import StudentProfileModal from "@/features/students/components/StudentProfileMo
 
 import { useCandidatesActions } from "../hooks/useCandidatesActions";
 import { useCandidatesPage } from "../hooks/useCandidatesPage";
+import { useStartChat } from "@/features/chat/hooks/useStartChat";
 
 import CandidateTabBar from "./CandidateTabBar";
 import CandidateToolbar from "./CandidateToolbar";
@@ -43,6 +44,7 @@ export default function CandidatesPage() {
     totalPages,
     refetch,
   } = useCandidatesPage();
+  const { startChatWithStudent } = useStartChat();
 
   const {
     selectedProfile,
@@ -157,9 +159,15 @@ export default function CandidatesPage() {
           onClose={() => setSelectedProfile(null)}
           studentId={selectedProfile.student.studentId}
           role="company"
-          adminNote={(selectedProfile as any).adminNote}
           applicationStatus={selectedProfile.status}
           showInviteCTA={tab === "invited"}
+          onChat={() =>
+            startChatWithStudent(
+              selectedProfile.student.studentId,
+              selectedProfile.student.fullName,
+              selectedProfile.student.avatarUrl
+            )
+          }
           cvUrl={"cvUrl" in selectedProfile ? (selectedProfile as any).cvUrl : undefined}
           onUpdateStatus={(newStatus) => {
             if ("applicationId" in selectedProfile) {

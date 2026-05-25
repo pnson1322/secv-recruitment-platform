@@ -1,41 +1,47 @@
 import { io, Socket } from "socket.io-client";
 
-let socket: Socket | null = null;
-let socketToken: string | null = null;
+const sockets: Record<string, Socket> = {};
+const socketTokens: Record<string, string> = {};
 
-export function connectSocket(token: string) {
-  if (socket && socket.connected && socketToken === token) {
-    return socket;
+export function connectSocket(token: string, namespace = "") {
+  const wsUrl = process.env.NEXT_PUBLIC_WS_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "";
+  const connectionUrl = namespace ? `${wsUrl.replace(/\/$/, "")}${namespace}` : wsUrl;
+  const key = namespace || "default";
+
+  if (sockets[key] && sockets[key].connected && socketTokens[key] === token) {
+    return sockets[key];
   }
 
-  if (socket && socketToken !== token) {
-    socket.disconnect();
-    socket = null;
-    socketToken = null;
+  if (sockets[key] && socketTokens[key] !== token) {
+    sockets[key].disconnect();
+    delete sockets[key];
+    delete socketTokens[key];
   }
 
-  if (!socket) {
-    socket = io(process.env.NEXT_PUBLIC_WS_URL as string, {
+  if (!sockets[key]) {
+    sockets[key] = io(connectionUrl, {
       transports: ["websocket"],
       auth: {
         token: `Bearer ${token}`,
       },
     });
 
-    socketToken = token;
+    socketTokens[key] = token;
   }
 
-  return socket;
+  return sockets[key];
 }
 
-export function getSocket() {
-  return socket;
+export function getSocket(namespace = "") {
+  const key = namespace || "default";
+  return sockets[key] || null;
 }
 
-export function disconnectSocket() {
-  if (!socket) return;
+export function disconnectSocket(namespace = "") {
+  const key = namespace || "default";
+  if (!sockets[key]) return;
 
-  socket.disconnect();
-  socket = null;
-  socketToken = null;
+  sockets[key].disconnect();
+  delete sockets[key];
+  delete socketTokens[key];
 }

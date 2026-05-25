@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Mail, DollarSign, MapPin, Calendar, CheckCircle2, XCircle, Clock } from "lucide-react";
 import { formatSalary } from "@/features/job-postings/utils/job-postings.utils";
 import type { InvitationItem } from "../../types/application.types";
@@ -36,13 +37,13 @@ export default function InvitationListItem({ invitation, onAccept, onReject }: P
     <div className="group overflow-hidden rounded-[24px] border border-slate-100 bg-white p-6 shadow-sm transition-all hover:border-cyan-200 hover:shadow-md">
       <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div className="flex gap-4">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-cyan-600 text-white shadow-lg shadow-cyan-100">
+          <Link href={`/jobs-detail/${invitation.job.jobId}`} className="flex gap-4 flex-1 group/link">
+            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-cyan-600 text-white shadow-lg shadow-cyan-100 transition-transform group-hover/link:scale-105">
               <Mail size={28} />
             </div>
 
             <div className="min-w-0">
-              <h3 className="truncate text-[18px] font-bold text-slate-900 group-hover:text-cyan-600 transition-colors">
+              <h3 className="truncate text-[18px] font-bold text-slate-900 group-hover/link:text-cyan-600 transition-colors">
                 {invitation.job.jobTitle}
               </h3>
               <p className="font-medium text-slate-600">{invitation.company.companyName}</p>
@@ -62,7 +63,7 @@ export default function InvitationListItem({ invitation, onAccept, onReject }: P
                 </div>
               </div>
             </div>
-          </div>
+          </Link>
 
           <span className={`self-start rounded-full border px-4 py-1 text-[12px] font-bold ${config.className}`}>
             {config.label}

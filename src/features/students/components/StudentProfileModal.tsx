@@ -1,6 +1,6 @@
 "use client";
 
-import { X, Mail, Phone, Calendar, Download, FileText, AlertCircle, Star, FileWarning } from "lucide-react";
+import { X, Mail, Phone, Calendar, Download, FileText, AlertCircle, Star, FileWarning, MessageSquare } from "lucide-react";
 import ClientPortal from "@/components/ClientPortal";
 import { useStudentProfileModal } from "../hooks/useStudentProfileModal";
 import { handleDownloadCV } from "@/utils/downloadCV";
@@ -18,6 +18,7 @@ type Props = {
   inviteLabel?: string;
   showInviteCTA?: boolean;
   cvUrl?: string;
+  onChat?: () => void;
 };
 
 const ACADEMIC_STATUS = {
@@ -37,6 +38,7 @@ export default function StudentProfileModal({
   inviteLabel = "Gửi lời mời",
   showInviteCTA = false,
   cvUrl,
+  onChat,
 }: Props) {
   const { profile, isLoading, isError, retry } = useStudentProfileModal(open, studentId, onClose);
 
@@ -274,6 +276,15 @@ export default function StudentProfileModal({
               
               {role === "company" && (
                 <>
+                  {onChat && (
+                    <button
+                      onClick={onChat}
+                      className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl border border-cyan-500 bg-cyan-50 px-6 text-[15px] font-semibold text-cyan-600 transition hover:bg-cyan-100 active:scale-95"
+                    >
+                      <MessageSquare size={18} />
+                      Nhắn tin
+                    </button>
+                  )}
                   {applicationStatus === "submitted" && (
                     <>
                       <button onClick={() => onUpdateStatus?.("rejected")} className="h-12 min-w-[120px] rounded-2xl border-2 border-red-500 text-[15px] font-semibold text-red-500 hover:bg-red-50">Loại</button>

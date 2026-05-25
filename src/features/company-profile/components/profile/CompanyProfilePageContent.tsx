@@ -23,6 +23,7 @@ import ApplyJobModal from "@/features/applications/components/modals/ApplyJobMod
 import type { JobPostingDataItem } from "@/features/job-postings/types/job-postings.types";
 import { useApplyJob } from "@/features/applications/hooks/useApplyJob";
 import { useFollowCompany } from "@/features/companies/hooks/useFollowCompany";
+import { useStartChat } from "@/features/chat/hooks/useStartChat";
 
 type CompanyProfilePageContentProps = {
   companyId?: string;
@@ -70,6 +71,7 @@ export default function CompanyProfilePageContent({
   const { applyJobData, handleOpenApplyModal, handleCloseApplyModal } = useApplyJob();
   const toggleFollowMutation = useFollowCompany(company?.companyId ?? 0);
   const isOwner = viewerRole === "COMPANY" && !companyId;
+  const { startChatWithCompany } = useStartChat();
 
   const isCompanyViewingOwn = isOwner && viewerRole === "COMPANY";
   const isAdminViewing = viewerRole === "ADMIN" && !!companyId;
@@ -130,6 +132,7 @@ export default function CompanyProfilePageContent({
         onFollow={() => toggleFollowMutation.mutate(company?.followed ?? false, { onSuccess: () => refetchProfile() })}
         onStatusChanged={() => refetchProfile()}
         onApplyJob={(job: JobPostingDataItem) => handleOpenApplyModal(job.jobId, job.jobTitle)}
+        onChat={() => company.companyId && startChatWithCompany(company.companyId)}
         reviews={reviews}
         reviewsPagination={reviewsPagination}
         reviewsStats={reviewsStats}

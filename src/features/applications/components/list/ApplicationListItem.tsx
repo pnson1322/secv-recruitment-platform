@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { ChevronDown, ChevronUp, Calendar, Building2, Clock, Eye, Users, CheckCircle2, Star, XCircle } from "lucide-react";
 import type { DataPagination } from "../../types/application.types";
 import { useState } from "react";
@@ -57,8 +58,8 @@ export default function ApplicationListItem({ application }: Props) {
       }`}
     >
       <div className="flex flex-col gap-4 px-6 py-6 md:flex-row md:items-center md:justify-between md:px-8 md:py-7">
-        <div className="flex items-center gap-5">
-          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-slate-50 text-slate-400 shadow-inner group-hover:bg-cyan-50 group-hover:text-cyan-500 transition-colors">
+        <Link href={`/jobs-detail/${application.job.jobId}`} className="flex items-center gap-5 flex-1 group/link">
+          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-slate-50 text-slate-400 shadow-inner group-hover/link:bg-cyan-50 group-hover/link:text-cyan-500 transition-colors">
             {application.company.logoUrl ? (
               <img 
                 src={application.company.logoUrl} 
@@ -71,7 +72,7 @@ export default function ApplicationListItem({ application }: Props) {
           </div>
 
           <div className="min-w-0">
-            <h3 className="truncate text-[17px] font-bold text-slate-900 group-hover:text-cyan-600 transition-colors">
+            <h3 className="truncate text-[17px] font-bold text-slate-900 group-hover/link:text-cyan-600 transition-colors">
               {application.job.jobTitle}
             </h3>
             <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-[14px] text-slate-500">
@@ -82,7 +83,7 @@ export default function ApplicationListItem({ application }: Props) {
               </div>
             </div>
           </div>
-        </div>
+        </Link>
 
         <div className="flex items-center justify-between gap-4 md:justify-end">
           <span className={`rounded-full border px-4 py-1 text-[13px] font-bold ${config.className}`}>

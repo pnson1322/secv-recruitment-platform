@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/features/auth/hooks/useAuth";
+import { useStartChat } from "@/features/chat/hooks/useStartChat";
 import { useCompanyProfile } from "@/features/company-profile/hooks/useCompanyProfile";
 import { useJobPostingDetail } from "../../hooks/useJobPostingDetail";
 import { usePatchJobPostingMutation } from "../../hooks/usePatchJobPostingMutation";
@@ -80,6 +81,7 @@ export default function JobPostingDetailPageContent({ jobId }: Props) {
 
   const patchMutation = usePatchJobPostingMutation(jobId);
   const toggleActiveMutation = useToggleJobPostingActiveMutation({ jobId });
+  const { startChatWithCompany } = useStartChat();
 
   const actions = useJobPostingDetailActions({
     viewerRole,
@@ -160,6 +162,7 @@ export default function JobPostingDetailPageContent({ jobId }: Props) {
               onReject={actions.handleReject}
               onRestrict={actions.handleRestrict}
               onReapprove={actions.handleReapprove}
+              onChat={() => startChatWithCompany(job.companyId)}
             />
 
             <JobPostingDetailSection

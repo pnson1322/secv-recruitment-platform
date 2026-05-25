@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import OAuthCallbackPageContent from "@/features/auth/components/OAuthCallbackPageContent";
 import { Metadata } from "next";
 
@@ -7,5 +8,9 @@ export const metadata: Metadata = {
 };
 
 export default function OAuthCallbackPage() {
-  return <OAuthCallbackPageContent />;
+  return (
+    <Suspense>
+      <OAuthCallbackPageContent />
+    </Suspense>
+  );
 }

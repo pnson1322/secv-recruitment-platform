@@ -15,6 +15,7 @@ import {
   X,
   ShieldAlert,
   Bookmark,
+  MessageSquare,
 } from "lucide-react";
 import type {
   JobPostingStatus,
@@ -51,6 +52,7 @@ type Props = {
   onReject: () => void;
   onRestrict: () => void;
   onReapprove: () => void;
+  onChat?: () => void;
 };
 
 export default function JobPostingDetailHeader({
@@ -83,6 +85,7 @@ export default function JobPostingDetailHeader({
   onReject,
   onRestrict,
   onReapprove,
+  onChat,
 }: Props) {
   const isCompany = viewerRole === "COMPANY";
   const isAdmin = viewerRole === "ADMIN";
@@ -281,7 +284,7 @@ export default function JobPostingDetailHeader({
         ) : null}
 
         {isStudent ? (
-          <div className="grid gap-3 md:grid-cols-2">
+          <div className="grid gap-3 md:grid-cols-3">
             <button
               type="button"
               onClick={onApply}
@@ -303,6 +306,15 @@ export default function JobPostingDetailHeader({
             >
               <Bookmark size={18} className={isSaved ? "fill-amber-600" : ""} />
               {isSaved ? "Đã lưu" : "Lưu tin"}
+            </button>
+
+            <button
+              type="button"
+              onClick={onChat}
+              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-cyan-500 bg-cyan-50 text-cyan-600 px-5 py-3 text-[15px] font-semibold transition hover:bg-cyan-100"
+            >
+              <MessageSquare size={18} />
+              Nhắn tin
             </button>
           </div>
         ) : null}

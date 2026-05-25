@@ -4,6 +4,7 @@ import { Filter, RefreshCcw, TriangleAlert, UsersRound } from "lucide-react";
 import Pagination from "@/components/Pagination";
 import StudentProfileModal from "@/features/students/components/StudentProfileModal";
 import { useSearchCandidatesPage } from "../hooks/useSearchCandidatesPage";
+import { useStartChat } from "@/features/chat/hooks/useStartChat";
 import SearchCandidateCard from "./search/SearchCandidateCard";
 import SearchCandidateInviteModal from "./search/SearchCandidateInviteModal";
 import SearchCandidatesFilters, {
@@ -59,6 +60,8 @@ export default function SearchCandidatesPage() {
     submitInvite,
     isSubmittingInvite,
   } = useSearchCandidatesPage();
+
+  const { startChatWithStudent } = useStartChat();
 
   return (
     <>
@@ -235,6 +238,18 @@ export default function SearchCandidatesPage() {
           if (student) {
             setSelectedProfileStudentId(null);
             openInviteModal(student);
+          }
+        }}
+        onChat={() => {
+          if (selectedProfileStudentId) {
+            const student = candidates.find(
+              (c) => c.studentId === selectedProfileStudentId,
+            );
+            startChatWithStudent(
+              selectedProfileStudentId,
+              student?.fullName,
+              student?.avatarUrl,
+            );
           }
         }}
       />
