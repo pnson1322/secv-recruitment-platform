@@ -2,7 +2,6 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
 import {
   useCompanyDashboardStats,
   useApplicationRateStats,
@@ -19,19 +18,42 @@ import SuccessRateChart from "./recruiter/SuccessRateChart";
 import JobCategoryDistribution from "./recruiter/JobCategoryDistribution";
 import RecentJobsSection from "./recruiter/RecentJobsSection";
 
+import { RecruiterDashboardSkeleton } from "./shared/DashboardSkeleton";
+import DashboardErrorState from "./shared/DashboardErrorState";
+
 export default function RecruiterDashboardPage() {
   const router = useRouter();
 
-  const { data: statsRes, isLoading: statsLoading } = useCompanyDashboardStats();
+  const {
+    data: statsRes,
+    isLoading: statsLoading,
+    isError: statsError,
+    refetch: refetchStats,
+  } = useCompanyDashboardStats();
   const stats = statsRes?.data;
 
-  const { data: successRateRes, isLoading: successRateLoading } = useApplicationRateStats();
+  const {
+    data: successRateRes,
+    isLoading: successRateLoading,
+    isError: successRateError,
+    refetch: refetchSuccessRate,
+  } = useApplicationRateStats();
   const successRates: ApplicationRateStat[] = successRateRes?.data || [];
 
-  const { data: categoryRes, isLoading: categoryLoading } = useJobsByCategoryStats();
+  const {
+    data: categoryRes,
+    isLoading: categoryLoading,
+    isError: categoryError,
+    refetch: refetchCategories,
+  } = useJobsByCategoryStats();
   const categories: JobByCategoryStat[] = categoryRes?.data || [];
 
-  const { data: recentJobsRes, isLoading: recentJobsLoading } = useQuery({
+  const {
+    data: recentJobsRes,
+    isLoading: recentJobsLoading,
+    isError: recentJobsError,
+    refetch: refetchRecentJobs,
+  } = useQuery({
     queryKey: ["recruiter-recent-jobs"],
     queryFn: () => getJobPostingCardsForCompany({ page: 1, limit: 6 }),
     staleTime: 1000 * 60 * 5,
@@ -44,17 +66,25 @@ export default function RecruiterDashboardPage() {
     categoryLoading ||
     recentJobsLoading;
 
+  const isError =
+    statsError ||
+    successRateError ||
+    categoryError ||
+    recentJobsError;
+
+  const handleRetry = () => {
+    refetchStats();
+    refetchSuccessRate();
+    refetchCategories();
+    refetchRecentJobs();
+  };
+
   if (isLoading) {
-    return (
-      <div className="flex min-h-[50vh] items-center justify-center">
-        <div className="flex flex-col items-center gap-3">
-          <Loader2 className="h-10 w-10 animate-spin text-(--color-accent)" />
-          <p className="text-[15px] font-medium text-(--color-muted)">
-            Đang tải dữ liệu tổng quan...
-          </p>
-        </div>
-      </div>
-    );
+    return <RecruiterDashboardSkeleton />;
+  }
+
+  if (isError) {
+    return <DashboardErrorState onRetry={handleRetry} />;
   }
 
   return (
