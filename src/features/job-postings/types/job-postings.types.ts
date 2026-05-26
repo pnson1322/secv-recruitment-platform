@@ -229,6 +229,7 @@ export type JobRecommendation = {
   salaryMin: number | null;
   salaryMax: number | null;
   salaryType: string;
+  saved?: boolean;
   isSalaryNegotiable: boolean;
   postedAt: string;
   skills: SkillItem[];

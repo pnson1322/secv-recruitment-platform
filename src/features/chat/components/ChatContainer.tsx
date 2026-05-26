@@ -39,6 +39,7 @@ export default function ChatContainer() {
     fileInputRef,
     messagesEndRef,
     chatMessagesContainerRef,
+    isPartnerTyping,
   } = useChatFlow();
 
   return (
@@ -84,6 +85,7 @@ export default function ChatContainer() {
               activeConversation={activeConversation}
               messagesEndRef={messagesEndRef}
               currentUserId={user?.user_id}
+              isPartnerTyping={isPartnerTyping}
             />
 
             <MessageInput

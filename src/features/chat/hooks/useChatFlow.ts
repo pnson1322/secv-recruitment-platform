@@ -49,6 +49,10 @@ export function useChatFlow() {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatMessagesContainerRef = useRef<HTMLDivElement>(null);
+  const lastMarkedMessageIdRef = useRef<number | null>(null);
+  const [isPartnerTyping, setIsPartnerTyping] = useState(false);
+  const isLocalTypingRef = useRef(false);
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (queryConversationId) {
@@ -110,11 +114,63 @@ export function useChatFlow() {
   const hideConversationMutation = useHideConversation();
   const blockConversationMutation = useBlockConversation();
 
-  useChatSocket({
+  const { sendTypingStatus } = useChatSocket({
     token,
     activeConversationId,
     userId: user?.user_id,
+    onPartnerTypingChange: setIsPartnerTyping,
   });
+
+  const handleLocalTyping = () => {
+    if (!activeConversationId) return;
+
+    if (!isLocalTypingRef.current) {
+      isLocalTypingRef.current = true;
+      sendTypingStatus(true);
+    }
+
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+
+    typingTimeoutRef.current = setTimeout(() => {
+      isLocalTypingRef.current = false;
+      sendTypingStatus(false);
+    }, 2000);
+  };
+
+  useEffect(() => {
+    if (!messageText) {
+      if (isLocalTypingRef.current) {
+        isLocalTypingRef.current = false;
+        sendTypingStatus(false);
+      }
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
+      return;
+    }
+    handleLocalTyping();
+  }, [messageText]);
+
+  useEffect(() => {
+    if (isLocalTypingRef.current) {
+      isLocalTypingRef.current = false;
+      sendTypingStatus(false);
+    }
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+    setIsPartnerTyping(false);
+  }, [activeConversationId]);
+
+  useEffect(() => {
+    return () => {
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const filteredConversationsResponse = useMemo(() => {
     if (!conversations) return undefined;
@@ -300,15 +356,21 @@ export function useChatFlow() {
   };
 
   useEffect(() => {
+    lastMarkedMessageIdRef.current = null;
+  }, [activeConversationId]);
+
+  useEffect(() => {
     if (!activeConversationId || sortedMessages.length === 0) return;
     const latestMessage = sortedMessages[sortedMessages.length - 1];
 
-    if (
-      latestMessage &&
-      !latestMessage.isMine &&
-      activeConversation &&
-      activeConversation.unreadCount > 0
-    ) {
+    if (!latestMessage) return;
+
+    const shouldMark =
+      (!latestMessage.isMine && latestMessage.messageId !== lastMarkedMessageIdRef.current) ||
+      (activeConversation && activeConversation.unreadCount > 0 && latestMessage.messageId !== lastMarkedMessageIdRef.current);
+
+    if (shouldMark) {
+      lastMarkedMessageIdRef.current = latestMessage.messageId;
       markReadMutation.mutate({
         conversationId: activeConversationId,
         messageId: latestMessage.messageId,
@@ -378,6 +440,7 @@ export function useChatFlow() {
     fileInputRef,
     messagesEndRef,
     chatMessagesContainerRef,
+    isPartnerTyping,
   };
 }
 export default useChatFlow;

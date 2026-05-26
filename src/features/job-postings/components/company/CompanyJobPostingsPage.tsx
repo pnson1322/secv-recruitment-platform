@@ -19,16 +19,18 @@ export default function CompanyJobPostingsPage({
     useCompanyJobPostingsPage();
 
   return (
-    <div className="mx-6 space-y-6 xl:mx-8">
+    <div className="mx-auto max-w-7xl space-y-6 px-4 sm:px-6 lg:px-8">
       <JobPostingStatsGrid stats={stats} />
 
-      <JobPostingToolbar
-        searchValue={searchInput}
-        tagValue={tag}
-        onSearchChange={setSearchInput}
-        onTagChange={setTag}
-        onCreate={() => onCreateJob?.()}
-      />
+      <div className="rounded-3xl border border-(--color-border) bg-white p-5 shadow-xs">
+        <JobPostingToolbar
+          searchValue={searchInput}
+          tagValue={tag}
+          onSearchChange={setSearchInput}
+          onTagChange={setTag}
+          onCreate={() => onCreateJob?.()}
+        />
+      </div>
 
       {isLoading ? (
         <div className="flex items-center justify-center rounded-3xl border border-(--color-border) bg-white px-6 py-16 shadow-sm">

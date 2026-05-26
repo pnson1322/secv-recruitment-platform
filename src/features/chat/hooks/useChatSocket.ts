@@ -10,9 +10,15 @@ type UseChatSocketProps = {
   token: string | null;
   activeConversationId: number | null;
   userId?: string | number | null;
+  onPartnerTypingChange?: (isTyping: boolean) => void;
 };
 
-export function useChatSocket({ token, activeConversationId, userId }: UseChatSocketProps) {
+export function useChatSocket({
+  token,
+  activeConversationId,
+  userId,
+  onPartnerTypingChange,
+}: UseChatSocketProps) {
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -126,6 +132,11 @@ export function useChatSocket({ token, activeConversationId, userId }: UseChatSo
       updateConversationList(message);
     };
 
+    const handleUserTyping = ({ userId: typingUserId, isTyping }: { userId: number; isTyping: boolean }) => {
+      if (userId !== undefined && userId !== null && String(typingUserId) === String(userId)) return;
+      onPartnerTypingChange?.(isTyping);
+    };
+
     const handleReadReceipt = ({ conversationId }: { conversationId: number }) => {
       queryClient.setQueriesData<ApiResponse<ConversationsResponse>>(
         { queryKey: ["chat", "conversations"] },
@@ -154,6 +165,7 @@ export function useChatSocket({ token, activeConversationId, userId }: UseChatSo
 
     socket.on("message_sent", handleMessageSent);
     socket.on("new_message", handleNewMessage);
+    socket.on("user_typing", handleUserTyping);
     socket.on("read_receipt", handleReadReceipt);
     socket.on("blocked_updated", handleInvalidateConversations);
     socket.on("you_were_blocked", handleInvalidateConversations);
@@ -168,13 +180,14 @@ export function useChatSocket({ token, activeConversationId, userId }: UseChatSo
       socket.off("connect", handleConnect);
       socket.off("message_sent", handleMessageSent);
       socket.off("new_message", handleNewMessage);
+      socket.off("user_typing", handleUserTyping);
       socket.off("read_receipt", handleReadReceipt);
       socket.off("blocked_updated", handleInvalidateConversations);
       socket.off("you_were_blocked", handleInvalidateConversations);
       socket.off("you_were_unblocked", handleInvalidateConversations);
       socket.off("hidden_updated", handleInvalidateConversations);
     };
-  }, [token, activeConversationId, queryClient, userId]);
+  }, [token, activeConversationId, queryClient, userId, onPartnerTypingChange]);
 
   useEffect(() => {
     if (!token || !activeConversationId) return;
@@ -191,5 +204,17 @@ export function useChatSocket({ token, activeConversationId, userId }: UseChatSo
       }
     };
   }, [token, activeConversationId]);
+
+  const sendTypingStatus = (isTyping: boolean) => {
+    if (!token || !activeConversationId) return;
+    const socket = connectSocket(token, "/chat");
+    if (socket && socket.connected) {
+      socket.emit(isTyping ? "typing_start" : "typing_stop", {
+        conversationId: activeConversationId,
+      });
+    }
+  };
+
+  return { sendTypingStatus };
 }
 export default useChatSocket;

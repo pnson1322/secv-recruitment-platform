@@ -16,6 +16,7 @@ type MessageListProps = {
   activeConversation: Conversation;
   messagesEndRef: React.RefObject<HTMLDivElement | null>;
   currentUserId?: string | number | null;
+  isPartnerTyping?: boolean;
 };
 
 export default function MessageList({
@@ -30,6 +31,7 @@ export default function MessageList({
   activeConversation,
   messagesEndRef,
   currentUserId,
+  isPartnerTyping,
 }: MessageListProps) {
   const [lightbox, setLightbox] = useState<{ urls: string[]; index: number } | null>(null);
 
@@ -296,6 +298,20 @@ export default function MessageList({
               })}
             </div>
           ))
+        )}
+        {isPartnerTyping && (
+          <div className="flex items-end gap-2.5 justify-start mt-4">
+            <div className="shrink-0 mb-1">
+              {partnerAvatar}
+            </div>
+            <div className="bg-white text-slate-800 border border-slate-100 rounded-2xl rounded-bl-none px-4 py-3 shadow-sm max-w-[70%]">
+              <div className="flex items-center gap-1.5 px-0.5">
+                <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+                <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+                <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce"></span>
+              </div>
+            </div>
+          </div>
         )}
         <div ref={messagesEndRef} />
       </div>

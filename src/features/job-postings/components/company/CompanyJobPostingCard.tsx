@@ -20,8 +20,8 @@ export default function CompanyJobPostingCard({ item, onViewDetail }: Props) {
   const tagMeta = getJobPostingTagMeta(item.tag);
 
   return (
-    <article className="rounded-3xl border border-(--color-border) bg-white p-5 shadow-sm transition hover:shadow-md">
-      <div className="flex h-full flex-col">
+    <article className="flex flex-col h-full rounded-3xl border border-(--color-border) bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:border-(--color-accent)">
+      <div className="flex flex-1 flex-col">
         <div className="flex items-start gap-4">
           <div className="relative flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-(--color-surface) text-(--color-muted)">
             {item.logoUrl ? (
@@ -83,7 +83,7 @@ export default function CompanyJobPostingCard({ item, onViewDetail }: Props) {
           </span>
         </div>
 
-        <div className="mt-4 flex flex-wrap gap-2">
+        <div className="mt-4 mb-5 flex flex-wrap gap-2">
           {item.skills.map((skill) => (
             <span
               key={skill.skillId}
@@ -94,7 +94,7 @@ export default function CompanyJobPostingCard({ item, onViewDetail }: Props) {
           ))}
         </div>
 
-        <div className="mt-5 border-t border-(--color-border) pt-4">
+        <div className="mt-auto pt-4 border-t border-(--color-border)">
           <div className="flex items-center justify-between gap-3">
             <span className="text-[14px] text-(--color-muted)">
               {item.applicantCount} ứng viên
