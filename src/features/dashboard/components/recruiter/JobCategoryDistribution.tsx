@@ -9,16 +9,13 @@ type Props = {
 };
 
 export default function JobCategoryDistribution({ categories }: Props) {
-  // State to track which segment is hovered
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
 
-  // Calculate total jobs across categories
   const totalJobs = categories.reduce(
     (acc: number, cat: JobByCategoryStat) => acc + (cat.jobs?.length || 0),
     0
   );
 
-  // SVG dimensions
   const center = 100;
   const colors = ["#06b6d4", "#6366f1", "#10b981", "#f59e0b", "#ec4899", "#8b5cf6"];
 
@@ -26,7 +23,6 @@ export default function JobCategoryDistribution({ categories }: Props) {
 
   return (
     <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-xs">
-      {/* Header with integrated total jobs badge */}
       <div className="flex items-center justify-between border-b border-slate-100 pb-4">
         <div className="flex items-center gap-3">
           <div className="rounded-xl bg-cyan-50 p-2 text-cyan-600">
@@ -57,7 +53,6 @@ export default function JobCategoryDistribution({ categories }: Props) {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-8 items-center">
-            {/* SVG Donut/Pie Chart Container */}
             <div className="relative mx-auto h-[200px] w-[200px]">
               <svg
                 width="200"
@@ -65,7 +60,6 @@ export default function JobCategoryDistribution({ categories }: Props) {
                 viewBox="0 0 200 200"
                 className="transform -rotate-90 overflow-visible"
               >
-                {/* Background track circle (visible by default as the donut hole background) */}
                 <circle
                   cx={center}
                   cy={center}
@@ -75,24 +69,20 @@ export default function JobCategoryDistribution({ categories }: Props) {
                   strokeWidth={30}
                 />
 
-                {/* Dynamic Pie segments */}
                 {categories.map((cat, idx) => {
                   const count = cat.jobs?.length || 0;
                   if (count === 0 || totalJobs === 0) return null;
 
                   const percent = count / totalJobs;
 
-                  // Geometry calculations based on active/inactive hover state
                   let currentRadius = 60;
-                  let currentStrokeWidth = 30; // Default: inner = 45, outer = 75
+                  let currentStrokeWidth = 30; 
 
                   if (hoveredIdx !== null) {
                     if (hoveredIdx === idx) {
-                      // Active segment: solid slice, larger outer radius (inner = 0, outer = 96)
                       currentRadius = 48;
                       currentStrokeWidth = 96;
                     } else {
-                      // Inactive segments: solid slice, smaller outer radius (inner = 0, outer = 64)
                       currentRadius = 32;
                       currentStrokeWidth = 64;
                     }
@@ -129,7 +119,6 @@ export default function JobCategoryDistribution({ categories }: Props) {
               </svg>
             </div>
 
-            {/* Interactive Legend List */}
             <div className="space-y-2">
               {categories.map((cat, idx) => {
                 const count = cat.jobs?.length || 0;
@@ -168,7 +157,6 @@ export default function JobCategoryDistribution({ categories }: Props) {
                       </span>
                     </div>
 
-                    {/* Micro horizontal progress bar inside the legend */}
                     <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden ml-5.5">
                       <div
                         className="h-full rounded-full transition-all duration-500 ease-out"
