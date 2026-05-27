@@ -62,8 +62,12 @@ export type UploadResumeResponse = {
 export type MyProfile = {
   studentId: number;
   fullName: string;
+  email: string;
+  phone: string;
+  studentCode: string;
   avatarUrl: string | null;
   currentYear: number;
+  studentStatus: StudentStatus;
   gpa: string;
   isOpenToWork: boolean;
   skills: {
