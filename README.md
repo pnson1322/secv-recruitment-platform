@@ -332,6 +332,45 @@ pnpm start          # hoặc: npm run start
 
 ---
 
+## 🌐 Hướng dẫn Deploy lên Vercel
+
+[Vercel](https://vercel.com) là nền tảng deploy chính thức của Next.js, hỗ trợ CI/CD tự động, SSL miễn phí và CDN toàn cầu.
+
+### Cách 1: Deploy qua Giao diện Web (Khuyên dùng)
+
+1. **Push mã nguồn** lên GitHub (hoặc GitLab/Bitbucket).
+2. Truy cập [vercel.com/new](https://vercel.com/new) → Đăng nhập bằng tài khoản GitHub.
+3. Chọn **Import** repository `se-cv-fe`.
+4. Cấu hình **Environment Variables**:
+   | Tên biến | Giá trị |
+   | :--- | :--- |
+   | `NEXT_PUBLIC_API_BASE_URL` | `https://api.your-domain.com` *(URL API Backend production)* |
+5. Nhấn **Deploy** → Vercel tự động build và cấp cho bạn một URL dạng `https://se-cv-fe-xxx.vercel.app`.
+6. *(Tùy chọn)* Vào **Settings → Domains** để gán tên miền riêng (custom domain).
+
+### Cách 2: Deploy qua Vercel CLI
+
+```bash
+# 1. Cài đặt Vercel CLI
+npm install -g vercel
+
+# 2. Đăng nhập
+vercel login
+
+# 3. Deploy (chạy từ thư mục gốc dự án)
+vercel
+
+# 4. Deploy lên Production
+vercel --prod
+```
+
+> **Lưu ý quan trọng:**
+> - Biến môi trường `NEXT_PUBLIC_API_BASE_URL` **bắt buộc** phải được cấu hình trên Vercel Dashboard (Settings → Environment Variables) trỏ đến địa chỉ API Backend production. Không được dùng `localhost`.
+> - Mỗi lần push code lên nhánh `main`, Vercel sẽ **tự động build và deploy** phiên bản mới (CI/CD).
+> - Push lên các nhánh khác (`feature/*`, `bugfix/*`...) sẽ tạo **Preview Deployment** riêng để kiểm tra trước khi merge.
+
+---
+
 ## 🧑‍💻 Quy chuẩn viết Code
 
 ### Đặt tên
