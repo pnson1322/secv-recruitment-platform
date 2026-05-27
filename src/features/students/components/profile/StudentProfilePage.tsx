@@ -3,6 +3,7 @@
 import { useStudentProfilePage } from "../../hooks/useStudentProfilePage";
 import CVManagementSection from "./CVManagementSection";
 import JobStatusSection from "./JobStatusSection";
+import JobPreferenceSection from "./JobPreferenceSection";
 import SkillsInterestsSection from "./SkillsInterestsSection";
 import { Loader2, AlertCircle } from "lucide-react";
 import ViewCVModal from "./modals/ViewCVModal";
@@ -78,6 +79,8 @@ export default function StudentProfilePage() {
           onUpdate={handleUpdateJobStatus}
           isLoading={isUpdatingStatus}
         />
+
+        <JobPreferenceSection />
 
         <SkillsInterestsSection 
           skills={profile.skills} 

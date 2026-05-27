@@ -306,8 +306,8 @@ export default function MessageList({
             </div>
             <div className="bg-white text-slate-800 border border-slate-100 rounded-2xl rounded-bl-none px-4 py-3 shadow-sm max-w-[70%]">
               <div className="flex items-center gap-1.5 px-0.5">
-                <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
-                <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+                <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: "-0.3s" }}></span>
+                <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: "-0.15s" }}></span>
                 <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce"></span>
               </div>
             </div>

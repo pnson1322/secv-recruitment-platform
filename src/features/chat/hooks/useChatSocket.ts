@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import { useQueryClient, type InfiniteData } from "@tanstack/react-query";
 import { connectSocket } from "@/lib/socket";
 import { chatKeys } from "./useChat";
@@ -194,26 +194,22 @@ export function useChatSocket({
 
     const socket = connectSocket(token, "/chat");
 
-    if (socket.connected) {
-      socket.emit("join_conversation", { conversationId: activeConversationId });
-    }
+    socket.emit("join_conversation", { conversationId: activeConversationId });
 
     return () => {
-      if (socket.connected) {
-        socket.emit("leave_conversation", { conversationId: activeConversationId });
-      }
+      socket.emit("leave_conversation", { conversationId: activeConversationId });
     };
   }, [token, activeConversationId]);
 
-  const sendTypingStatus = (isTyping: boolean) => {
+  const sendTypingStatus = useCallback((isTyping: boolean) => {
     if (!token || !activeConversationId) return;
     const socket = connectSocket(token, "/chat");
-    if (socket && socket.connected) {
+    if (socket) {
       socket.emit(isTyping ? "typing_start" : "typing_stop", {
         conversationId: activeConversationId,
       });
     }
-  };
+  }, [token, activeConversationId]);
 
   return { sendTypingStatus };
 }

@@ -10,6 +10,7 @@ import {
   StudentGeneralStats,
   StudentAdminListItem,
   StudentListParams,
+  JobPreference
 } from "../types/student.types";
 
 export async function getStudentGeneralStats() {
@@ -122,6 +123,19 @@ export async function updateStudentActiveStatus(studentId: number, isActive: boo
   const res = await api.patch<ApiResponse<Record<string, never>>>(
     `/student/${studentId}/active`,
     { isActive }
+  );
+  return res.data;
+}
+
+export async function getJobPreference() {
+  const res = await api.get<ApiResponse<JobPreference>>("/student/job-preference");
+  return res.data;
+}
+
+export async function updateJobPreference(body: JobPreference) {
+  const res = await api.patch(
+    "/student/me/job-preference",
+    body,
   );
   return res.data;
 }

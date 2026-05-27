@@ -33,6 +33,71 @@ const salaryModeOptions: Array<{
   { label: "Thỏa thuận", value: "NEGOTIABLE" },
 ];
 
+const LOCATIONS = [
+  "Hà Nội",
+  "Hồ Chí Minh",
+  "Bình Dương",
+  "Đà Nẵng",
+  "Đồng Nai",
+  "Long An",
+  "Bà Rịa - Vũng Tàu",
+  "Hải Phòng",
+  "Bắc Ninh",
+  "Cần Thơ",
+  "Hà Nam",
+  "Quảng Nam",
+  "Hưng Yên",
+  "Vĩnh Phúc",
+  "Thừa Thiên Huế",
+  "Khánh Hòa",
+  "Hải Dương",
+  "Tiền Giang",
+  "Thanh Hóa",
+  "Nam Định",
+  "Bắc Giang",
+  "Thái Bình",
+  "Phú Thọ",
+  "Nghệ An",
+  "Quảng Ngãi",
+  "Bình Định",
+  "Quảng Ninh",
+  "Lâm Đồng",
+  "Kiên Giang",
+  "Tây Ninh",
+  "An Giang",
+  "Hậu Giang",
+  "Trà Vinh",
+  "Bình Phước",
+  "Đồng Tháp",
+  "Bến Tre",
+  "Vĩnh Long",
+  "Lào Cai",
+  "Sơn La",
+  "Thái Nguyên",
+  "Hòa Bình",
+  "Sóc Trăng",
+  "Yên Bái",
+  "Phú Yên",
+  "Cà Mau",
+  "Lạng Sơn",
+  "Tuyên Quang",
+  "Bình Thuận",
+  "Đắk Lắk",
+  "Quảng Trị",
+  "Đắk Nông",
+  "Gia Lai",
+  "Hà Giang",
+  "Kon Tum",
+  "Bắc Kạn",
+  "Cao Bằng",
+  "Điện Biên",
+  "Lai Châu",
+  "Ninh Thuận",
+  "Quảng Bình",
+];
+
+const LOCATION_OPTIONS = LOCATIONS.sort().map((loc) => ({ label: loc, value: loc }));
+
 export default function CreateJobBasicInfoSection({
   values,
   errors,
@@ -74,20 +139,17 @@ export default function CreateJobBasicInfoSection({
             <label className="mb-2 block text-[14px] font-semibold text-(--color-text)">
               Địa điểm <span className="text-red-500">*</span>
             </label>
-            <div
-              className={`flex h-12 items-center gap-3 rounded-2xl bg-white px-4 ${
-                errors.city
-                  ? "border border-red-400"
-                  : "border border-(--color-border)"
-              }`}
-            >
-              <MapPin size={18} className="text-(--color-muted)" />
-              <input
-                data-field="city"
+            <div className="relative [&_button]:pl-11 [&_button]:rounded-2xl [&_button]:h-12 [&_button_span]:text-[15px]">
+              <div className="absolute inset-y-0 left-4 z-10 flex items-center pointer-events-none text-(--color-muted)">
+                <MapPin size={18} />
+              </div>
+              <CustomSelect
+                label=""
+                placeholder="Chọn địa điểm"
                 value={values.city}
-                onChange={(e) => onChange("city", e.target.value)}
-                placeholder="Ví dụ: Hà Nội"
-                className="w-full bg-transparent text-[15px] text-(--color-text) outline-none placeholder:text-slate-400"
+                options={LOCATION_OPTIONS}
+                error={errors.city}
+                onChange={(value) => onChange("city", value)}
               />
             </div>
             {errors.city ? (
@@ -189,7 +251,7 @@ export default function CreateJobBasicInfoSection({
                   data-field="salaryMin"
                   value={values.salaryMin}
                   onChange={(e) => onChange("salaryMin", e.target.value)}
-                  placeholder="5 triệu"
+                  placeholder="5000000"
                   className="w-full bg-transparent text-[15px] text-(--color-text) outline-none placeholder:text-slate-400"
                 />
               </div>

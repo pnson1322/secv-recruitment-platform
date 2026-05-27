@@ -103,3 +103,9 @@ export type StudentListParams = {
   status?: string;
   keyword?: string;
 };
+
+export type JobPreference = {
+  desiredSalaryMin: number,
+  desiredSalaryMax: number,
+  desiredLocation: string,
+};

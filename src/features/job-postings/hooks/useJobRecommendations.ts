@@ -6,6 +6,5 @@ export function useJobRecommendations(params: JobRecommendationsParams = {}) {
   return useQuery({
     queryKey: ["job-recommendations", params],
     queryFn: () => getJobRecommendations(params),
-    staleTime: 1000 * 60 * 5, 
   });
 }

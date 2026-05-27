@@ -6,7 +6,6 @@ export function useJobPostingCardsForStudent(params: JobPostingCardsParams) {
   return useQuery({
     queryKey: ["job-posting-cards-student", params],
     queryFn: () => getJobPostingCardsForStudent(params),
-    staleTime: 1000 * 60 * 5,
     placeholderData: keepPreviousData,
   });
 }

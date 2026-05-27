@@ -5,6 +5,5 @@ export function useApplicationStats() {
   return useQuery({
     queryKey: ["application-stats"],
     queryFn: getApplicationStats,
-    staleTime: 1000 * 60 * 5, // 5 minutes
   });
 }

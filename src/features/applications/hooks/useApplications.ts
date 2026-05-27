@@ -6,6 +6,5 @@ export function useApplications(params: ApplicationParams) {
   return useQuery({
     queryKey: ["applications", params],
     queryFn: () => getApplications(params),
-    staleTime: 1000 * 60 * 5, // 5 minutes
   });
 }

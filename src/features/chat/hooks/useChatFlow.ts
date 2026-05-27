@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { toast } from "sonner";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { getAccessToken } from "@/features/auth/lib/auth-storage";
@@ -121,7 +121,7 @@ export function useChatFlow() {
     onPartnerTypingChange: setIsPartnerTyping,
   });
 
-  const handleLocalTyping = () => {
+  const handleLocalTyping = useCallback(() => {
     if (!activeConversationId) return;
 
     if (!isLocalTypingRef.current) {
@@ -137,7 +137,7 @@ export function useChatFlow() {
       isLocalTypingRef.current = false;
       sendTypingStatus(false);
     }, 2000);
-  };
+  }, [activeConversationId, sendTypingStatus]);
 
   useEffect(() => {
     if (!messageText) {
@@ -151,7 +151,7 @@ export function useChatFlow() {
       return;
     }
     handleLocalTyping();
-  }, [messageText]);
+  }, [messageText, handleLocalTyping, sendTypingStatus]);
 
   useEffect(() => {
     if (isLocalTypingRef.current) {
@@ -162,7 +162,7 @@ export function useChatFlow() {
       clearTimeout(typingTimeoutRef.current);
     }
     setIsPartnerTyping(false);
-  }, [activeConversationId]);
+  }, [activeConversationId, sendTypingStatus]);
 
   useEffect(() => {
     return () => {
@@ -216,8 +216,16 @@ export function useChatFlow() {
 
   const sortedMessages = useMemo(() => {
     if (!messagesData?.pages) return [];
-    const allMsgs = messagesData.pages.flatMap((page) => page.messages);
-    return [...allMsgs].sort((a, b) => a.messageId - b.messageId);
+
+    const allMsgs = messagesData.pages.flatMap(
+      (page) => page.messages
+    );
+
+    return [...allMsgs].sort(
+      (a, b) =>
+        new Date(a.createdAt).getTime() -
+        new Date(b.createdAt).getTime()
+    );
   }, [messagesData?.pages]);
 
   const groupedMessages = useMemo(() => {
@@ -366,9 +374,9 @@ export function useChatFlow() {
     if (!latestMessage) return;
 
     const shouldMark =
-      (!latestMessage.isMine && latestMessage.messageId !== lastMarkedMessageIdRef.current) ||
+      (latestMessage.messageId !== lastMarkedMessageIdRef.current) ||
       (activeConversation && activeConversation.unreadCount > 0 && latestMessage.messageId !== lastMarkedMessageIdRef.current);
-
+      
     if (shouldMark) {
       lastMarkedMessageIdRef.current = latestMessage.messageId;
       markReadMutation.mutate({

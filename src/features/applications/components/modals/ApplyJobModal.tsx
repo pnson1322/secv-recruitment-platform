@@ -3,7 +3,7 @@
 import { X, FileText, Check, Loader2, AlertCircle } from "lucide-react";
 import ClientPortal from "@/components/ClientPortal";
 import { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getMyProfile } from "@/features/students/api/student.api";
 import { createApplication } from "../../api/application.api";
 import { toast } from "sonner";
@@ -18,6 +18,7 @@ type Props = {
 };
 
 export default function ApplyJobModal({ open, onClose, jobId, jobTitle }: Props) {
+  const queryClient = useQueryClient();
   const [selectedCvUrl, setSelectedCvUrl] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { user } = useAuth();
@@ -60,6 +61,13 @@ export default function ApplyJobModal({ open, onClose, jobId, jobTitle }: Props)
         cvUrl: selectedCvUrl,
         coverLetter: "Tôi rất mong muốn được ứng tuyển vào vị trí này. Cảm ơn quý công ty!",
       });
+      
+      // Invalidate all application and stats queries to sync UI instantly
+      queryClient.invalidateQueries({ queryKey: ["applications"] });
+      queryClient.invalidateQueries({ queryKey: ["application-stats"] });
+      queryClient.invalidateQueries({ queryKey: ["job-posting-cards-student"] });
+      queryClient.invalidateQueries({ queryKey: ["job-recommendations"] });
+
       toast.success("Ứng tuyển thành công!");
       onClose();
     } catch (error: any) {

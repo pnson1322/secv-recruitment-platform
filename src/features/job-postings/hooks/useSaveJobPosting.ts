@@ -9,9 +9,11 @@ export function useSaveJobPosting(jobId: number) {
     mutationFn: (isSaved: boolean) => 
       isSaved ? unsaveJobPosting(jobId) : saveJobPosting(jobId),
     onSuccess: (_, isSaved) => {
-      queryClient.invalidateQueries({ queryKey: ["student-jobs"] });
+      queryClient.invalidateQueries({ queryKey: ["job-posting-cards-student"] });
+      queryClient.invalidateQueries({ queryKey: ["job-recommendations"] });
       queryClient.invalidateQueries({ queryKey: ["student-saved-jobs"] });
       queryClient.invalidateQueries({ queryKey: ["job-postings", "detail", jobId] });
+      
       toast.success(isSaved ? "Đã bỏ lưu tin tuyển dụng" : "Đã lưu tin tuyển dụng");
     },
     onError: () => {
