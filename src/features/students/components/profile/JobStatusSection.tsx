@@ -16,10 +16,12 @@ const STATUS_OPTIONS = [
 
 export default function JobStatusSection({ isOpenToWork, onUpdate, isLoading = false }: Props) {
   const [selectedStatus, setSelectedStatus] = useState(isOpenToWork ? "active" : "not-searching");
+  const [prevIsOpenToWork, setPrevIsOpenToWork] = useState(isOpenToWork);
 
-  useEffect(() => {
+  if (isOpenToWork !== prevIsOpenToWork) {
+    setPrevIsOpenToWork(isOpenToWork);
     setSelectedStatus(isOpenToWork ? "active" : "not-searching");
-  }, [isOpenToWork]);
+  }
 
   const handleSave = async () => {
     const newValue = selectedStatus === "active";
@@ -65,7 +67,7 @@ export default function JobStatusSection({ isOpenToWork, onUpdate, isLoading = f
       <div className="rounded-2xl bg-blue-50/50 p-5 mb-6">
         <div className="flex items-center gap-2 mb-2">
           <Info size={18} className="text-blue-500" />
-          <h4 className="text-[14px] font-bold text-slate-700">Khi bật "Đang tìm việc":</h4>
+          <h4 className="text-[14px] font-bold text-slate-700">Khi bật &quot;Đang tìm việc&quot;:</h4>
         </div>
         <ul className="space-y-1.5 text-[13px] font-medium text-slate-500">
           <li className="flex items-center gap-2">

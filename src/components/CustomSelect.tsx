@@ -47,6 +47,7 @@ export default function CustomSelect({
         !wrapperRef.current.contains(event.target as Node)
       ) {
         setOpen(false);
+        setSearchQuery("");
       }
     }
 
@@ -55,12 +56,6 @@ export default function CustomSelect({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-
-  useEffect(() => {
-    if (!open) {
-      setSearchQuery("");
-    }
-  }, [open]);
 
   return (
     <div ref={wrapperRef} className="relative">
@@ -72,7 +67,13 @@ export default function CustomSelect({
 
       <button
         type="button"
-        onClick={() => setOpen((prev) => !prev)}
+        onClick={() =>
+          setOpen((prev) => {
+            const next = !prev;
+            if (!next) setSearchQuery("");
+            return next;
+          })
+        }
         className={`flex h-11 w-full items-center justify-between rounded-xl border bg-white px-4 text-left outline-none transition focus:ring-2 ${
           error
             ? "border-red-400 focus:border-red-400 focus:ring-red-100"
@@ -124,6 +125,7 @@ export default function CustomSelect({
                   onClick={() => {
                     onChange(option.value);
                     setOpen(false);
+                    setSearchQuery("");
                   }}
                   className="flex w-full items-center justify-between px-4 py-3 text-left text-sm text-(--color-text) transition hover:bg-slate-50"
                 >

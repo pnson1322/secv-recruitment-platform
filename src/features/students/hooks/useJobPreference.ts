@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getJobPreference, updateJobPreference } from "../api/student.api";
+import type { JobPreference } from "../types/student.types";
 import { toast } from "sonner";
 
 export function useJobPreference() {
@@ -20,13 +21,18 @@ export function useJobPreference() {
 
   const preference = prefRes?.data;
 
-  useEffect(() => {
+  const [prevPreference, setPrevPreference] = useState<JobPreference | null>(null);
+  const [prevIsEditing, setPrevIsEditing] = useState(isEditing);
+
+  if (preference !== prevPreference || isEditing !== prevIsEditing) {
+    setPrevPreference(preference || null);
+    setPrevIsEditing(isEditing);
     if (preference) {
       setDesiredLocation(preference.desiredLocation || "");
       setSalaryMinStr(preference.desiredSalaryMin ? preference.desiredSalaryMin.toString() : "");
       setSalaryMaxStr(preference.desiredSalaryMax ? preference.desiredSalaryMax.toString() : "");
     }
-  }, [preference, isEditing]);
+  }
 
   const updateMutation = useMutation({
     mutationFn: updateJobPreference,

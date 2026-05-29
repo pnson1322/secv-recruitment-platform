@@ -92,6 +92,10 @@ export default function AllJobsSection() {
   const [searchTerm, setSearchTerm] = useState("");
   const [lastFilters, setLastFilters] = useState({ search: "", city: "" });
 
+  if (params.search !== lastFilters.search || params.city !== lastFilters.city) {
+    setLastFilters({ search: params.search, city: params.city });
+  }
+
   useEffect(() => {
     const handler = setTimeout(() => {
       setParams((prev) => ({ ...prev, search: searchTerm, page: 1 }));
@@ -101,10 +105,6 @@ export default function AllJobsSection() {
       clearTimeout(handler);
     };
   }, [searchTerm]);
-
-  useEffect(() => {
-    setLastFilters({ search: params.search, city: params.city });
-  }, [params.search, params.city]);
 
   const { data, isLoading, isFetching, isError, refetch } =
     useJobPostingCardsForStudent(params);

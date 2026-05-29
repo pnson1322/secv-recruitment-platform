@@ -99,8 +99,8 @@ export default function StudentTable({ students, isLoading }: Props) {
                       </div>
                     </td>
                     <td className="px-6 py-5 text-center">
-                      <div className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[12px] font-bold uppercase tracking-tight ${(student.isActive ?? (student as any).is_active) ? "bg-emerald-50 text-emerald-600" : "bg-red-50 text-red-600"}`}>
-                        {(student.isActive ?? (student as any).is_active) ? "Hoạt động" : "Bị khóa"}
+                      <div className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[12px] font-bold uppercase tracking-tight ${(student.isActive ?? (student as { is_active?: boolean }).is_active) ? "bg-emerald-50 text-emerald-600" : "bg-red-50 text-red-600"}`}>
+                        {(student.isActive ?? (student as { is_active?: boolean }).is_active) ? "Hoạt động" : "Bị khóa"}
                       </div>
                     </td>
                     <td className="px-6 py-5 text-center">
@@ -117,18 +117,18 @@ export default function StudentTable({ students, isLoading }: Props) {
                         </button>
                         <button 
                           onClick={() => {
-                            const currentActive = student.isActive ?? (student as any).is_active;
+                            const currentActive = student.isActive ?? (student as { is_active?: boolean }).is_active;
                             handleToggleActive(student.studentId, currentActive);
                           }}
                           disabled={toggleActiveMutation.isPending}
                           className={`flex h-10 w-10 items-center justify-center rounded-xl transition-all active:scale-90 disabled:opacity-50 ${
-                            (student.isActive ?? (student as any).is_active) 
+                            (student.isActive ?? (student as { is_active?: boolean }).is_active) 
                               ? "bg-slate-100 text-slate-500 hover:bg-red-500 hover:text-white hover:shadow-lg hover:shadow-red-200" 
                               : "bg-emerald-50 text-emerald-500 hover:bg-emerald-500 hover:text-white hover:shadow-lg hover:shadow-emerald-200"
                           }`}
-                          title={(student.isActive ?? (student as any).is_active) ? "Khóa sinh viên" : "Mở khóa sinh viên"}
+                          title={(student.isActive ?? (student as { is_active?: boolean }).is_active) ? "Khóa sinh viên" : "Mở khóa sinh viên"}
                         >
-                          {(student.isActive ?? (student as any).is_active) ? <Ban size={20} strokeWidth={2.5} /> : <CheckCircle2 size={20} strokeWidth={2.5} />}
+                          {(student.isActive ?? (student as { is_active?: boolean }).is_active) ? <Ban size={20} strokeWidth={2.5} /> : <CheckCircle2 size={20} strokeWidth={2.5} />}
                         </button>
                       </div>
                     </td>

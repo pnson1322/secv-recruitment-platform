@@ -44,7 +44,7 @@ export default function DeleteConfirmModal({
 
             <h3 className="text-xl font-bold text-slate-900">Xác nhận xóa thể loại</h3>
             <p className="mt-3 text-[15px] font-medium leading-relaxed text-slate-500">
-              Bạn có chắc chắn muốn xóa thể loại <span className="font-bold text-slate-900">"{categoryName}"</span>? 
+              Bạn có chắc chắn muốn xóa thể loại <span className="font-bold text-slate-900">&quot;{categoryName}&quot;</span>? 
               Hành động này không thể hoàn tác và sẽ ảnh hưởng đến các tin tuyển dụng liên quan.
             </p>
 

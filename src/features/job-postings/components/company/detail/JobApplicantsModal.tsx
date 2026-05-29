@@ -109,7 +109,7 @@ export default function JobApplicantsModal({ open, onClose, jobId, jobTitle }: P
                   <div className="flex items-center">
                     {TABS.map((t) => {
                       const isActive = tab === t.key;
-                      const count = (tabCounts as any)[t.key] ?? 0;
+                      const count = tabCounts[t.key] ?? 0;
                       return (
                         <button
                           key={t.key}
@@ -206,7 +206,7 @@ export default function JobApplicantsModal({ open, onClose, jobId, jobTitle }: P
           studentId={selectedProfile.student.studentId}
           role="company"
           applicationStatus={selectedProfile.status}
-          cvUrl={"cvUrl" in selectedProfile ? (selectedProfile as any).cvUrl : undefined}
+          cvUrl={"cvUrl" in selectedProfile ? (selectedProfile as { cvUrl?: string }).cvUrl : undefined}
           onChat={() =>
             startChatWithStudent(
               selectedProfile.student.studentId,
@@ -217,7 +217,7 @@ export default function JobApplicantsModal({ open, onClose, jobId, jobTitle }: P
           onUpdateStatus={(newStatus) => {
             if (selectedProfile && "applicationId" in selectedProfile) {
               handleUpdateStatus(
-                (selectedProfile as any).applicationId,
+                (selectedProfile as { applicationId: number }).applicationId,
                 newStatus as "passed" | "rejected" | "interviewing",
                 newStatus === "interviewing" 
                   ? "Đã duyệt ứng viên" 

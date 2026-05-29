@@ -133,7 +133,7 @@ export default function CandidateTableInvited({
                           {inv.student.fullName}
                         </p>
                         <p className="truncate text-[13px] text-slate-500">
-                          {(inv.student as any).email}
+                          {inv.student.email}
                         </p>
                       </div>
                     </div>

@@ -86,7 +86,7 @@ export default function RecruiterStatsGrid({ stats }: StatsProps) {
           </div>
         </div>
         <p className="mt-4 text-[13px] text-slate-400">
-          Ứng viên đã đạt trạng thái "Passed"
+          Ứng viên đã đạt trạng thái &quot;Passed&quot;
         </p>
       </div>
     </div>

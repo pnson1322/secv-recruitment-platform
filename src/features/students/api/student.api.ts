@@ -20,7 +20,7 @@ export async function getStudentGeneralStats() {
 
 export async function getStudentListForAdmin(params: StudentListParams) {
   const {page = 1, limit = 10, status, keyword } = params
-  const res = await api.get<ApiResponse<{ data: StudentAdminListItem[]; meta: any }>>("/student", {
+  const res = await api.get<ApiResponse<{ data: StudentAdminListItem[]; meta: { currentPage: number; itemsPerPage: number; totalItems: number; totalPages: number } }>>("/student", {
     params: {page, limit, status: status || undefined, keyword: keyword || undefined}
   });
   return res.data;

@@ -61,7 +61,13 @@ export function useSearchCandidatesPage() {
 
   useEffect(() => {
     const updatePageSize = () => {
-      setPageSize(getPageSizeFromWidth(window.innerWidth));
+      const nextSize = getPageSizeFromWidth(window.innerWidth);
+      setPageSize((prev) => {
+        if (prev !== nextSize) {
+          setPage(1);
+        }
+        return nextSize;
+      });
     };
 
     updatePageSize();
@@ -71,10 +77,6 @@ export function useSearchCandidatesPage() {
       window.removeEventListener("resize", updatePageSize);
     };
   }, []);
-
-  useEffect(() => {
-    setPage(1);
-  }, [pageSize]);
 
   const companyQuery = useCompanyProfile({ 
     viewerRole: user?.role === ROLES.RECRUITER ? ROLES.RECRUITER : undefined,

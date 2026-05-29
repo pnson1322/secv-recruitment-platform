@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Sparkles, HelpCircle } from "lucide-react";
 import { useJobRecommendations } from "@/features/job-postings/hooks/useJobRecommendations";
 import StudentJobCard from "@/features/job-postings/components/student/StudentJobCard";
-import type { JobPostingCardStudentItem } from "@/features/job-postings/types/job-postings.types";
+import type { JobPostingCardStudentItem, SalaryType, JobRecommendation } from "@/features/job-postings/types/job-postings.types";
 
 export default function RecommendationsSection() {
   const [limit, setLimit] = useState(4);
@@ -82,10 +82,10 @@ export default function RecommendationsSection() {
             city: rec.city,
             salaryMin: rec.salaryMin,
             salaryMax: rec.salaryMax,
-            salaryType: rec.salaryType as any,
+            salaryType: rec.salaryType as SalaryType,
             isSalaryNegotiable: rec.isSalaryNegotiable,
             postedAt: rec.postedAt,
-            applicantCount: (rec as any).applicantCount ?? 0,
+            applicantCount: (rec as JobRecommendation & { applicantCount?: number }).applicantCount ?? 0,
             skills: rec.skills,
             saved: rec.saved,
           };

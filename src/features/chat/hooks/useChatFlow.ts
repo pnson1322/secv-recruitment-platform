@@ -17,8 +17,8 @@ import { useChatSocket } from "./useChatSocket";
 import type { Message, Conversation } from "../types/chat.types";
 import { useRouter, useSearchParams } from "next/navigation";
 
-const getErrMsg = (error: any, fallback: string): string => {
-  const msg = error?.response?.data?.message;
+const getErrMsg = (error: unknown, fallback: string): string => {
+  const msg = (error as { response?: { data?: { message?: unknown } } })?.response?.data?.message;
   if (typeof msg === "string") return msg;
   if (Array.isArray(msg)) return msg.join(", ");
   return fallback;
@@ -54,7 +54,10 @@ export function useChatFlow() {
   const isLocalTypingRef = useRef(false);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  useEffect(() => {
+  const [prevQueryConversationId, setPrevQueryConversationId] = useState<string | null>(null);
+
+  if (queryConversationId !== prevQueryConversationId) {
+    setPrevQueryConversationId(queryConversationId);
     if (queryConversationId) {
       const numId = Number(queryConversationId);
       if (!isNaN(numId)) {
@@ -68,7 +71,14 @@ export function useChatFlow() {
       setActiveConversationId(null);
       setMobileView("list");
     }
-  }, [queryConversationId]);
+  }
+
+  const [prevActiveConversationId, setPrevActiveConversationId] = useState<number | null>(null);
+
+  if (activeConversationId !== prevActiveConversationId) {
+    setPrevActiveConversationId(activeConversationId);
+    setIsPartnerTyping(false);
+  }
 
   const handleSelectConversation = (id: number | null) => {
     setActiveConversationId(id);
@@ -88,7 +98,10 @@ export function useChatFlow() {
     search: debouncedSearch,
   });
 
-  useEffect(() => {
+  const [prevConversations, setPrevConversations] = useState<typeof conversations>(undefined);
+
+  if (conversations !== prevConversations) {
+    setPrevConversations(conversations);
     if (conversations?.data) {
       setConversationCache((prev) => {
         const next = { ...prev };
@@ -98,7 +111,7 @@ export function useChatFlow() {
         return next;
       });
     }
-  }, [conversations]);
+  }
 
   const {
     data: messagesData,
@@ -161,7 +174,6 @@ export function useChatFlow() {
     if (typingTimeoutRef.current) {
       clearTimeout(typingTimeoutRef.current);
     }
-    setIsPartnerTyping(false);
   }, [activeConversationId, sendTypingStatus]);
 
   useEffect(() => {
@@ -214,10 +226,11 @@ export function useChatFlow() {
     };
   }, [filteredConversationsResponse, activeConversationId, conversationCache, queryName, queryAvatar]);
 
+  const pages = messagesData?.pages;
   const sortedMessages = useMemo(() => {
-    if (!messagesData?.pages) return [];
+    if (!pages) return [];
 
-    const allMsgs = messagesData.pages.flatMap(
+    const allMsgs = pages.flatMap(
       (page) => page.messages
     );
 
@@ -226,7 +239,7 @@ export function useChatFlow() {
         new Date(a.createdAt).getTime() -
         new Date(b.createdAt).getTime()
     );
-  }, [messagesData?.pages]);
+  }, [pages]);
 
   const groupedMessages = useMemo(() => {
     const parseDateSafely = (isoString: string) => {
@@ -342,7 +355,7 @@ export function useChatFlow() {
         images,
       });
       scrollToBottom("smooth");
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.error(getErrMsg(error, "Không thể gửi tin nhắn"));
       setMessageText(content);
       setSelectedImages(images);
@@ -397,7 +410,7 @@ export function useChatFlow() {
       toast.success("Đã ẩn cuộc trò chuyện");
       setActiveConversationId(null);
       setMobileView("list");
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.error(getErrMsg(error, "Không thể ẩn cuộc trò chuyện"));
     }
   };
@@ -413,7 +426,7 @@ export function useChatFlow() {
       });
 
       toast.success(newBlockState ? "Đã chặn cuộc trò chuyện" : "Đã bỏ chặn cuộc trò chuyện");
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.error(getErrMsg(error, "Không thể thực hiện tác vụ"));
     }
   };

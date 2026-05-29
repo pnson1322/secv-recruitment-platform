@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { updateStudentActiveStatus } from "../api/student.api";
+import type { ApiResponse, StudentAdminListItem } from "../types/student.types";
 
 export function useStudentTable() {
   const queryClient = useQueryClient();
@@ -14,16 +15,16 @@ export function useStudentTable() {
     mutationFn: ({ id, isActive }: { id: number; isActive: boolean }) => 
       updateStudentActiveStatus(id, isActive),
     onSuccess: (_, variables) => {
-      queryClient.setQueriesData<any>(
+      queryClient.setQueriesData<ApiResponse<{ data: (StudentAdminListItem & { is_active?: boolean })[]; meta: unknown }>>(
         { queryKey: ["admin-students"] },
-        (old: any) => {
+        (old) => {
           if (!old || !old.data) return old;
           return {
             ...old,
             data: {
               ...old.data,
-              data: old.data.data.map((item: any) => 
-                item.studentId == variables.id 
+              data: old.data.data.map((item) => 
+                item.studentId === variables.id 
                   ? { 
                       ...item, 
                       isActive: variables.isActive,
@@ -49,7 +50,7 @@ export function useStudentTable() {
     setOpenDetail(true);
   };
 
-  const handleToggleActive = (id: number, currentActive: boolean | any) => {
+  const handleToggleActive = (id: number, currentActive: boolean) => {
     const isActive = !currentActive;
     toggleActiveMutation.mutate({ id, isActive });
   };

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { PieChart } from "lucide-react";
 import type { JobByCategoryStat } from "../../types/dashboard.types";
 
@@ -19,7 +19,22 @@ export default function JobCategoryDistribution({ categories }: Props) {
   const center = 100;
   const colors = ["#06b6d4", "#6366f1", "#10b981", "#f59e0b", "#ec4899", "#8b5cf6"];
 
-  let accumulatedPercent = 0;
+  const categoriesWithOffsets = useMemo(() => {
+    let currentOffset = 0;
+    const result = [];
+    for (const cat of categories) {
+      const count = cat.jobs?.length || 0;
+      const percent = totalJobs > 0 ? count / totalJobs : 0;
+      result.push({
+        ...cat,
+        count,
+        percent,
+        offset: currentOffset,
+      });
+      currentOffset += percent;
+    }
+    return result;
+  }, [categories, totalJobs]);
 
   return (
     <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-xs">
@@ -69,11 +84,10 @@ export default function JobCategoryDistribution({ categories }: Props) {
                   strokeWidth={30}
                 />
 
-                {categories.map((cat, idx) => {
-                  const count = cat.jobs?.length || 0;
-                  if (count === 0 || totalJobs === 0) return null;
+                {categoriesWithOffsets.map((cat, idx) => {
+                  if (cat.count === 0 || totalJobs === 0) return null;
 
-                  const percent = count / totalJobs;
+                  const percent = cat.percent;
 
                   let currentRadius = 60;
                   let currentStrokeWidth = 30; 
@@ -90,8 +104,7 @@ export default function JobCategoryDistribution({ categories }: Props) {
 
                   const segmentCircumference = 2 * Math.PI * currentRadius;
                   const strokeDasharray = `${percent * segmentCircumference} ${segmentCircumference}`;
-                  const strokeDashoffset = -accumulatedPercent * segmentCircumference;
-                  accumulatedPercent += percent;
+                  const strokeDashoffset = -cat.offset * segmentCircumference;
 
                   const color = colors[idx % colors.length];
 

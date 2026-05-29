@@ -77,7 +77,7 @@ export default function SimilarJobsSection() {
                   {formatSalary({
                     salaryMin: job.salaryMin,
                     salaryMax: job.salaryMax,
-                    salaryType: job.salaryType as any,
+                    salaryType: job.salaryType as "RANGE" | "NEGOTIABLE",
                     isSalaryNegotiable: job.isSalaryNegotiable,
                   })}
                 </p>

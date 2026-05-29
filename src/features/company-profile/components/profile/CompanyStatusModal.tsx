@@ -20,10 +20,14 @@ export default function CompanyStatusModal({
   isLoading = false,
 }: Props) {
   const [reason, setReason] = useState("");
+  const [prevOpen, setPrevOpen] = useState(open);
 
-  useEffect(() => {
-    if (open) setReason("");
-  }, [open]);
+  if (open !== prevOpen) {
+    setPrevOpen(open);
+    if (open) {
+      setReason("");
+    }
+  }
 
   if (!open) return null;
 

@@ -77,7 +77,7 @@ export async function markMessageAsRead(payload: {
   conversationId: number;
   messageId: number;
 }) {
-  const res = await api.patch<ApiResponse<{}>>("/chat/read", payload);
+  const res = await api.patch<ApiResponse<Record<string, never>>>("/chat/read", payload);
   return res.data;
 }
 

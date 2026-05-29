@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { getMyProfile, updateStudentInfo, updateAvatar } from "@/features/students/api/student.api";
+import type { MyProfile } from "@/features/students/types/student.types";
 
 export function useStudentSettings() {
   const queryClient = useQueryClient();
@@ -24,17 +25,20 @@ export function useStudentSettings() {
     queryFn: getMyProfile,
   });
 
-  useEffect(() => {
+  const [prevProfile, setPrevProfile] = useState<MyProfile | null>(null);
+
+  if (profile !== prevProfile) {
+    setPrevProfile(profile || null);
     if (profile) {
       setFullName(profile.fullName || "");
       setEmail(profile.email || "");
       setPhone(profile.phone || "");
     }
-  }, [profile]);
+  }
 
   const updateInfoMutation = useMutation({
     mutationFn: updateStudentInfo,
-    onSuccess: (res: any) => {
+    onSuccess: (res) => {
       toast.success(res?.message || "Cập nhật thông tin thành công");
       queryClient.invalidateQueries({ queryKey: ["studentProfile"] });
       
@@ -46,14 +50,16 @@ export function useStudentSettings() {
         });
       }
     },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message || "Không thể cập nhật thông tin");
+    onError: (err: unknown) => {
+      toast.error(
+        (err as { response?: { data?: { message?: string } } })?.response?.data?.message || "Không thể cập nhật thông tin"
+      );
     },
   });
 
   const updateAvatarMutation = useMutation({
     mutationFn: updateAvatar,
-    onSuccess: (res: any) => {
+    onSuccess: (res) => {
       toast.success(res?.message || "Cập nhật ảnh đại diện thành công");
       queryClient.invalidateQueries({ queryKey: ["studentProfile"] });
 
@@ -64,8 +70,10 @@ export function useStudentSettings() {
         });
       }
     },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message || "Không thể cập nhật ảnh đại diện");
+    onError: (err: unknown) => {
+      toast.error(
+        (err as { response?: { data?: { message?: string } } })?.response?.data?.message || "Không thể cập nhật ảnh đại diện"
+      );
     },
   });
 

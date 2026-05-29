@@ -35,7 +35,7 @@ export default function JobApplicantCard({
     ? "Đã tốt nghiệp" 
     : student.currentYear ? `Năm ${student.currentYear}` : "N/A";
   const gpaLabel = student.gpa ? String(student.gpa) : "N.A";
-  const majorLabel = (student as any).majorName || "Chưa cập nhật chuyên ngành";
+  const majorLabel = student.majorName || "Chưa cập nhật chuyên ngành";
 
   return (
     <div className="group relative overflow-hidden rounded-[24px] border border-slate-100 bg-white p-6 shadow-sm transition-all duration-300 hover:border-cyan-100 hover:shadow-md">
@@ -67,9 +67,9 @@ export default function JobApplicantCard({
                 </div>
               </div>
             </div>
-
+ 
             <div className="flex flex-wrap gap-2">
-              {student.skills?.slice(0, 5).map((skill: any) => (
+              {student.skills?.slice(0, 5).map((skill: string | { skillId: number; skillName: string }) => (
                 <span 
                   key={typeof skill === 'string' ? skill : skill.skillId} 
                   className="rounded-lg bg-slate-100 px-2.5 py-1 text-[12px] font-semibold text-slate-600"

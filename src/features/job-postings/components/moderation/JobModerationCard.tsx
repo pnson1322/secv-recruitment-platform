@@ -59,7 +59,7 @@ export default function JobModerationCard({ job }: Props) {
         </div>
         <div className="flex items-center gap-2 text-[13px] font-medium text-slate-500">
           <Calendar size={16} className="text-slate-400" />
-          <span>{formatDate(job.applicationDeadline || (job as any).postedAt || (job as any).createdAt)}</span>
+          <span>{formatDate(job.applicationDeadline || (job as { postedAt?: string }).postedAt || job.createdAt)}</span>
         </div>
       </div>
 

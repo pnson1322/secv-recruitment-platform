@@ -144,7 +144,7 @@ export async function getJobPostingCardsForAdmin(
 ) {
   const { page = 1, limit = 10, search, status, city } = params;
 
-  const filteredParams: any = {};
+  const filteredParams: Record<string, unknown> = {};
 
   if (search || status || city || page > 1 || limit !== 10) {
     filteredParams.page = page;

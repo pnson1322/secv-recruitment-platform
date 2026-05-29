@@ -32,7 +32,7 @@ export default function DeleteCVModal({ open, onClose, onConfirm, cv, isDeleting
               </div>
               <h3 className="mb-2 text-[20px] font-bold text-slate-900">Xác nhận xóa CV</h3>
               <p className="text-[15px] leading-relaxed text-slate-500">
-                Bạn có chắc chắn muốn xóa CV <span className="font-bold text-slate-800">"{cv.resumeName}"</span>? 
+                Bạn có chắc chắn muốn xóa CV <span className="font-bold text-slate-800">&quot;{cv.resumeName}&quot;</span>? 
                 Hành động này không thể hoàn tác.
               </p>
             </div>

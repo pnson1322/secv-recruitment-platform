@@ -30,19 +30,21 @@ export function useAdminSettings() {
 
   const createAdminMutation = useMutation({
     mutationFn: createAdmin,
-    onSuccess: (res: any) => {
+    onSuccess: (res) => {
       toast.success(res?.message || "Thêm tài khoản admin mới thành công");
       queryClient.invalidateQueries({ queryKey: ["admins"] });
       setIsAddOpen(false);
     },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message || "Không thể thêm tài khoản admin");
+    onError: (err: unknown) => {
+      toast.error(
+        (err as { response?: { data?: { message?: string } } })?.response?.data?.message || "Không thể thêm tài khoản admin"
+      );
     },
   });
 
   const deleteAdminMutation = useMutation({
     mutationFn: deleteAdmin,
-    onSuccess: (res: any) => {
+    onSuccess: (res) => {
       toast.success(res?.message || "Xóa tài khoản admin thành công");
       queryClient.invalidateQueries({ queryKey: ["admins"] });
       setDeleteTarget(null);
@@ -57,8 +59,10 @@ export function useAdminSettings() {
         }
       }
     },
-    onError: (err: any) => {
-      toast.error(err?.response?.data?.message || "Không thể xóa tài khoản admin");
+    onError: (err: unknown) => {
+      toast.error(
+        (err as { response?: { data?: { message?: string } } })?.response?.data?.message || "Không thể xóa tài khoản admin"
+      );
     },
   });
 

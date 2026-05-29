@@ -44,8 +44,8 @@ export function useStudentProfilePage() {
       toast.success("Đã xóa CV thành công");
       refetch();
       setSelectedCvForDelete(null);
-    } catch (error: any) {
-      if (error.response?.status === 400) {
+    } catch (error: unknown) {
+      if ((error as { response?: { status?: number } })?.response?.status === 400) {
         toast.error("Không thể xóa CV mặc định");
       } else {
         toast.error("Lỗi khi xóa CV");

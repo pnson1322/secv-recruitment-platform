@@ -168,7 +168,7 @@ export default function CandidatesPage() {
               selectedProfile.student.avatarUrl
             )
           }
-          cvUrl={"cvUrl" in selectedProfile ? (selectedProfile as any).cvUrl : undefined}
+          cvUrl={"cvUrl" in selectedProfile ? (selectedProfile as { cvUrl?: string }).cvUrl : undefined}
           onUpdateStatus={(newStatus) => {
             if ("applicationId" in selectedProfile) {
               const message =
@@ -178,7 +178,11 @@ export default function CandidatesPage() {
                     ? "Đã duyệt ứng viên"
                     : "Đã chuyển sang trạng thái Đậu";
 
-              handleUpdateStatus(selectedProfile.applicationId, newStatus as any, message);
+              handleUpdateStatus(
+                selectedProfile.applicationId,
+                newStatus as Parameters<typeof handleUpdateStatus>[1],
+                message
+              );
               setSelectedProfile(null);
             }
           }}

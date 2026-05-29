@@ -20,7 +20,7 @@ export function useRespondInvitation() {
         queryClient.invalidateQueries({ queryKey: ["applicationStats"] });
       }
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       toast.error(getApiErrorMessage(error));
     },
   });

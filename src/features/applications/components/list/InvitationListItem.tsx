@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Mail, DollarSign, MapPin, Calendar, CheckCircle2, XCircle, Clock } from "lucide-react";
 import { formatSalary } from "@/features/job-postings/utils/job-postings.utils";
+import type { SalaryType } from "@/features/job-postings/types/job-postings.types";
 import type { InvitationItem } from "../../types/application.types";
 
 type Props = {
@@ -29,7 +30,7 @@ export default function InvitationListItem({ invitation, onAccept, onReject }: P
   const salaryText = formatSalary({
     salaryMin: invitation.job.salaryMin,
     salaryMax: invitation.job.salaryMax,
-    salaryType: invitation.job.salaryType as any,
+    salaryType: invitation.job.salaryType as SalaryType,
     isSalaryNegotiable: invitation.job.isSalaryNegotiable,
   });
 
@@ -72,7 +73,7 @@ export default function InvitationListItem({ invitation, onAccept, onReject }: P
 
         <div className="rounded-2xl bg-slate-50/80 p-4 border border-slate-50">
           <p className="text-[14px] leading-relaxed text-slate-600 italic">
-            "{invitation.message}"
+            &quot;{invitation.message}&quot;
           </p>
         </div>
 

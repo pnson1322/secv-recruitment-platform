@@ -60,10 +60,10 @@ export function useStartChat() {
       const nameParam = name ? `&name=${encodeURIComponent(name)}` : "";
       const avatarParam = avatar ? `&avatar=${encodeURIComponent(avatar)}` : "";
       router.push(`/student/messages?id=${conversationId}${nameParam}${avatarParam}`);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Lỗi khi mở cuộc trò chuyện với công ty:", error);
       toast.error(
-        error?.response?.data?.message || "Không thể bắt đầu trò chuyện",
+        (error as { response?: { data?: { message?: string } } })?.response?.data?.message || "Không thể bắt đầu trò chuyện",
         { id: toastId }
       );
     }
@@ -109,10 +109,10 @@ export function useStartChat() {
       const nameParam = name ? `&name=${encodeURIComponent(name)}` : "";
       const avatarParam = avatar ? `&avatar=${encodeURIComponent(avatar)}` : "";
       router.push(`/recruiter/messages?id=${conversationId}${nameParam}${avatarParam}`);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Lỗi khi mở cuộc trò chuyện với sinh viên:", error);
       toast.error(
-        error?.response?.data?.message || "Không thể bắt đầu trò chuyện",
+        (error as { response?: { data?: { message?: string } } })?.response?.data?.message || "Không thể bắt đầu trò chuyện",
         { id: toastId }
       );
     }

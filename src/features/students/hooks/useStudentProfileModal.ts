@@ -9,12 +9,22 @@ export function useStudentProfileModal(open: boolean, studentId: number | null, 
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
 
+  const [prevId, setPrevId] = useState<number | null>(null);
+  const [prevOpen, setPrevOpen] = useState(false);
+
+  if (open !== prevOpen || studentId !== prevId) {
+    setPrevOpen(open);
+    setPrevId(studentId);
+    if (open && studentId) {
+      setIsLoading(true);
+      setIsError(false);
+    }
+  }
+
   useEffect(() => {
     if (!open || !studentId) return;
     
     let isMounted = true;
-    setIsLoading(true);
-    setIsError(false);
     
     getStudentProfile(studentId)
       .then((data) => {

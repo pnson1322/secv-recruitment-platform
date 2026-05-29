@@ -87,7 +87,7 @@ export function useCandidatesActions(refetch: () => void) {
 
     toast.promise(promise, {
       loading: "Đang cập nhật trạng thái...",
-      success: (res: any) => {
+      success: (res) => {
         if (res.success) {
           refetch();
           return successMessage;

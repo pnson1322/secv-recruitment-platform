@@ -70,7 +70,7 @@ export default function ApplyJobModal({ open, onClose, jobId, jobTitle }: Props)
 
       toast.success("Ứng tuyển thành công!");
       onClose();
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.error(getApiErrorMessage(error));
     } finally {
       setIsSubmitting(false);
