@@ -88,11 +88,14 @@ export function useNotificationSocket(
         });
       }
 
-      if (inserted && !newNotification.is_read) {
+      if (!newNotification.is_read) {
         queryClient.setQueryData<number>(
           notificationKeys.unread(),
           (oldCount = 0) => oldCount + 1,
         );
+        queryClient.invalidateQueries({
+          queryKey: notificationKeys.unread(),
+        });
       }
 
       const tabHidden =
@@ -108,6 +111,10 @@ export function useNotificationSocket(
 
     socket.on("connect", handleConnect);
     socket.on("notification", handleNotification);
+
+    if (socket.connected) {
+      handleConnect();
+    }
 
     return () => {
       socket.off("connect", handleConnect);

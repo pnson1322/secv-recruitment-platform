@@ -15,4 +15,5 @@ export type Admin = {
 export type CreateAdminParams = {
     email: string,
     password: string,
+    confirmPassword?: string,
 }

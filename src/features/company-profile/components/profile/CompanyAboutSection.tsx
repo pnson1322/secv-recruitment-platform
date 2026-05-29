@@ -29,7 +29,7 @@ export default function CompanyAboutSection({
     <div className="space-y-4">
       <CompanySectionCard>
         <div className="flex items-start justify-between gap-4">
-          <h2 className="text-[1.45rem] font-extrabold tracking-[-0.02em] text-[#0F172A] md:text-[1.6rem]">
+          <h2 className="text-[1.35rem] font-extrabold tracking-[-0.02em] text-[#0F172A] md:text-[1.48rem]">
             Về chúng tôi
           </h2>
 

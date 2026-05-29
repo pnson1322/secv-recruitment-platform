@@ -1,6 +1,7 @@
 "use client";
 
-import { Mail, Lock, X, Plus, Loader2 } from "lucide-react";
+import { useState } from "react";
+import { Mail, Lock, X, Plus, Loader2, Eye, EyeOff } from "lucide-react";
 import ClientPortal from "@/components/ClientPortal";
 import { useAddAdminForm } from "../../hooks/useAddAdminForm";
 
@@ -17,6 +18,8 @@ export default function AddAdminModal({
   onSubmit,
   isLoading,
 }: AddAdminModalProps) {
+  const [showPassword, setShowPassword] = useState(false);
+
   const {
     email,
     password,
@@ -27,6 +30,11 @@ export default function AddAdminModal({
     handleConfirm,
     handleClose,
   } = useAddAdminForm({ onSubmit, onClose });
+
+  const handleModalClose = () => {
+    setShowPassword(false);
+    handleClose();
+  };
 
   if (!isOpen) return null;
 
@@ -40,7 +48,7 @@ export default function AddAdminModal({
             </h2>
             <button
               type="button"
-              onClick={handleClose}
+              onClick={handleModalClose}
               disabled={isLoading}
               className="text-slate-400 transition hover:text-slate-600 disabled:opacity-50"
             >
@@ -82,7 +90,7 @@ export default function AddAdminModal({
               }`}>
                 <Lock className="text-slate-400" size={20} />
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => handlePasswordChange(e.target.value)}
                   disabled={isLoading}
@@ -95,6 +103,14 @@ export default function AddAdminModal({
                     }
                   }}
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="text-slate-400 hover:text-slate-600 focus:outline-none"
+                  tabIndex={-1}
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
               </div>
               {passwordError && (
                 <p className="mt-1.5 text-[13px] font-semibold text-red-500">
@@ -107,7 +123,7 @@ export default function AddAdminModal({
           <div className="flex justify-end gap-3 border-t border-slate-100 bg-slate-50 px-6 py-4">
             <button
               type="button"
-              onClick={handleClose}
+              onClick={handleModalClose}
               disabled={isLoading}
               className="rounded-2xl border border-slate-200 bg-white px-6 py-3 text-base font-semibold text-slate-700 transition hover:bg-slate-100 disabled:opacity-60"
             >

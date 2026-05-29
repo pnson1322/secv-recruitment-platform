@@ -1,36 +1,11 @@
 "use client";
 
 import React from "react";
-import { AlertCircle, Search, Star } from "lucide-react";
+import { AlertCircle, Search } from "lucide-react";
 import Pagination from "@/components/Pagination";
 import { useStudentCompaniesPage } from "../hooks/useStudentCompaniesPage";
 import CompanyToolbar from "./CompanyToolbar";
 import CompanyCard from "./CompanyCard";
-import { StudentCompanyDataPart } from "@/features/company-profile/types/company.types";
-
-const MOCK_FEATURED_COMPANIES: StudentCompanyDataPart[] = [
-  {
-    companyId: 1001,
-    companyName: "VNG Corporation",
-    industry: "Công nghệ - Giải trí",
-    logoUrl: "https://st.depositphotos.com/1594962/2275/v/450/depositphotos_22755734-stock-illustration-vng-logo.jpg",
-    activeJobs: 32,
-  },
-  {
-    companyId: 1002,
-    companyName: "FPT Software",
-    industry: "Phần mềm & Dịch vụ CNTT",
-    logoUrl: "https://st.depositphotos.com/2274151/4841/v/450/depositphotos_48410095-stock-illustration-fpt-logo.jpg",
-    activeJobs: 128,
-  },
-  {
-    companyId: 1003,
-    companyName: "Tech Solutions Vietnam",
-    industry: "Công nghệ thông tin",
-    logoUrl: "",
-    activeJobs: 18,
-  }
-];
 
 export default function StudentCompaniesPage() {
   const {
@@ -82,23 +57,7 @@ export default function StudentCompaniesPage() {
         </div>
       ) : (
         <div className="space-y-8">
-          {!isFiltering && !isLoading && (
-            <section className="space-y-4">
-              <div className="flex items-center gap-2.5">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-100 text-amber-500">
-                  <Star size={18} fill="currentColor" />
-                </div>
-                <h2 className="text-xl font-bold text-slate-900">
-                  Công ty nổi bật
-                </h2>
-              </div>
-              <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-                {MOCK_FEATURED_COMPANIES.map((company) => (
-                  <CompanyCard key={company.companyId} company={company} />
-                ))}
-              </div>
-            </section>
-          )}
+
 
           <section className="space-y-4">
             <div className="flex items-center justify-between">

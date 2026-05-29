@@ -7,9 +7,7 @@ export async function getAllAdmins() {
 }
 
 export async function createAdmin(params: CreateAdminParams) {
-    const response = await api.post("/auth/admins", {
-        params
-    });
+    const response = await api.post("/auth/admins", params);
     return response.data;
 }
 

@@ -22,7 +22,7 @@ export default function CompanyOfficeGallery({
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-center gap-3">
           <ImageIcon className="text-[#06B6D4]" size={28} />
-          <h3 className="text-[1.28rem] font-extrabold tracking-[-0.02em] text-[#0F172A]">
+          <h3 className="text-[1.18rem] font-extrabold tracking-[-0.02em] text-[#0F172A]">
             Hình ảnh văn phòng
           </h3>
         </div>

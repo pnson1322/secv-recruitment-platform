@@ -38,7 +38,7 @@ export function useAppHeader() {
   useNotificationSocket(socketToken, {
     enabled: !!user,
     showToast: !isNotificationOpen,
-    onlyToastWhenTabHidden: true,
+    onlyToastWhenTabHidden: false,
   });
 
   useEffect(() => {

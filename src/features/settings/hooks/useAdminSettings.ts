@@ -36,9 +36,21 @@ export function useAdminSettings() {
       setIsAddOpen(false);
     },
     onError: (err: unknown) => {
-      toast.error(
-        (err as { response?: { data?: { message?: string } } })?.response?.data?.message || "Không thể thêm tài khoản admin"
-      );
+      const responseData = (err as { response?: { data?: { message?: unknown; error?: unknown } } })?.response?.data;
+      let message = "Không thể thêm tài khoản admin";
+      
+      if (typeof responseData?.message === "string") {
+        message = responseData.message;
+      } else if (Array.isArray(responseData?.message)) {
+        message = (responseData.message[0] as string) || message;
+      } else if (typeof responseData?.message === "object" && responseData?.message !== null) {
+        const msgObj = responseData.message as { message?: string; error?: string };
+        message = msgObj.message || msgObj.error || message;
+      } else if (responseData?.error && typeof responseData.error === "string") {
+        message = responseData.error;
+      }
+      
+      toast.error(message);
     },
   });
 
@@ -60,9 +72,21 @@ export function useAdminSettings() {
       }
     },
     onError: (err: unknown) => {
-      toast.error(
-        (err as { response?: { data?: { message?: string } } })?.response?.data?.message || "Không thể xóa tài khoản admin"
-      );
+      const responseData = (err as { response?: { data?: { message?: unknown; error?: unknown } } })?.response?.data;
+      let message = "Không thể xóa tài khoản admin";
+      
+      if (typeof responseData?.message === "string") {
+        message = responseData.message;
+      } else if (Array.isArray(responseData?.message)) {
+        message = (responseData.message[0] as string) || message;
+      } else if (typeof responseData?.message === "object" && responseData?.message !== null) {
+        const msgObj = responseData.message as { message?: string; error?: string };
+        message = msgObj.message || msgObj.error || message;
+      } else if (responseData?.error && typeof responseData.error === "string") {
+        message = responseData.error;
+      }
+      
+      toast.error(message);
     },
   });
 
@@ -106,6 +130,7 @@ export function useAdminSettings() {
       await createAdminMutation.mutateAsync({
         email: values.email,
         password: values.password || "",
+        confirmPassword: values.password || "",
       });
     },
 

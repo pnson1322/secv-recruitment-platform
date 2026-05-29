@@ -23,7 +23,7 @@ export default function CompanyInfoGrid({
     <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
       <CompanySectionCard>
         <div className="flex items-start justify-between gap-4">
-          <h3 className="text-[1.28rem] font-extrabold tracking-[-0.02em] text-[#0F172A]">
+          <h3 className="text-[1.18rem] font-extrabold tracking-[-0.02em] text-[#0F172A]">
             Thông tin chi tiết
           </h3>
 
@@ -55,7 +55,7 @@ export default function CompanyInfoGrid({
 
       <CompanySectionCard>
         <div className="flex items-start justify-between gap-4">
-          <h3 className="text-[1.28rem] font-extrabold tracking-[-0.02em] text-[#0F172A]">
+          <h3 className="text-[1.18rem] font-extrabold tracking-[-0.02em] text-[#0F172A]">
             Liên hệ
           </h3>
 

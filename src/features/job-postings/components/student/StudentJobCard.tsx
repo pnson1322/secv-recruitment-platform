@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Building2, MapPin, DollarSign, Clock, Users, ChevronRight, Bookmark } from "lucide-react";
@@ -11,6 +11,27 @@ interface StudentJobCardProps {
 
 export default function StudentJobCard({ job }: StudentJobCardProps) {
   const toggleSaveMutation = useSaveJobPosting(job.jobId);
+  const [localSaved, setLocalSaved] = useState(job.saved ?? false);
+  const [prevSaved, setPrevSaved] = useState(job.saved);
+
+  if (job.saved !== prevSaved) {
+    setPrevSaved(job.saved);
+    setLocalSaved(job.saved ?? false);
+  }
+
+  const handleSaveToggle = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (toggleSaveMutation.isPending) return;
+
+    const previousSaved = localSaved;
+    setLocalSaved(!previousSaved);
+
+    try {
+      await toggleSaveMutation.mutateAsync(previousSaved);
+    } catch (error) {
+      setLocalSaved(previousSaved);
+    }
+  };
 
   const formatSalary = () => {
     if (job.isSalaryNegotiable) return "Thỏa thuận";
@@ -22,10 +43,8 @@ export default function StudentJobCard({ job }: StudentJobCardProps) {
     return "Thỏa thuận";
   };
 
-  const isSaved = job.saved ?? false;
-
   return (
-    <div className="group flex flex-col rounded-2xl border border-slate-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-cyan-200 hover:shadow-xl hover:shadow-cyan-500/10">
+    <div className="group flex flex-col h-full rounded-2xl border border-slate-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-cyan-200 hover:shadow-xl hover:shadow-cyan-500/10">
       <div className="flex gap-4">
         <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl border border-slate-50 bg-slate-50">
           {job.logoUrl ? (
@@ -93,21 +112,18 @@ export default function StudentJobCard({ job }: StudentJobCardProps) {
         )}
       </div>
 
-      <div className="mt-5 flex gap-2.5">
+      <div className="mt-auto pt-5 flex gap-2.5">
         <button 
-          onClick={(e) => {
-            e.preventDefault();
-            toggleSaveMutation.mutate(isSaved);
-          }}
+          onClick={handleSaveToggle}
           disabled={toggleSaveMutation.isPending}
           className={`flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-xl border transition disabled:opacity-50 ${
-            isSaved 
+            localSaved 
               ? "border-amber-100 bg-amber-50 text-amber-500 hover:bg-amber-100" 
               : "border-slate-200 text-slate-400 hover:bg-slate-50 hover:text-slate-600"
           }`}
-          title={isSaved ? "Bỏ lưu" : "Lưu tin"}
+          title={localSaved ? "Bỏ lưu" : "Lưu tin"}
         >
-          <Bookmark size={20} className={isSaved ? "fill-amber-500" : ""} />
+          <Bookmark size={20} className={localSaved ? "fill-amber-500" : ""} />
         </button>
         <Link
           href={`/jobs-detail/${job.jobId}`}
