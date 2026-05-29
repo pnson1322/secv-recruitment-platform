@@ -1,7 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Briefcase, Search, MapPin, RotateCcw, AlertCircle } from "lucide-react";
+import {
+  Briefcase,
+  Search,
+  MapPin,
+  RotateCcw,
+  AlertCircle,
+} from "lucide-react";
 import CustomSelect from "@/components/CustomSelect";
 import Pagination from "@/components/Pagination";
 import { useJobPostingCardsForStudent } from "@/features/job-postings/hooks/useJobPostingCardsForStudent";
@@ -100,10 +106,12 @@ export default function AllJobsSection() {
     setLastFilters({ search: params.search, city: params.city });
   }, [params.search, params.city]);
 
-  const { data, isLoading, isFetching, isError, refetch } = useJobPostingCardsForStudent(params);
+  const { data, isLoading, isFetching, isError, refetch } =
+    useJobPostingCardsForStudent(params);
 
   const isFiltering = searchTerm || params.city;
-  const isFilterChanging = params.search !== lastFilters.search || params.city !== lastFilters.city;
+  const isFilterChanging =
+    params.search !== lastFilters.search || params.city !== lastFilters.city;
 
   const handleClearFilters = () => {
     setSearchTerm("");
@@ -158,7 +166,7 @@ export default function AllJobsSection() {
             </div>
             <input
               type="text"
-              placeholder="Tìm kiếm vị trí, công ty..."
+              placeholder="Tìm kiếm công việc"
               className="w-full h-11 rounded-xl border border-slate-200 bg-white py-2 pl-11 pr-4 text-[14px] outline-none transition-all focus:border-cyan-500 focus:ring-4 focus:ring-cyan-500/5 text-slate-700"
               value={searchTerm}
               onChange={handleSearchChange}
@@ -205,7 +213,9 @@ export default function AllJobsSection() {
             <Briefcase size={20} />
           </div>
           <div>
-            <h3 className="text-xl font-bold text-slate-800">Tất cả tin tuyển dụng</h3>
+            <h3 className="text-xl font-bold text-slate-800">
+              Tất cả tin tuyển dụng
+            </h3>
             <p className="text-[13px] text-slate-400">
               {data?.data?.meta?.totalItems
                 ? `Tìm thấy ${data.data.meta.totalItems} việc làm đang tuyển`
@@ -219,7 +229,10 @@ export default function AllJobsSection() {
         {isLoading || (isFetching && isFilterChanging) ? (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {[...Array(6)].map((_, i) => (
-              <div key={i} className="flex flex-col rounded-2xl border border-slate-100 bg-white p-5 shadow-xs animate-pulse">
+              <div
+                key={i}
+                className="flex flex-col rounded-2xl border border-slate-100 bg-white p-5 shadow-xs animate-pulse"
+              >
                 <div className="flex gap-4">
                   <div className="h-16 w-16 shrink-0 rounded-xl bg-slate-100" />
                   <div className="flex flex-1 flex-col justify-center gap-2.5">
@@ -262,9 +275,13 @@ export default function AllJobsSection() {
               </div>
             )}
 
-            <div className={`grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 transition-opacity duration-300 ${
-              isFetching && !isFilterChanging ? "opacity-50 pointer-events-none" : ""
-            }`}>
+            <div
+              className={`grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 transition-opacity duration-300 ${
+                isFetching && !isFilterChanging
+                  ? "opacity-50 pointer-events-none"
+                  : ""
+              }`}
+            >
               {data.data.data.map((job) => (
                 <StudentJobCard key={job.jobId} job={job} />
               ))}

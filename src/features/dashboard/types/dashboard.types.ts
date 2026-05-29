@@ -4,10 +4,10 @@ export type ApiResponse<T> = {
   data: T;
 };
 
-export type ApplicationRateStat = {
-  month: string;
-  successRate: number;
-};
+export interface ApplicationRateStat {
+  date: string;
+  count: number;
+}
 
 export type JobItem = {
   jobId: number;
@@ -62,4 +62,3 @@ export type AdminTopCompanyStat = {
   companyName: string;
   totalJobs: number;
 };
-

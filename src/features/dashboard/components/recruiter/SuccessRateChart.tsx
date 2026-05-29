@@ -4,14 +4,16 @@ import { TrendingUp } from "lucide-react";
 import type { ApplicationRateStat } from "../../types/dashboard.types";
 
 type Props = {
-  successRates: ApplicationRateStat[];
+  data: ApplicationRateStat[];
 };
 
-export default function SuccessRateChart({ successRates }: Props) {
+export default function ApplicationCountChart({ data }: Props) {
   const chartHeight = 160;
   const chartWidth = 500;
   const paddingX = 40;
   const paddingY = 25;
+
+  const maxCount = Math.max(...data.map((d) => d.count), 5);
 
   interface Point {
     x: number;
@@ -20,16 +22,24 @@ export default function SuccessRateChart({ successRates }: Props) {
     value: number;
   }
 
-  const points: Point[] = successRates.map((item: ApplicationRateStat, index: number) => {
+  const points: Point[] = data.map((item, index) => {
     const x =
       paddingX +
-      (index * (chartWidth - paddingX * 2)) / Math.max(1, successRates.length - 1);
-    const rate = item.successRate || 0;
+      (index * (chartWidth - paddingX * 2)) / Math.max(1, data.length - 1);
+    const count = item.count || 0;
+
     const y =
       chartHeight -
       paddingY -
-      (rate / 100) * (chartHeight - paddingY * 2);
-    return { x, y, label: item.month || "", value: rate };
+      (count / maxCount) * (chartHeight - paddingY * 2);
+
+    let formatLabel = item.date;
+    if (item.date && item.date.includes("-")) {
+      const parts = item.date.split("-");
+      formatLabel = `${parts[2]}/${parts[1]}`;
+    }
+
+    return { x, y, label: formatLabel, value: count };
   });
 
   const linePath = points.reduce((path: string, p: Point, i: number) => {
@@ -40,6 +50,11 @@ export default function SuccessRateChart({ successRates }: Props) {
     ? `${linePath} L ${points[points.length - 1].x} ${chartHeight - paddingY} L ${points[0].x} ${chartHeight - paddingY} Z`
     : "";
 
+  const yAxisSteps = [0, 0.25, 0.5, 0.75, 1].map((multiplier) =>
+    Math.ceil(maxCount * multiplier),
+  );
+  const uniqueYAxisSteps = Array.from(new Set(yAxisSteps));
+
   return (
     <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-xs">
       <div className="flex items-center justify-between border-b border-slate-100 pb-4">
@@ -49,19 +64,19 @@ export default function SuccessRateChart({ successRates }: Props) {
           </div>
           <div>
             <h3 className="text-[17px] font-bold text-slate-800">
-              Tỉ lệ Ứng tuyển Thành công
+              Lượt ứng tuyển (7 Ngày Qua)
             </h3>
             <p className="text-[13px] text-slate-400">
-              Phân tích tỉ lệ hồ sơ được duyệt theo từng tháng (%)
+              Thống kê số lượng hồ sơ nộp vào công ty
             </p>
           </div>
         </div>
       </div>
 
       <div className="mt-6 flex flex-col justify-end">
-        {successRates.length === 0 ? (
+        {data.length === 0 ? (
           <div className="flex h-40 items-center justify-center text-slate-400">
-            Không có dữ liệu tỉ lệ thành công
+            Không có dữ liệu thống kê
           </div>
         ) : (
           <div className="relative w-full overflow-hidden">
@@ -76,11 +91,12 @@ export default function SuccessRateChart({ successRates }: Props) {
                 </linearGradient>
               </defs>
 
-              {[0, 25, 50, 75, 100].map((val) => {
+              {/* Vẽ các đường grid ngang trục Y */}
+              {uniqueYAxisSteps.map((val) => {
                 const y =
                   chartHeight -
                   paddingY -
-                  (val / 100) * (chartHeight - paddingY * 2);
+                  (val / maxCount) * (chartHeight - paddingY * 2);
                 return (
                   <g key={val} className="opacity-40">
                     <line
@@ -98,19 +114,14 @@ export default function SuccessRateChart({ successRates }: Props) {
                       textAnchor="end"
                       className="fill-slate-400 text-[10px] font-semibold"
                     >
-                      {val}%
+                      {val}
                     </text>
                   </g>
                 );
               })}
 
-              {areaPath && (
-                <path
-                  d={areaPath}
-                  fill="url(#chartGradient)"
-                />
-              )}
-
+              {/* Fill Gradient & Line */}
+              {areaPath && <path d={areaPath} fill="url(#chartGradient)" />}
               {linePath && (
                 <path
                   d={linePath}
@@ -122,6 +133,7 @@ export default function SuccessRateChart({ successRates }: Props) {
                 />
               )}
 
+              {/* Các điểm dữ liệu & Tooltip */}
               {points.map((p: Point, i: number) => (
                 <g key={i} className="group/point">
                   <circle
@@ -145,33 +157,24 @@ export default function SuccessRateChart({ successRates }: Props) {
                       textAnchor="middle"
                       className="fill-white text-[11px] font-bold"
                     >
-                      {p.value}%
+                      {p.value} hồ sơ
                     </text>
                   </g>
                 </g>
               ))}
 
-              {points.map((p: Point, i: number) => {
-                if (points.length > 6 && i % 2 !== 0) return null;
-                let formatMonth = p.label;
-                if (p.label && p.label.includes("-")) {
-                  const parts = p.label.split("-");
-                  if (parts[0] && parts[1]) {
-                    formatMonth = parts[1] + "/" + parts[0].substring(2);
-                  }
-                }
-                return (
-                  <text
-                    key={i}
-                    x={p.x}
-                    y={chartHeight - 6}
-                    textAnchor="middle"
-                    className="fill-slate-400 text-[10px] font-bold"
-                  >
-                    {formatMonth}
-                  </text>
-                );
-              })}
+              {/* Trục X: Ngày tháng */}
+              {points.map((p: Point, i: number) => (
+                <text
+                  key={i}
+                  x={p.x}
+                  y={chartHeight - 6}
+                  textAnchor="middle"
+                  className="fill-slate-400 text-[10px] font-bold"
+                >
+                  {p.label}
+                </text>
+              ))}
             </svg>
           </div>
         )}

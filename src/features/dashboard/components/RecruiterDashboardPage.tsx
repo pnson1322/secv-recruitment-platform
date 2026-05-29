@@ -14,12 +14,12 @@ import type {
 import { getJobPostingCardsForCompany } from "@/features/job-postings/api/job-postings.api";
 
 import RecruiterStatsGrid from "./recruiter/RecruiterStatsGrid";
-import SuccessRateChart from "./recruiter/SuccessRateChart";
 import JobCategoryDistribution from "./recruiter/JobCategoryDistribution";
 import RecentJobsSection from "./recruiter/RecentJobsSection";
 
 import { RecruiterDashboardSkeleton } from "./shared/DashboardSkeleton";
 import DashboardErrorState from "./shared/DashboardErrorState";
+import ApplicationCountChart from "./recruiter/SuccessRateChart";
 
 export default function RecruiterDashboardPage() {
   const router = useRouter();
@@ -61,16 +61,10 @@ export default function RecruiterDashboardPage() {
   const recentJobs = recentJobsRes?.data?.data || [];
 
   const isLoading =
-    statsLoading ||
-    successRateLoading ||
-    categoryLoading ||
-    recentJobsLoading;
+    statsLoading || successRateLoading || categoryLoading || recentJobsLoading;
 
   const isError =
-    statsError ||
-    successRateError ||
-    categoryError ||
-    recentJobsError;
+    statsError || successRateError || categoryError || recentJobsError;
 
   const handleRetry = () => {
     refetchStats();
@@ -92,7 +86,7 @@ export default function RecruiterDashboardPage() {
       <RecruiterStatsGrid stats={stats} />
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <SuccessRateChart successRates={successRates} />
+        <ApplicationCountChart data={successRates} />
         <JobCategoryDistribution categories={categories} />
       </div>
 
