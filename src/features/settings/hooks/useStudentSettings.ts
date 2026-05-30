@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useAuth } from "@/features/auth/hooks/useAuth";
@@ -25,16 +25,13 @@ export function useStudentSettings() {
     queryFn: getMyProfile,
   });
 
-  const [prevProfile, setPrevProfile] = useState<MyProfile | null>(null);
-
-  if (profile !== prevProfile) {
-    setPrevProfile(profile || null);
+  useEffect(() => {
     if (profile) {
       setFullName(profile.fullName || "");
       setEmail(profile.email || "");
       setPhone(profile.phone || "");
     }
-  }
+  }, [profile]);
 
   const updateInfoMutation = useMutation({
     mutationFn: updateStudentInfo,
