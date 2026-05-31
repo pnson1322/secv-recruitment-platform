@@ -33,6 +33,12 @@ export default function CVManagementSection({ resumes, onSetDefault, onView, onD
     });
   };
 
+  const sortedResumes = [...resumes].sort((a, b) => {
+    if (a.isDefault && !b.isDefault) return -1;
+    if (!a.isDefault && b.isDefault) return 1;
+    return a.resumeId - b.resumeId;
+  });
+
   return (
     <section className="rounded-[32px] border border-slate-200 bg-white p-8 shadow-sm">
       <div className="mb-6 flex items-center gap-3">
@@ -46,8 +52,8 @@ export default function CVManagementSection({ resumes, onSetDefault, onView, onD
       </div>
 
       <div className="space-y-4 mb-6">
-        {resumes.length > 0 ? (
-          resumes.map((cv) => (
+        {sortedResumes.length > 0 ? (
+          sortedResumes.map((cv) => (
             <div 
               key={cv.resumeId}
               className={`group relative flex flex-col gap-4 rounded-[24px] border p-6 transition-all duration-300 ${

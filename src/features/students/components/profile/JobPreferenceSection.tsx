@@ -85,6 +85,7 @@ export default function JobPreferenceSection() {
     isUpdating,
     handleSave,
     formatSalaryDisplay,
+    handleCancel,
   } = useJobPreference();
 
   if (isLoading) {
@@ -180,7 +181,7 @@ export default function JobPreferenceSection() {
 
           <div className="flex justify-end gap-3 pt-3 border-t border-slate-100">
             <button
-              onClick={() => setIsEditing(false)}
+              onClick={handleCancel}
               disabled={isUpdating}
               className="flex items-center gap-1.5 rounded-2xl border border-slate-200 px-5 py-2.5 text-[14px] font-bold text-slate-600 transition hover:bg-slate-50 disabled:opacity-60"
             >

@@ -27,9 +27,12 @@ export function useStudentSettings() {
 
   useEffect(() => {
     if (profile) {
-      setFullName(profile.fullName || "");
-      setEmail(profile.email || "");
-      setPhone(profile.phone || "");
+      const timer = setTimeout(() => {
+        setFullName(profile.fullName || "");
+        setEmail(profile.email || "");
+        setPhone(profile.phone || "");
+      }, 0);
+      return () => clearTimeout(timer);
     }
   }, [profile]);
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getJobPreference, updateJobPreference } from "../api/student.api";
 import type { JobPreference } from "../types/student.types";
@@ -21,18 +21,25 @@ export function useJobPreference() {
 
   const preference = prefRes?.data;
 
-  const [prevPreference, setPrevPreference] = useState<JobPreference | null>(null);
-  const [prevIsEditing, setPrevIsEditing] = useState(isEditing);
+  useEffect(() => {
+    if (preference) {
+      const timer = setTimeout(() => {
+        setDesiredLocation(preference.desiredLocation || "");
+        setSalaryMinStr(preference.desiredSalaryMin ? preference.desiredSalaryMin.toString() : "");
+        setSalaryMaxStr(preference.desiredSalaryMax ? preference.desiredSalaryMax.toString() : "");
+      }, 0);
+      return () => clearTimeout(timer);
+    }
+  }, [preference]);
 
-  if (preference !== prevPreference || isEditing !== prevIsEditing) {
-    setPrevPreference(preference || null);
-    setPrevIsEditing(isEditing);
+  const handleCancel = () => {
+    setIsEditing(false);
     if (preference) {
       setDesiredLocation(preference.desiredLocation || "");
       setSalaryMinStr(preference.desiredSalaryMin ? preference.desiredSalaryMin.toString() : "");
       setSalaryMaxStr(preference.desiredSalaryMax ? preference.desiredSalaryMax.toString() : "");
     }
-  }
+  };
 
   const updateMutation = useMutation({
     mutationFn: updateJobPreference,
@@ -97,5 +104,6 @@ export function useJobPreference() {
     isUpdating: updateMutation.isPending,
     handleSave,
     formatSalaryDisplay,
+    handleCancel,
   };
 }
