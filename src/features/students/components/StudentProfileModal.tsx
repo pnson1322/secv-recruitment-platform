@@ -219,13 +219,6 @@ export default function StudentProfileModal({
                         <span className="text-slate-500 font-medium text-left">Chuyên ngành</span>
                         <span className="font-semibold text-slate-800 text-right max-w-[180px]">{profile.majorName}</span>
                       </div>
-                      <div className="flex justify-between items-center text-[14px]">
-                        <span className="text-slate-500 font-medium">GPA</span>
-                        <span className="flex items-center gap-1 font-semibold text-slate-800">
-                          <Star size={16} className="fill-amber-400 text-amber-400" />
-                          {profile.gpa} / 4.0
-                        </span>
-                      </div>
                     </div>
                   </section>
 

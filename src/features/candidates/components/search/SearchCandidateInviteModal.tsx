@@ -1,6 +1,6 @@
 "use client";
 
-import { Mail, Send, Star, X } from "lucide-react";
+import { Mail, Send, X } from "lucide-react";
 import ClientPortal from "@/components/ClientPortal";
 import CustomSelect from "@/components/CustomSelect";
 import type { JobPostingDataItem } from "@/features/job-postings/types/job-postings.types";
@@ -37,13 +37,6 @@ function getYearLabel(student: StudentCardItem): string {
   return currentYear ? `Năm ${currentYear}` : "";
 }
 
-function getGpaLabel(gpa: StudentCardItem["gpa"]): string {
-  if (gpa === null || gpa === undefined || gpa === "") {
-    return "N.A";
-  }
-  const numericValue = Number(gpa);
-  return Number.isFinite(numericValue) ? numericValue.toFixed(1) : String(gpa);
-}
 
 export default function SearchCandidateInviteModal({
   open,
@@ -131,10 +124,6 @@ export default function SearchCandidateInviteModal({
                   {subtitleLabel}
                 </p>
                 <div className="mt-2 flex items-center gap-3">
-                  <div className="flex items-center gap-1.5 rounded-lg bg-amber-50 px-2 py-1 text-[13px] font-bold text-amber-600">
-                    <Star size={14} className="fill-amber-400 text-amber-400" />
-                    <span>GPA: {getGpaLabel(candidate.gpa)}</span>
-                  </div>
                   {candidate.isOpenToWork && (
                     <span className="rounded-lg bg-emerald-50 px-2 py-1 text-[12px] font-bold text-emerald-600">
                       Đang tìm việc

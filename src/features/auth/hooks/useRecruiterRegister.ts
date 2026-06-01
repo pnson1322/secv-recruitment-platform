@@ -27,7 +27,7 @@ export function useRecruiterRegister() {
 
     onSuccess: (response) => {
       toast.success(response.message || "Đăng ký thành công");
-      router.push("/login/recruiter");
+      router.push("/login");
     },
 
     onError: (error) => {

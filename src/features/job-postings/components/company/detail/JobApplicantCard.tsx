@@ -34,7 +34,6 @@ export default function JobApplicantCard({
   const yearLabel = student.studentStatus === "GRADUATED" 
     ? "Đã tốt nghiệp" 
     : student.currentYear ? `Năm ${student.currentYear}` : "N/A";
-  const gpaLabel = student.gpa ? String(student.gpa) : "N.A";
   const majorLabel = student.majorName || "Chưa cập nhật chuyên ngành";
 
   return (
@@ -59,11 +58,6 @@ export default function JobApplicantCard({
                 <div className="flex items-center gap-1.5">
                   <span className="h-1 w-1 rounded-full bg-slate-300" />
                   <span className="truncate">{majorLabel}</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <span className="h-1 w-1 rounded-full bg-slate-300" />
-                  <Star size={14} className="fill-amber-400 text-amber-400" />
-                  <span className="text-amber-600">GPA: {gpaLabel}</span>
                 </div>
               </div>
             </div>

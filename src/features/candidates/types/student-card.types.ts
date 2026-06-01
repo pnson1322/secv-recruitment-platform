@@ -7,7 +7,6 @@ export type StudentCardItem = {
   fullName: string;
   avatarUrl: string | null;
   currentYear?: number | string | null;
-  gpa: string | number | null;
   isOpenToWork: boolean;
   skills: string[];
   studentStatus?: StudentStatus | null;
@@ -35,7 +34,6 @@ export type GetStudentCardsParams = {
   search?: string;
   majorId?: number;
   years?: StudentCardYearValue[];
-  minGpa?: number;
   skillIds?: number[];
   isOpenToWork?: boolean;
 };
@@ -44,7 +42,6 @@ export type SearchCandidatesFiltersValue = {
   search: string;
   majorId: string;
   years: StudentCardYearValue[];
-  minGpa: number;
   skillIds: number[];
   isOpenToWork: boolean;
 };

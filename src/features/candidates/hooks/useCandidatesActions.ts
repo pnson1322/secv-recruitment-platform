@@ -111,7 +111,6 @@ export function useCandidatesActions(refetch: () => void) {
       fullName: student.fullName,
       avatarUrl: student.avatarUrl,
       currentYear: student.currentYear,
-      gpa: student.gpa ?? null,
       isOpenToWork: !!student.isOpenToWork,
       skills: student.skills?.map((s) => s.skillName) || [],
       studentStatus: student.studentStatus,

@@ -109,7 +109,6 @@ export default function StudentSettingsPage() {
 
         <StudentEducationCard
           academicYearDisplay={academicYearDisplay}
-          gpa={profile?.gpa || "0.0"}
         />
 
         <CommonSettingsSection />

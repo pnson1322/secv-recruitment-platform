@@ -35,7 +35,6 @@ export type CandidateStudent = {
   avatarUrl: string | null;
   currentYear?: number;
   majorName?: string;
-  gpa?: string;
   phone?: string;
   skills?: CandidateSkill[];
   isOpenToWork?: boolean;

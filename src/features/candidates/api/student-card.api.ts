@@ -14,7 +14,6 @@ export async function getStudentCards(
     search,
     majorId,
     years,
-    minGpa,
     skillIds,
     isOpenToWork,
   } = params;
@@ -36,10 +35,6 @@ export async function getStudentCards(
     years.forEach((year) => {
       query.append("years", String(year));
     });
-  }
-
-  if (typeof minGpa === "number") {
-    query.append("minGpa", String(minGpa));
   }
 
   if (Array.isArray(skillIds) && skillIds.length > 0) {

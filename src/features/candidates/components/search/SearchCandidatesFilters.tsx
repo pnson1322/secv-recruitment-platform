@@ -25,7 +25,6 @@ type Props = {
   onSearchSubmit: () => void;
   onMajorChange: (value: string) => void;
   onToggleYear: (year: StudentCardYearValue) => void;
-  onMinGpaChange: (value: number) => void;
   onToggleSkill: (skillId: number) => void;
   onOpenToWorkChange: (checked: boolean) => void;
   onApply: () => void;
@@ -52,7 +51,6 @@ export default function SearchCandidatesFilters({
   onSearchSubmit,
   onMajorChange,
   onToggleYear,
-  onMinGpaChange,
   onToggleSkill,
   onOpenToWorkChange,
   onApply,
@@ -166,26 +164,6 @@ export default function SearchCandidatesFilters({
           </div>
         </div>
 
-        <div>
-          <div className="mb-2 flex items-center justify-between gap-3">
-            <p className="text-[14px] font-semibold text-slate-800">
-              GPA tối thiểu
-            </p>
-            <span className="text-[14px] font-semibold text-cyan-600">
-              {filters.minGpa.toFixed(1)} / 4.0
-            </span>
-          </div>
-
-          <input
-            type="range"
-            min={0}
-            max={4}
-            step={0.1}
-            value={filters.minGpa}
-            onChange={(e) => onMinGpaChange(Number(e.target.value))}
-            className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-cyan-100 accent-cyan-500"
-          />
-        </div>
 
         <div>
           <div className="mb-2 flex items-center justify-between gap-3">

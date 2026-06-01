@@ -25,7 +25,6 @@ function createDefaultFilters(): SearchCandidatesFiltersValue {
     search: "",
     majorId: "",
     years: [],
-    minGpa: 0,
     skillIds: [],
     isOpenToWork: true,
   };
@@ -132,7 +131,6 @@ export function useSearchCandidatesPage() {
           ? Number(appliedFilters.majorId)
           : undefined,
         years: appliedFilters.years.length ? appliedFilters.years : undefined,
-        minGpa: appliedFilters.minGpa,
         skillIds: appliedFilters.skillIds.length
           ? appliedFilters.skillIds
           : undefined,
@@ -200,7 +198,6 @@ export function useSearchCandidatesPage() {
     if (appliedFilters.search.trim()) count += 1;
     if (appliedFilters.majorId) count += 1;
     if (appliedFilters.years.length > 0) count += 1;
-    if (appliedFilters.minGpa > 0) count += 1;
     if (appliedFilters.skillIds.length > 0) count += 1;
     if (appliedFilters.isOpenToWork) count += 1;
 
@@ -224,9 +221,6 @@ export function useSearchCandidatesPage() {
     }));
   };
 
-  const updateMinGpa = (value: number) => {
-    setDraftFilters((prev) => ({ ...prev, minGpa: value }));
-  };
 
   const toggleSkill = (skillId: number) => {
     setDraftFilters((prev) => ({
@@ -322,7 +316,6 @@ export function useSearchCandidatesPage() {
     updateSearch,
     updateMajorId,
     toggleYear,
-    updateMinGpa,
     toggleSkill,
     updateOpenToWork,
     applyFilters,

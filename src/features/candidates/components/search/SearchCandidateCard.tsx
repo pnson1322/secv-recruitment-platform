@@ -1,4 +1,4 @@
-import { Mail, Star } from "lucide-react";
+import { Mail } from "lucide-react";
 import CandidateAvatar from "../shared/CandidateAvatar";
 import type { StudentCardItem } from "../../types/student-card.types";
 
@@ -30,19 +30,6 @@ function getYearLabel(student: StudentCardItem): string {
   return `Năm ${currentYear}`;
 }
 
-function getGpaLabel(gpa: StudentCardItem["gpa"]): string {
-  if (gpa === null || gpa === undefined || gpa === "") {
-    return "Chưa cập nhật";
-  }
-
-  const numericValue = Number(gpa);
-
-  if (Number.isFinite(numericValue)) {
-    return numericValue.toFixed(1);
-  }
-
-  return String(gpa);
-}
 
 export default function SearchCandidateCard({
   student,
@@ -77,10 +64,6 @@ export default function SearchCandidateCard({
             </p>
 
             <div className="mt-2 flex flex-wrap items-center gap-2">
-              <div className="flex items-center gap-1.5 text-[14px] font-semibold text-slate-800">
-                <Star size={16} className="fill-amber-400 text-amber-400" />
-                <span>GPA: {getGpaLabel(student.gpa)}</span>
-              </div>
 
               {student.isOpenToWork ? (
                 <span className="inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-0.5 text-[12px] font-bold text-emerald-600">

@@ -38,7 +38,6 @@ export type StudentProfile = {
   studentStatus: StudentStatus;
   currentYear: number;
   enrollmentYear: number;
-  gpa: number;
   isOpenToWork: boolean;
   majorName: string;
   skills: string[];
@@ -68,7 +67,6 @@ export type MyProfile = {
   avatarUrl: string | null;
   currentYear: number;
   studentStatus: StudentStatus;
-  gpa: string;
   isOpenToWork: boolean;
   skills: {
     skillId: number;

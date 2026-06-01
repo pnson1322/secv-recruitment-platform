@@ -30,7 +30,6 @@ export default function SearchCandidatesPage() {
     updateSearch,
     updateMajorId,
     toggleYear,
-    updateMinGpa,
     toggleSkill,
     updateOpenToWork,
     applyFilters,
@@ -104,7 +103,6 @@ export default function SearchCandidatesPage() {
               onSearchSubmit={applyFilters}
               onMajorChange={updateMajorId}
               onToggleYear={toggleYear}
-              onMinGpaChange={updateMinGpa}
               onToggleSkill={toggleSkill}
               onOpenToWorkChange={updateOpenToWork}
               onApply={applyFilters}
@@ -126,7 +124,6 @@ export default function SearchCandidatesPage() {
               onSearchSubmit={applyFilters}
               onMajorChange={updateMajorId}
               onToggleYear={toggleYear}
-              onMinGpaChange={updateMinGpa}
               onToggleSkill={toggleSkill}
               onOpenToWorkChange={updateOpenToWork}
               onApply={applyFilters}
@@ -186,7 +183,7 @@ export default function SearchCandidatesPage() {
                   Chưa tìm thấy ứng viên phù hợp
                 </h3>
                 <p className="mt-2 text-[15px] leading-7 text-slate-500">
-                  Bạn hãy thử nới lỏng bộ lọc, giảm GPA tối thiểu hoặc bỏ bớt kỹ
+                  Bạn hãy thử nới lỏng bộ lọc hoặc bỏ bớt kỹ
                   năng bắt buộc.
                 </p>
                 <button
